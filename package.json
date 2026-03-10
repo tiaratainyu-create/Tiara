@@ -1,0 +1,8 @@
+{
+  "name": "tiara-platform",
+  "version": "1.0.0",
+  "description": "Tiara 錦糸町 夜のお仕事求人プラットフォーム",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}
