@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiara 管理画面</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --or:#ff6b00;--bg:#0f0f13;--bg2:#1a1a22;--bg3:#22222e;
+  --bd:#2e2e3e;--md:#888;--lt:#555;
+  --grn:#22c55e;--red:#ef4444;--blu:#3b82f6;--ylw:#f59e0b;
+}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:#e8e8f0;min-height:100vh;}
+
+/* LOGIN */
+#loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 40% 40%,#1a0a00,var(--bg) 70%);}
+.login-box{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,.6);}
+.login-logo{font-size:2rem;font-weight:900;color:var(--or);text-align:center;margin-bottom:4px;}
+.login-sub{font-size:.7rem;color:var(--md);text-align:center;margin-bottom:32px;letter-spacing:2px;}
+.lf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.lf label{font-size:.7rem;font-weight:700;color:var(--md);letter-spacing:1px;}
+.lf input{background:var(--bg3);border:1.5px solid var(--bd);color:#e8e8f0;padding:12px 14px;border-radius:8px;font-size:.9rem;font-family:'Noto Sans JP',sans-serif;outline:none;transition:border-color .15s;}
+.lf input:focus{border-color:var(--or);}
+.login-btn{width:100%;background:var(--or);color:#fff;border:none;padding:14px;border-radius:8px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:8px;transition:opacity .15s;}
+.login-btn:hover{opacity:.88;}
+.login-err{color:var(--red);font-size:.75rem;text-align:center;margin-top:10px;min-height:18px;}
+
+/* LAYOUT */
+#adminPage{display:none;min-height:100vh;}
+.adm-wrap{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+.adm-side{background:var(--bg2);border-right:1px solid var(--bd);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;}
+.adm-logo{padding:24px 20px 18px;border-bottom:1px solid var(--bd);font-size:1.3rem;font-weight:900;color:var(--or);}
+.adm-logo small{display:block;font-size:.58rem;color:var(--md);font-weight:500;letter-spacing:2px;margin-top:2px;}
+.adm-nav{padding:10px 0;flex:1;}
+.anav-item{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:.82rem;font-weight:700;color:var(--md);cursor:pointer;border-left:3px solid transparent;transition:all .13s;}
+.anav-item:hover{color:#e8e8f0;background:var(--bg3);}
+.anav-item.on{color:var(--or);background:rgba(255,107,0,.08);border-left-color:var(--or);}
+.anav-ico{font-size:1rem;width:20px;text-align:center;}
+.req-cnt{margin-left:auto;background:var(--red);color:#fff;font-size:.58rem;padding:2px 7px;border-radius:10px;display:none;}
+.adm-user{padding:12px 20px;font-size:.7rem;color:var(--lt);border-top:1px solid var(--bd);}
+.adm-logout{padding:12px 20px;border-top:1px solid var(--bd);font-size:.75rem;color:var(--md);cursor:pointer;display:flex;align-items:center;gap:8px;transition:color .13s;}
+.adm-logout:hover{color:var(--red);}
+
+/* MAIN */
+.adm-main{padding:28px 32px;overflow-y:auto;}
+.adm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.adm-title{font-size:1.3rem;font-weight:900;}
+.adm-title span{color:var(--or);}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:16px 18px;}
+.sc-lbl{font-size:.65rem;color:var(--md);font-weight:700;letter-spacing:1px;margin-bottom:5px;}
+.sc-val{font-size:1.7rem;font-weight:900;line-height:1;}
+.sc-val.or{color:var(--or);}
+.sc-val.grn{color:var(--grn);}
+.sc-sub{font-size:.62rem;color:var(--lt);margin-top:3px;}
+
+/* TABS */
+.tab-content{display:none;}
+.tab-content.on{display:block;}
+
+/* TABLE */
+.tbl-wrap{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;overflow:hidden;}
+.tbl-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bd);gap:10px;flex-wrap:wrap;}
+.tbl-search{background:var(--bg3);border:1.5px solid var(--bd);color:#e8e8f0;padding:8px 14px;border-radius:6px;font-size:.82rem;width:220px;font-family:'Noto Sans JP',sans-serif;outline:none;}
+.tbl-search:focus{border-color:var(--or);}
+.add-btn{background:var(--or);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-size:.8rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:opacity .13s;white-space:nowrap;}
+.add-btn:hover{opacity:.88;}
+table{width:100%;border-collapse:collapse;}
+th{padding:9px 14px;text-align:left;font-size:.65rem;font-weight:700;color:var(--md);letter-spacing:1px;border-bottom:1px solid var(--bd);background:var(--bg3);}
+td{padding:12px 14px;font-size:.8rem;border-bottom:1px solid rgba(46,46,62,.5);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,107,0,.03);}
+.badge{display:inline-block;padding:3px 9px;border-radius:4px;font-size:.6rem;font-weight:700;letter-spacing:.5px;}
+.b-active{background:rgba(34,197,94,.15);color:var(--grn);}
+.b-pending{background:rgba(245,158,11,.15);color:var(--ylw);}
+.b-inactive,.b-rejected{background:rgba(136,136,136,.12);color:var(--md);}
+.b-approved{background:rgba(34,197,94,.15);color:var(--grn);}
+.b-premium{background:rgba(255,107,0,.15);color:var(--or);}
+.b-standard{background:rgba(59,130,246,.15);color:var(--blu);}
+.b-light{background:rgba(136,136,136,.12);color:var(--md);}
+.act-btns{display:flex;gap:5px;flex-wrap:wrap;}
+.act-btn{padding:5px 10px;border-radius:4px;font-size:.65rem;font-weight:700;cursor:pointer;border:none;font-family:'Noto Sans JP',sans-serif;transition:opacity .13s;white-space:nowrap;}
+.act-btn:hover{opacity:.8;}
+.act-edit{background:rgba(59,130,246,.18);color:var(--blu);}
+.act-del{background:rgba(239,68,68,.18);color:var(--red);}
+.act-approve{background:rgba(34,197,94,.18);color:var(--grn);}
+.act-reject{background:rgba(239,68,68,.18);color:var(--red);}
+.empty-row td{text-align:center;padding:40px;color:var(--md);font-size:.82rem;}
+
+/* DRAG */
+.drag-handle{cursor:grab;color:var(--lt);font-size:1.1rem;padding:0 4px;user-select:none;}
+.drag-handle:active{cursor:grabbing;}
+tr.dragging{opacity:.35;}
+tr.drag-over td{border-top:2px solid var(--or)!important;}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;transform:translateY(16px);transition:transform .2s;}
+.modal-bg.open .modal{transform:translateY(0);}
+.modal-head{padding:18px 22px 14px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1;}
+.modal-title{font-size:1rem;font-weight:900;}
+.modal-close{background:none;border:none;color:var(--md);cursor:pointer;font-size:1.1rem;padding:4px;}
+.modal-body{padding:18px 22px;}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:var(--bg2);}
+.mf{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+.mf:last-child{margin-bottom:0;}
+.mf label{font-size:.68rem;font-weight:700;color:var(--md);letter-spacing:.5px;}
+.mf label.req::after{content:' *';color:var(--red);}
+.mf input,.mf select,.mf textarea{background:var(--bg3);border:1.5px solid var(--bd);color:#e8e8f0;padding:10px 12px;border-radius:6px;font-size:.85rem;font-family:'Noto Sans JP',sans-serif;outline:none;transition:border-color .13s;width:100%;}
+.mf input:focus,.mf select:focus,.mf textarea:focus{border-color:var(--or);}
+.mf textarea{resize:vertical;min-height:80px;}
+.mf select option{background:var(--bg3);}
+.row2m{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-cancel{background:var(--bg3);color:var(--md);border:1px solid var(--bd);padding:10px 20px;border-radius:6px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.btn-save{background:var(--or);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:.82rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:opacity .13s;}
+.btn-save:hover{opacity:.88;}
+.features-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.fcb{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1.5px solid var(--bd);border-radius:16px;cursor:pointer;font-size:.7rem;color:#e8e8f0;transition:all .12s;}
+.fcb.on{border-color:var(--or);background:rgba(255,107,0,.1);color:var(--or);}
+.detail-row{display:flex;padding:10px 0;border-bottom:1px solid var(--bd);}
+.detail-row:last-child{border-bottom:none;}
+.detail-lbl{font-size:.7rem;color:var(--md);font-weight:700;width:110px;flex-shrink:0;padding-top:2px;}
+.detail-val{font-size:.82rem;color:#e8e8f0;flex:1;word-break:break-all;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--bg2);border:1px solid var(--bd);border-left:4px solid var(--grn);padding:13px 20px;border-radius:8px;font-size:.82rem;font-weight:700;transform:translateX(130%);transition:transform .25s;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.toast.show{transform:translateX(0);}
+.toast.err{border-left-color:var(--red);}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">Tiara</div>
+    <div class="login-sub">ADMIN DASHBOARD</div>
+    <div class="lf">
+      <label>メールアドレス</label>
+      <input type="email" id="loginEmail" placeholder="admin@example.com">
+    </div>
+    <div class="lf">
+      <label>パスワード</label>
+      <input type="password" id="loginPass" placeholder="パスワード" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">ログイン</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPage">
+  <div class="adm-wrap">
+    <aside class="adm-side">
+      <div class="adm-logo">Tiara <small>ADMIN PANEL</small></div>
+      <nav class="adm-nav">
+        <div class="anav-item on" onclick="showTab('stores',this)"><span class="anav-ico">🏪</span> 店舗管理</div>
+        <div class="anav-item" onclick="showTab('requests',this)"><span class="anav-ico">📋</span> 掲載申請<span class="req-cnt" id="reqCnt"></span></div>
+        <div class="anav-item" onclick="showTab('applications',this)"><span class="anav-ico">💌</span> 体入応募</div>
+      </nav>
+      <div class="adm-user" id="adminEmail"></div>
+      <div class="adm-logout" onclick="doLogout()">🚪 ログアウト</div>
+    </aside>
+
+    <main class="adm-main">
+
+      <!-- STORES -->
+      <div class="tab-content on" id="tab-stores">
+        <div class="adm-header">
+          <div class="adm-title">店舗管理 <span id="storeCntLbl"></span></div>
+          <button class="add-btn" onclick="openStoreModal()">＋ 店舗を追加</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="sc-lbl">総店舗数</div><div class="sc-val or" id="sCnt">—</div><div class="sc-sub">件</div></div>
+          <div class="stat-card"><div class="sc-lbl">公開中</div><div class="sc-val grn" id="sActive">—</div><div class="sc-sub">件</div></div>
+          <div class="stat-card"><div class="sc-lbl">プレミアム</div><div class="sc-val or" id="sPrem">—</div><div class="sc-sub">件</div></div>
+          <div class="stat-card"><div class="sc-lbl">平均時給</div><div class="sc-val" id="sAvg">—</div><div class="sc-sub">円</div></div>
+        </div>
+        <div class="tbl-wrap">
+          <div class="tbl-head">
+            <input class="tbl-search" type="text" placeholder="店舗名で検索..." oninput="filterStores(this.value)">
+            <span style="font-size:.7rem;color:var(--md);">☰ ドラッグで表示順を変更</span>
+          </div>
+          <table>
+            <thead><tr><th style="width:36px"></th><th style="width:40px">順位</th><th>店舗名</th><th>業種</th><th>時給</th><th>プラン</th><th>ステータス</th><th>操作</th></tr></thead>
+            <tbody id="storesTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REQUESTS -->
+      <div class="tab-content" id="tab-requests">
+        <div class="adm-header"><div class="adm-title">掲載申請一覧</div></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>店舗名</th><th>業種</th><th>担当者 / メール</th><th>プラン</th><th>申請日</th><th>ステータス</th><th>操作</th></tr></thead>
+            <tbody id="requestsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- APPLICATIONS -->
+      <div class="tab-content" id="tab-applications">
+        <div class="adm-header"><div class="adm-title">体入応募一覧</div></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>店舗名</th><th>お名前</th><th>年齢</th><th>経験</th><th>連絡先</th><th>希望日時</th><th>応募日</th><th>詳細</th></tr></thead>
+            <tbody id="applicationsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- STORE MODAL -->
+<div class="modal-bg" id="storeModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="storeModalTitle">店舗を追加</div>
+      <button class="modal-close" onclick="closeModal('storeModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editStoreId">
+      <div class="mf"><label class="req">店舗名</label><input type="text" id="mName" placeholder="例：Club Magnolia"></div>
+      <div class="row2m">
+        <div class="mf"><label class="req">業種</label>
+          <select id="mGenre"><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option><option>スナック</option><option>ガールズバー</option><option>バー</option></select>
+        </div>
+        <div class="mf"><label>プラン</label>
+          <select id="mPlan"><option value="light">ライト</option><option value="standard" selected>スタンダード</option><option value="premium">プレミアム</option></select>
+        </div>
+      </div>
+      <div class="mf"><label>住所</label><input type="text" id="mAddress" placeholder="東京都墨田区錦糸町X-X-X"></div>
+      <div class="row2m">
+        <div class="mf"><label>最低時給</label><input type="number" id="mPayMin" placeholder="4000"></div>
+        <div class="mf"><label>最高時給</label><input type="number" id="mPayMax" placeholder="10000"></div>
+      </div>
+      <div class="row2m">
+        <div class="mf"><label>営業開始</label><input type="time" id="mOpen" value="20:00"></div>
+        <div class="mf"><label>営業終了</label><input type="time" id="mClose" value="04:00"></div>
+      </div>
+      <div class="mf"><label>店舗PR</label><textarea id="mDesc" placeholder="雰囲気・待遇など自由に記入"></textarea></div>
+      <div class="mf"><label>連絡先メール</label><input type="email" id="mEmail" placeholder="store@example.com"></div>
+      <div class="mf"><label>特典・条件</label><div class="features-grid" id="featGrid"></div></div>
+      <div class="row2m">
+        <div class="mf"><label>ステータス</label><select id="mStatus"><option value="active">公開中</option><option value="inactive">非公開</option></select></div>
+        <div class="mf"><label>急募</label><select id="mUrgent"><option value="false">なし</option><option value="true">急募にする</option></select></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('storeModal')">キャンセル</button>
+      <button class="btn-save" onclick="saveStore()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- REQUEST DETAIL MODAL -->
+<div class="modal-bg" id="reqModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">掲載申請 詳細</div><button class="modal-close" onclick="closeModal('reqModal')">✕</button></div>
+    <div class="modal-body"><div id="reqDetailBody"></div></div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal('reqModal')">閉じる</button>
+      <button class="act-btn act-reject" style="padding:10px 18px;font-size:.8rem;" id="reqRejectBtn">却下</button>
+      <button class="act-btn act-approve" style="padding:10px 18px;font-size:.8rem;" id="reqApproveBtn">✓ 承認して掲載</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP DETAIL MODAL -->
+<div class="modal-bg" id="appModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">応募詳細</div><button class="modal-close" onclick="closeModal('appModal')">✕</button></div>
+    <div class="modal-body"><div id="appDetailBody"></div></div>
+    <div class="modal-foot"><button class="btn-cancel" onclick="closeModal('appModal')">閉じる</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://ljvovzmjqesspzikglna.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+const FEATS = ['体験入店OK','日払いOK','週1〜OK','未経験歓迎','掛け持ちOK','送迎あり','寮完備','ドレス貸出','ノルマなし'];
+
+let allStores = [];
+let dragIdx = null;
+
+// ── AUTH ──
+sb.auth.onAuthStateChange((event, session) => {
+  if (session) initAdmin(session.user);
+  else { document.getElementById('adminPage').style.display='none'; document.getElementById('loginPage').style.display='flex'; }
+});
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) errEl.textContent = 'ログイン失敗：' + error.message;
+}
+
+async function doLogout() { await sb.auth.signOut(); }
+
+function initAdmin(user) {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('adminPage').style.display = 'block';
+  document.getElementById('adminEmail').textContent = '👤 ' + user.email;
+  loadAll();
+}
+
+// ── DATA ──
+async function loadAll() { await Promise.all([loadStores(), loadRequests(), loadApplications()]); }
+
+async function loadStores() {
+  const { data } = await sb.from('stores').select('*').order('sort_order',{ascending:true,nullsFirst:false}).order('created_at',{ascending:false});
+  allStores = data || [];
+  renderStores(allStores);
+  updateStats();
+}
+
+async function loadRequests() {
+  const { data } = await sb.from('listing_requests').select('*').order('created_at',{ascending:false});
+  const rows = data || [];
+  const pending = rows.filter(r=>r.status==='pending').length;
+  const badge = document.getElementById('reqCnt');
+  badge.textContent = pending; badge.style.display = pending > 0 ? 'inline' : 'none';
+  renderRequests(rows);
+}
+
+async function loadApplications() {
+  const { data } = await sb.from('applications').select('*').order('created_at',{ascending:false});
+  renderApplications(data || []);
+}
+
+function updateStats() {
+  document.getElementById('sCnt').textContent = allStores.length;
+  document.getElementById('sActive').textContent = allStores.filter(s=>s.status==='active').length;
+  document.getElementById('sPrem').textContent = allStores.filter(s=>s.plan==='premium').length;
+  const pays = allStores.filter(s=>s.hourly_min).map(s=>+s.hourly_min);
+  const avg = pays.length ? Math.round(pays.reduce((a,b)=>a+b,0)/pays.length) : 0;
+  document.getElementById('sAvg').textContent = avg ? '¥'+avg.toLocaleString() : '—';
+}
+
+// ── STORES ──
+function renderStores(stores) {
+  document.getElementById('storeCntLbl').textContent = `（${stores.length}件）`;
+  const tbody = document.getElementById('storesTbody');
+  if (!stores.length) { tbody.innerHTML='<tr class="empty-row"><td colspan="8">店舗がありません</td></tr>'; return; }
+  tbody.innerHTML = stores.map((s,i) => `
+    <tr draggable="true" data-id="${s.id}" data-idx="${i}"
+      ondragstart="onDragStart(event,${i})" ondragover="onDragOver(event)"
+      ondrop="onDrop(event,${i})" ondragleave="onDragLeave(event)" ondragend="onDragEnd(event)">
+      <td><span class="drag-handle">☰</span></td>
+      <td style="color:var(--or);font-weight:900;font-size:.9rem;">${i+1}</td>
+      <td>
+        <strong style="color:#e8e8f0">${s.name}</strong>
+        ${s.is_urgent?'<span class="badge" style="background:rgba(239,68,68,.15);color:var(--red);margin-left:6px">🔥急募</span>':''}
+        <div style="font-size:.63rem;color:var(--md);margin-top:2px">${s.address||''}</div>
+      </td>
+      <td>${s.genre||'—'}</td>
+      <td style="color:var(--or);font-weight:700">${s.hourly_min?'¥'+Number(s.hourly_min).toLocaleString():'—'}${s.hourly_max?'〜¥'+Number(s.hourly_max).toLocaleString():''}</td>
+      <td><span class="badge b-${s.plan||'light'}">${planLbl(s.plan)}</span></td>
+      <td><span class="badge b-${s.status||'inactive'}">${s.status==='active'?'公開中':'非公開'}</span></td>
+      <td><div class="act-btns">
+        <button class="act-btn act-edit" onclick="openStoreModal('${s.id}')">編集</button>
+        <button class="act-btn act-del" onclick="delStore('${s.id}','${s.name.replace(/'/g,"\\'")}')">削除</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function filterStores(q) { renderStores(q ? allStores.filter(s=>s.name?.includes(q)||s.genre?.includes(q)) : allStores); }
+function planLbl(p) { return {premium:'プレミアム',standard:'スタンダード',light:'ライト'}[p]||p||'—'; }
+
+// ── DRAG ──
+function onDragStart(e,idx) { dragIdx=idx; e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
+function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onDragEnd(e) { e.currentTarget.classList.remove('dragging'); }
+async function onDrop(e,targetIdx) {
+  e.currentTarget.classList.remove('drag-over');
+  if (dragIdx===null || dragIdx===targetIdx) return;
+  const moved = allStores.splice(dragIdx,1)[0];
+  allStores.splice(targetIdx,0,moved);
+  dragIdx=null;
+  renderStores(allStores);
+  await Promise.all(allStores.map((s,i)=>sb.from('stores').update({sort_order:i+1}).eq('id',s.id)));
+  showToast('並び順を保存しました ✓');
+}
+
+// ── STORE MODAL ──
+function openStoreModal(id) {
+  const fg = document.getElementById('featGrid');
+  fg.innerHTML = FEATS.map(f=>`<div class="fcb" onclick="this.classList.toggle('on')" data-feat="${f}">${f}</div>`).join('');
+  if (id) {
+    const s = allStores.find(x=>x.id===id);
+    if (!s) return;
+    document.getElementById('storeModalTitle').textContent = '店舗を編集';
+    document.getElementById('editStoreId').value = s.id;
+    document.getElementById('mName').value    = s.name||'';
+    document.getElementById('mGenre').value   = s.genre||'キャバクラ';
+    document.getElementById('mPlan').value    = s.plan||'standard';
+    document.getElementById('mAddress').value = s.address||'';
+    document.getElementById('mPayMin').value  = s.hourly_min||'';
+    document.getElementById('mPayMax').value  = s.hourly_max||'';
+    document.getElementById('mOpen').value    = s.open_time||'20:00';
+    document.getElementById('mClose').value   = s.close_time||'04:00';
+    document.getElementById('mDesc').value    = s.description||'';
+    document.getElementById('mEmail').value   = s.contact_email||'';
+    document.getElementById('mStatus').value  = s.status||'active';
+    document.getElementById('mUrgent').value  = s.is_urgent?'true':'false';
+    const feats = s.features||[];
+    fg.querySelectorAll('.fcb').forEach(el=>{ if(feats.includes(el.dataset.feat)) el.classList.add('on'); });
+  } else {
+    document.getElementById('storeModalTitle').textContent = '店舗を追加';
+    document.getElementById('editStoreId').value = '';
+    ['mName','mAddress','mPayMin','mPayMax','mDesc','mEmail'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('mStatus').value = 'active';
+    document.getElementById('mUrgent').value = 'false';
+  }
+  document.getElementById('storeModal').classList.add('open');
+}
+
+async function saveStore() {
+  const name = document.getElementById('mName').value.trim();
+  if (!name) { showToast('店舗名を入力してください',true); return; }
+  const features = [...document.querySelectorAll('#featGrid .fcb.on')].map(el=>el.dataset.feat);
+  const payload = {
+    name, genre:document.getElementById('mGenre').value,
+    plan:document.getElementById('mPlan').value,
+    address:document.getElementById('mAddress').value,
+    hourly_min:+document.getElementById('mPayMin').value||null,
+    hourly_max:+document.getElementById('mPayMax').value||null,
+    open_time:document.getElementById('mOpen').value,
+    close_time:document.getElementById('mClose').value,
+    description:document.getElementById('mDesc').value,
+    contact_email:document.getElementById('mEmail').value,
+    features, status:document.getElementById('mStatus').value,
+    is_urgent:document.getElementById('mUrgent').value==='true',
+    is_new:!document.getElementById('editStoreId').value,
+  };
+  const id = document.getElementById('editStoreId').value;
+  const { error } = id ? await sb.from('stores').update(payload).eq('id',id) : await sb.from('stores').insert(payload);
+  if (error) { showToast('保存に失敗：'+error.message,true); return; }
+  showToast(id?'店舗を更新しました ✓':'店舗を追加しました ✓');
+  closeModal('storeModal');
+  loadStores();
+}
+
+async function delStore(id,name) {
+  if (!confirm(`「${name}」を削除しますか？`)) return;
+  await sb.from('stores').delete().eq('id',id);
+  showToast('削除しました');
+  loadStores();
+}
+
+// ── REQUESTS ──
+function renderRequests(rows) {
+  const tbody = document.getElementById('requestsTbody');
+  if (!rows.length) { tbody.innerHTML='<tr class="empty-row"><td colspan="7">申請がありません</td></tr>'; return; }
+  tbody.innerHTML = rows.map(r=>`
+    <tr>
+      <td><strong style="color:#e8e8f0">${r.store_name||'—'}</strong></td>
+      <td>${r.genre||'—'}</td>
+      <td>${r.manager_name||'—'}<div style="font-size:.63rem;color:var(--md)">${r.contact_email||''}</div></td>
+      <td><span class="badge b-${r.plan||'light'}">${planLbl(r.plan)}</span></td>
+      <td style="font-size:.7rem;color:var(--md)">${r.created_at?new Date(r.created_at).toLocaleDateString('ja-JP'):'—'}</td>
+      <td><span class="badge b-${r.status==='pending'?'pending':r.status==='approved'?'approved':'rejected'}">${{pending:'審査中',approved:'承認済',rejected:'却下'}[r.status]||r.status}</span></td>
+      <td><div class="act-btns">
+        <button class="act-btn act-edit" onclick='openReqDetail(${JSON.stringify(r).replace(/\\/g,"\\\\").replace(/'/g,"&#39;")})'>詳細</button>
+        ${r.status==='pending'?`
+          <button class="act-btn act-approve" onclick='approveReq(${JSON.stringify(r).replace(/\\/g,"\\\\").replace(/'/g,"&#39;")})'>承認</button>
+          <button class="act-btn act-reject" onclick="rejectReq('${r.id}')">却下</button>
+        `:''}
+      </div></td>
+    </tr>`).join('');
+}
+
+function openReqDetail(r) {
+  const fields=[['店舗名',r.store_name],['業種',r.genre],['住所',r.address],
+    ['時給','¥'+(r.hourly_min||'—')+'〜¥'+(r.hourly_max||'—')],
+    ['営業時間',(r.open_time||'')+'〜'+(r.close_time||'')],
+    ['特典',Array.isArray(r.features)?r.features.join('、'):r.features||'—'],
+    ['担当者',r.manager_name],['電話',r.phone],['メール',r.contact_email],
+    ['LINE',r.line_id],['プラン',planLbl(r.plan)],
+    ['申請日',r.created_at?new Date(r.created_at).toLocaleString('ja-JP'):'—']];
+  document.getElementById('reqDetailBody').innerHTML = fields.map(([l,v])=>`
+    <div class="detail-row"><div class="detail-lbl">${l}</div><div class="detail-val">${v||'—'}</div></div>`).join('');
+  const ab=document.getElementById('reqApproveBtn'), rb=document.getElementById('reqRejectBtn');
+  if (r.status==='pending') {
+    ab.style.display=''; rb.style.display='';
+    ab.onclick=()=>{approveReq(r);closeModal('reqModal');};
+    rb.onclick=()=>{rejectReq(r.id);closeModal('reqModal');};
+  } else { ab.style.display='none'; rb.style.display='none'; }
+  document.getElementById('reqModal').classList.add('open');
+}
+
+async function approveReq(r) {
+  await sb.from('listing_requests').update({status:'approved'}).eq('id',r.id);
+  await sb.from('stores').insert({
+    name:r.store_name, genre:r.genre, address:r.address,
+    description:r.description, hourly_min:r.hourly_min, hourly_max:r.hourly_max,
+    open_time:r.open_time, close_time:r.close_time, features:r.features,
+    contact_email:r.contact_email, plan:r.plan||'standard', status:'active', is_new:true,
+  });
+  showToast('承認して店舗に追加しました ✓');
+  loadAll();
+}
+
+async function rejectReq(id) {
+  await sb.from('listing_requests').update({status:'rejected'}).eq('id',id);
+  showToast('却下しました');
+  loadRequests();
+}
+
+// ── APPLICATIONS ──
+function renderApplications(rows) {
+  const tbody = document.getElementById('applicationsTbody');
+  if (!rows.length) { tbody.innerHTML='<tr class="empty-row"><td colspan="8">応募がありません</td></tr>'; return; }
+  tbody.innerHTML = rows.map(a=>`
+    <tr>
+      <td><strong style="color:#e8e8f0">${a.store_name||'—'}</strong></td>
+      <td>${a.applicant_name||a.name||'—'}</td>
+      <td>${a.age||'—'}</td>
+      <td>${a.experience||'—'}</td>
+      <td style="font-size:.75rem">${a.contact||'—'}</td>
+      <td style="font-size:.75rem">${a.preferred_date||a.date||'—'}</td>
+      <td style="font-size:.7rem;color:var(--md)">${a.created_at?new Date(a.created_at).toLocaleDateString('ja-JP'):'—'}</td>
+      <td><button class="act-btn act-edit" onclick='openAppDetail(${JSON.stringify(a).replace(/\\/g,"\\\\").replace(/'/g,"&#39;")})'>詳細</button></td>
+    </tr>`).join('');
+}
+
+function openAppDetail(a) {
+  const fields=[['店舗名',a.store_name],['業種',a.genre],['時給',a.pay],
+    ['お名前',a.applicant_name||a.name],['年齢',a.age],['経験',a.experience],
+    ['連絡先',a.contact],['希望日時',a.preferred_date||a.date],
+    ['応募日',a.created_at?new Date(a.created_at).toLocaleString('ja-JP'):'—']];
+  document.getElementById('appDetailBody').innerHTML = fields.map(([l,v])=>`
+    <div class="detail-row"><div class="detail-lbl">${l}</div><div class="detail-val">${v||'—'}</div></div>`).join('');
+  document.getElementById('appModal').classList.add('open');
+}
+
+// ── UTILS ──
+function showTab(name,el) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.anav-item').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  el.classList.add('on');
+  if(name==='requests') loadRequests();
+  if(name==='applications') loadApplications();
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function showToast(msg,err=false) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show'+(err?' err':'');
+  setTimeout(()=>t.className='toast',3000);
+}
+</script>
+</body>
+</html>
