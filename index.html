@@ -629,7 +629,7 @@ async function ownerSend(btn){
   if(!storeName){alert('店舗名を入力してください');btn.textContent='掲載申請を送信する →';btn.disabled=false;return;}
   if(!ownerEmail){alert('メールアドレスを入力してください');btn.textContent='掲載申請を送信する →';btn.disabled=false;return;}
   try{
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/listing_requests`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},body:JSON.stringify({store_name:storeName,genre,address,description:pr,hourly_min:payMin?Number(payMin.replace(/[^0-9]/g,'')):null,hourly_max:payMax?Number(payMax.replace(/[^0-9]/g,'')):null,open_time:openTime,close_time:closeTime,features:featuresArr,manager_name:managerName,owner_name:managerName,phone:tel,contact_email:ownerEmail,owner_email:ownerEmail,line_id:lineId,plan:planName,status:'pending'})});
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/listing_requests`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},body:JSON.stringify({store_name:storeName,genre,address,pr_text:pr,min_wage:payMin?Number(payMin.replace(/[^0-9]/g,'')):null,max_wage:payMax?Number(payMax.replace(/[^0-9]/g,'')):null,opening_time:openTime,closing_time:closeTime,features:featuresArr,owner_name:managerName,owner_email:ownerEmail,phone:tel,plan:planName,status:'pending'})});
     if(!res.ok){const e=await res.text();console.error('400 error:',e);}
   }catch(e){console.error(e);}
   btn.textContent='✓ 申請受付完了！2営業日以内にご連絡します';btn.style.background='#2e7d32';
@@ -658,5 +658,3 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 </body>
 </html>
-完了
-GitHubで index.html を開いて、全選択（Cmd+A）→ 上のコードを全部貼り付け → Commit してください！
