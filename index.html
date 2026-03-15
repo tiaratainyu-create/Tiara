@@ -611,11 +611,27 @@ function selPlan(c,n,p){document.querySelectorAll('.pc').forEach(x=>x.classList.
 
 async function ownerSend(btn){
   btn.textContent='送信中...';btn.disabled=true;
-  const fields=document.querySelectorAll('#pg-owner .fi');
-  const storeName=fields[0]?.value||'',genre=fields[1]?.value||'',address=fields[2]?.value||'',pr=fields[3]?.value||'',payMin=fields[4]?.value||'',payMax=fields[5]?.value||'',openTime=fields[6]?.value||'',closeTime=fields[7]?.value||'',managerName=fields[8]?.value||'',tel=fields[9]?.value||'',ownerEmail=fields[10]?.value||'',lineId=fields[11]?.value||'';
+  const storeName=document.querySelector('#pg-owner input[placeholder*="Magnolia"]')?.value||'';
+  const genre=document.querySelector('#pg-owner select.fi')?.value||'';
+  const address=document.querySelector('#pg-owner input[placeholder*="錦糸"]')?.value||'';
+  const pr=document.querySelector('#pg-owner textarea.fi')?.value||'';
+  const payMin=document.querySelector('#pg-owner input[placeholder*="4,000"]')?.value||document.querySelector('#pg-owner input[placeholder*="4000"]')?.value||'';
+  const payMax=document.querySelector('#pg-owner input[placeholder*="10,000"]')?.value||document.querySelector('#pg-owner input[placeholder*="10000"]')?.value||'';
+  const times=document.querySelectorAll('#pg-owner input[type="time"]');
+  const openTime=times[0]?.value||'';
+  const closeTime=times[1]?.value||'';
+  const managerName=document.querySelector('#pg-owner input[placeholder*="花子"]')?.value||'';
+  const tel=document.querySelector('#pg-owner input[type="tel"]')?.value||'';
+  const ownerEmail=document.querySelector('#pg-owner input[type="email"]')?.value||'';
+  const lineId=document.querySelector('#pg-owner input[placeholder*="@store"]')?.value||'';
   const planName=document.getElementById('pb-name')?.textContent||'';
   const featuresArr=[...document.querySelectorAll('#pg-owner .cbi input:checked')].map(cb=>cb.parentElement.textContent.trim());
-  try{await fetch(`${SUPABASE_URL}/rest/v1/listing_requests`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},body:JSON.stringify({store_name:storeName,genre,address,description:pr,hourly_min:payMin?Number(payMin.replace(/[^0-9]/g,'')):null,hourly_max:payMax?Number(payMax.replace(/[^0-9]/g,'')):null,open_time:openTime,close_time:closeTime,features:featuresArr,manager_name:managerName,phone:tel,contact_email:ownerEmail,owner_email:ownerEmail,line_id:lineId,plan:planName,status:'pending'})});}catch(e){console.error(e);}
+  if(!storeName){alert('店舗名を入力してください');btn.textContent='掲載申請を送信する →';btn.disabled=false;return;}
+  if(!ownerEmail){alert('メールアドレスを入力してください');btn.textContent='掲載申請を送信する →';btn.disabled=false;return;}
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/listing_requests`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},body:JSON.stringify({store_name:storeName,genre,address,description:pr,hourly_min:payMin?Number(payMin.replace(/[^0-9]/g,'')):null,hourly_max:payMax?Number(payMax.replace(/[^0-9]/g,'')):null,open_time:openTime,close_time:closeTime,features:featuresArr,manager_name:managerName,owner_name:managerName,phone:tel,contact_email:ownerEmail,owner_email:ownerEmail,line_id:lineId,plan:planName,status:'pending'})});
+    if(!res.ok){const e=await res.text();console.error('400 error:',e);}
+  }catch(e){console.error(e);}
   btn.textContent='✓ 申請受付完了！2営業日以内にご連絡します';btn.style.background='#2e7d32';
 }
 
@@ -642,3 +658,5 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 </body>
 </html>
+完了
+GitHubで index.html を開いて、全選択（Cmd+A）→ 上のコードを全部貼り付け → Commit してください！
