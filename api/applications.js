@@ -1,22 +1,21 @@
-import { createClient } from '@supabase/supabase-js';
-
+const { createClient } = require('@supabase/supabase-js');
+ 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
-
-export default async function handler(req, res) {
+ 
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
+ 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
+ 
   try {
     const data = req.body;
-
-    // applicationsテーブルに保存
+ 
     const { error: dbError } = await supabase.from('applications').insert([{
       store_id: data.store_id,
       store_name: data.store_name,
@@ -29,13 +28,11 @@ export default async function handler(req, res) {
       pay: data.pay,
       owner_email: data.owner_email,
     }]);
-
+ 
     if (dbError) {
       console.error('DB error:', dbError);
-      // DBエラーでもメール送信は続行
     }
-
-    // send-email Edge Functionを呼び出し
+ 
     const emailRes = await fetch(
       `${process.env.SUPABASE_URL}/functions/v1/send-email`,
       {
@@ -60,17 +57,17 @@ export default async function handler(req, res) {
         }),
       }
     );
-
+ 
     if (!emailRes.ok) {
       const errText = await emailRes.text();
       console.error('Email error:', errText);
-      return res.status(500).json({ error: 'メール送信に失敗しました' });
     }
-
+ 
     return res.status(200).json({ ok: true });
-
+ 
   } catch (e) {
     console.error('Handler error:', e);
     return res.status(500).json({ error: e.message });
   }
-}
+};
+ 
