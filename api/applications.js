@@ -33,13 +33,14 @@ module.exports = async (req, res) => {
       console.error('DB error:', dbError);
     }
  
+    // ANON KEYでEdge Functionを呼ぶ
     const emailRes = await fetch(
       `${process.env.SUPABASE_URL}/functions/v1/send-email`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({
           type: 'apply',
@@ -58,10 +59,8 @@ module.exports = async (req, res) => {
       }
     );
  
-    if (!emailRes.ok) {
-      const errText = await emailRes.text();
-      console.error('Email error:', errText);
-    }
+    const emailResult = await emailRes.text();
+    console.log('Email result:', emailRes.status, emailResult);
  
     return res.status(200).json({ ok: true });
  
