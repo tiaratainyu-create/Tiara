@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiara オーナーページ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans JP',sans-serif;background:#f0f2f5;color:#222;min-height:100vh;}
+:root{--or:#ff6b00;--or3:#fff3e8;--wh:#fff;--bd:#e5e8ef;--dk:#1a1a2e;--md:#6b7280;--lt:#9ca3af;--red:#e53935;--grn:#22c55e;--blu:#3b82f6;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#1a1a2e,#2d3561);}
+.login-box{background:#fff;border-radius:14px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
+.login-top{background:linear-gradient(135deg,var(--or),#ff9100);padding:28px;text-align:center;}
+.login-top h1{font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:3px;}
+.login-top p{font-size:.7rem;color:rgba(255,255,255,.8);}
+.login-body{padding:24px 28px;}
+.l-tabs{display:flex;border-bottom:2px solid #f0f0f0;margin-bottom:18px;}
+.l-tab{flex:1;padding:10px;font-size:.82rem;font-weight:700;background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.l-tab.on{color:var(--or);border-bottom:2px solid var(--or);margin-bottom:-2px;}
+.l-tab:not(.on){color:var(--lt);}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+.fl{font-size:.72rem;font-weight:700;color:#555;}
+.fi{padding:11px 13px;border:1.5px solid var(--bd);border-radius:8px;font-size:.88rem;color:#222;outline:none;font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .13s;}
+.fi:focus{border-color:var(--or);}
+.err-box{display:none;font-size:.73rem;color:var(--red);background:#fee2e2;border-radius:6px;padding:8px 12px;margin-bottom:12px;}
+.err-box.show{display:block;}
+.submit-btn{width:100%;background:var(--or);color:#fff;border:none;padding:13px;border-radius:8px;font-size:.92rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 14px rgba(255,107,0,.3);transition:opacity .13s;margin-top:4px;}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;}
+
+/* SHELL */
+.shell{display:none;min-height:100vh;flex-direction:column;}
+.shell.open{display:flex;}
+
+/* HEADER */
+.hdr{height:56px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.06);position:sticky;top:0;z-index:100;}
+.hdr-logo{display:flex;align-items:center;gap:8px;}
+.hdr-ico{width:32px;height:32px;border-radius:8px;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:900;color:#fff;}
+.hdr-name{font-size:.82rem;font-weight:900;color:var(--dk);}
+.hdr-badge{font-size:.55rem;background:var(--or);color:#fff;padding:2px 7px;border-radius:3px;font-weight:700;}
+.hdr-title{font-size:.9rem;font-weight:900;color:var(--dk);flex:1;}
+.hdr-title small{font-size:.62rem;color:var(--lt);font-weight:400;margin-left:6px;}
+.hdr-exit{background:none;border:1.5px solid var(--bd);color:var(--md);font-size:.72rem;font-weight:700;padding:6px 12px;border-radius:6px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;white-space:nowrap;}
+.hdr-exit:hover{border-color:var(--red);color:var(--red);}
+.sb-toggle{background:none;border:none;font-size:1.2rem;color:var(--md);cursor:pointer;padding:4px;display:none;}
+
+/* BODY */
+.body{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:210px;background:var(--dk);flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto;transition:transform .25s;}
+.sb-sec{padding:8px 10px 3px;}
+.sb-lbl{font-size:.55rem;color:rgba(255,255,255,.25);letter-spacing:3px;padding:0 8px;margin-bottom:3px;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;color:rgba(255,255,255,.5);font-size:.78rem;font-weight:500;border:none;background:transparent;width:100%;text-align:left;font-family:'Noto Sans JP',sans-serif;transition:all .12s;white-space:nowrap;}
+.sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);}
+.sb-item.on{background:rgba(255,107,0,.15);color:#ff8c33;}
+.sb-ico{font-size:.95rem;width:16px;text-align:center;flex-shrink:0;}
+.sb-bdg{margin-left:auto;font-size:.57rem;font-weight:900;padding:2px 6px;border-radius:8px;background:var(--red);color:#fff;}
+.sb-foot{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.07);}
+.sb-user{display:flex;align-items:center;gap:9px;padding:6px 8px;}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:var(--or);color:#fff;font-size:.78rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-uname{font-size:.74rem;font-weight:700;color:#fff;}
+.sb-urole{font-size:.58rem;color:rgba(255,255,255,.3);}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:22px;}
+.pg{display:none;}
+.pg.on{display:block;animation:pgIn .2s ease;}
+@keyframes pgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kc-or::before{background:var(--or);}
+.kc-gr::before{background:var(--grn);}
+.kc-bl::before{background:var(--blu);}
+.kc-re::before{background:var(--red);}
+.kpi-lbl{font-size:.66rem;color:var(--md);font-weight:700;margin-bottom:7px;}
+.kpi-num{font-size:1.7rem;font-weight:900;color:var(--dk);line-height:1;margin-bottom:4px;}
+.kpi-sub{font-size:.68rem;color:var(--lt);}
+.kpi-ico{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.8rem;opacity:.1;}
+
+/* SBOX */
+.sbox{background:#fff;border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:18px;}
+.sbox:last-child{margin-bottom:0;}
+.shead{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bd);background:#fafbfc;}
+.stitle{font-size:.82rem;font-weight:900;color:var(--dk);display:flex;align-items:center;gap:7px;}
+.stitle::before{content:'';width:3px;height:13px;background:var(--or);border-radius:2px;flex-shrink:0;}
+.saction{font-size:.7rem;color:var(--or);cursor:pointer;font-weight:700;background:var(--or3);border:1px solid rgba(255,107,0,.2);padding:4px 11px;border-radius:5px;transition:all .13s;font-family:'Noto Sans JP',sans-serif;}
+.saction:hover{background:var(--or);color:#fff;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;font-size:.62rem;font-weight:700;color:var(--lt);letter-spacing:1px;padding:9px 14px;border-bottom:1.5px solid var(--bd);background:#fafbfc;white-space:nowrap;}
+.tbl td{padding:10px 14px;border-bottom:1px solid var(--bd);font-size:.78rem;color:#333;vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:#fafbfc;}
+.td-main{font-weight:700;}
+.td-sub{font-size:.66rem;color:var(--lt);margin-top:1px;}
+.abadge{display:inline-flex;align-items:center;gap:3px;font-size:.63rem;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.abadge::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.ab-on{background:#dcfce7;color:#15803d;}.ab-on::before{background:var(--grn);}
+.ab-rev{background:#fef9c3;color:#854d0e;}.ab-rev::before{background:#f59e0b;}
+.ab-off{background:#fee2e2;color:#991b1b;}.ab-off::before{background:var(--red);}
+.tacts{display:flex;gap:4px;}
+.tact{font-size:.64rem;font-weight:700;padding:4px 9px;border:1.5px solid var(--bd);border-radius:4px;cursor:pointer;background:#fff;color:var(--md);font-family:'Noto Sans JP',sans-serif;transition:all .11s;}
+.tact:hover{border-color:var(--or);color:var(--or);}
+.tact.ok{color:var(--grn);}.tact.ok:hover{border-color:var(--grn);background:#dcfce7;}
+.tact.danger{color:var(--red);}.tact.danger:hover{border-color:var(--red);background:#fee2e2;}
+
+/* FORM */
+.form-grid{padding:18px;display:flex;flex-direction:column;gap:14px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-fg{display:flex;flex-direction:column;gap:4px;}
+.form-lbl{font-size:.72rem;font-weight:700;color:#555;}
+.form-lbl.req::after{content:' *';color:var(--red);}
+.form-fi{padding:10px 12px;border:1.5px solid var(--bd);border-radius:7px;font-size:.86rem;color:#222;outline:none;font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .13s;}
+.form-fi:focus{border-color:var(--or);}
+textarea.form-fi{resize:vertical;min-height:80px;}
+select.form-fi{appearance:none;cursor:pointer;}
+.cb-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.cbi{display:flex;align-items:center;gap:6px;padding:6px 11px;border:1.5px solid var(--bd);border-radius:20px;cursor:pointer;font-size:.73rem;color:var(--dk);transition:all .12s;font-weight:500;}
+.cbi:has(input:checked){border-color:var(--or);background:var(--or3);color:var(--or);}
+.cbi input{accent-color:var(--or);cursor:pointer;}
+.save-btn{background:var(--or);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:.88rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 3px 10px rgba(255,107,0,.3);transition:opacity .13s;}
+.save-btn:hover{opacity:.88;}
+
+/* PLANS */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px;}
+.plan-card{border:2px solid var(--bd);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s;position:relative;background:#fff;}
+.plan-card.sel{border-color:var(--or);background:var(--or3);}
+.plan-card.pop::after{content:'人気';position:absolute;top:-9px;right:12px;background:var(--or);color:#fff;font-size:.58rem;font-weight:900;padding:2px 10px;border-radius:3px;}
+.plan-ico{font-size:1.4rem;margin-bottom:8px;}
+.plan-name{font-size:.9rem;font-weight:900;color:var(--dk);margin-bottom:4px;}
+.plan-feats{font-size:.68rem;color:var(--md);line-height:1.7;margin-bottom:10px;}
+.plan-price{font-size:1.4rem;font-weight:900;color:var(--or);line-height:1;}
+.plan-per{font-size:.6rem;color:var(--lt);}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#f9f9f9;border-radius:8px;border:1px solid var(--bd);margin-bottom:7px;}
+.toggle-title{font-size:.82rem;font-weight:700;color:var(--dk);}
+.toggle-sub{font-size:.68rem;color:var(--lt);margin-top:1px;}
+.tog{position:relative;width:42px;height:22px;flex-shrink:0;cursor:pointer;}
+.tog input{opacity:0;width:0;height:0;}
+.tog-track{position:absolute;inset:0;border-radius:11px;background:#ccc;transition:.2s;}
+.tog input:checked+.tog-track{background:var(--or);}
+.tog-thumb{position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tog input:checked~.tog-thumb{transform:translateX(20px);}
+
+/* GUARANTEE */
+.guar-banner{background:linear-gradient(135deg,#1a1a2e,#2d3561);border-radius:10px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+
+/* STRIPE */
+#stripe-el{border:1.5px solid var(--bd);border-radius:8px;padding:13px 14px;background:#fff;}
+
+
+/* 写真スロット */
+.photo-slot{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;}
+.photo-placeholder{width:100%;height:100%;min-height:72px;background:#f4f4f4;border:2px dashed var(--bd);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;gap:2px;}
+.photo-placeholder:hover{border-color:var(--or);background:var(--or3);}
+.photo-slot img.preview{width:100%;height:100%;object-fit:cover;display:block;border-radius:6px;}
+.photo-slot .remove-btn{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;border:none;width:20px;height:20px;border-radius:50%;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--dk);color:#fff;padding:11px 16px;border-radius:8px;font-size:.78rem;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:9999;transform:translateY(70px);opacity:0;transition:all .28s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;gap:7px;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* OVERLAY */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;}
+.sb-overlay.show{display:block;}
+
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr);}.plan-grid{grid-template-columns:1fr;}}
+@media(max-width:680px){
+  .sidebar{position:fixed;top:56px;left:0;bottom:0;z-index:200;transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .sb-toggle{display:block;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .content{padding:12px;}
+  .row2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-top">
+      <div style="font-size:2rem;margin-bottom:8px;">🏪</div>
+      <h1>Tiara オーナーページ</h1>
+      <p>掲載店舗の管理・申込確認・お支払い</p>
+    </div>
+    <div class="login-body">
+      <div class="l-tabs">
+        <button class="l-tab on" id="lTabLogin" onclick="switchTab('login')">ログイン</button>
+        <button class="l-tab" id="lTabReg" onclick="switchTab('register')">新規登録</button>
+      </div>
+      <div class="err-box" id="loginErr"></div>
+      <div id="fLogin">
+        <div class="fg"><label class="fl">メールアドレス</label><input class="fi" id="lEmail" type="email" placeholder="owner@example.com"></div>
+        <div class="fg"><label class="fl">パスワード</label><input class="fi" id="lPw" type="password" placeholder="••••••••"></div>
+        <button class="submit-btn" id="loginBtn" onclick="doLogin()">ログイン →</button>
+        <div style="text-align:center;margin-top:12px;font-size:.7rem;color:var(--lt);"><a href="#" onclick="sendReset()" style="color:var(--or);">パスワードを忘れた方</a></div>
+      </div>
+      <div id="fReg" style="display:none;">
+        <div class="fg"><label class="fl">店舗名 *</label><input class="fi" id="rStore" type="text" placeholder="例：Club Magnolia"></div>
+        <div class="fg"><label class="fl">メールアドレス *</label><input class="fi" id="rEmail" type="email" placeholder="owner@example.com"></div>
+        <div class="fg"><label class="fl">パスワード * <span style="font-weight:400;color:var(--lt);font-size:.65rem;">(8文字以上)</span></label><input class="fi" id="rPw" type="password" placeholder="••••••••"></div>
+        <button class="submit-btn" id="regBtn" onclick="doRegister()">オーナー登録する →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div class="shell" id="shell">
+  <div class="hdr">
+    <button class="sb-toggle" onclick="toggleSb()">☰</button>
+    <div class="hdr-logo">
+      <div class="hdr-ico">🏪</div>
+      <div class="hdr-name" id="hdrName">マイページ</div>
+      <span class="hdr-badge">OWNER</span>
+    </div>
+    <div class="hdr-title" id="hdrTitle">ダッシュボード <small>概要</small></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+      <div style="font-size:.7rem;color:var(--lt);" id="hdrDate"></div>
+      <button class="hdr-exit" onclick="doLogout()">← ログアウト</button>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="sb-overlay" id="sbOverlay" onclick="closeSb()"></div>
+    <nav class="sidebar" id="sidebar">
+      <div class="sb-sec">
+        <div class="sb-lbl">店舗管理</div>
+        <button class="sb-item on" onclick="nav('dashboard',this)"><span class="sb-ico">📊</span>ダッシュボード</button>
+        <button class="sb-item" onclick="nav('applies',this)"><span class="sb-ico">📝</span>体入申込<span class="sb-bdg" id="sbBadge" style="display:none">0</span></button>
+        <button class="sb-item" onclick="nav('store',this)"><span class="sb-ico">✏️</span>店舗情報を編集</button>
+        <button class="sb-item" onclick="nav('schedule',this)"><span class="sb-ico">📅</span>定休日・受付設定</button>
+      </div>
+      <div class="sb-sec">
+        <div class="sb-lbl">アカウント</div>
+        <button class="sb-item" onclick="nav('plan',this)"><span class="sb-ico">📦</span>契約プラン・決済</button>
+        <button class="sb-item" onclick="nav('guarantee',this)"><span class="sb-ico">🛡️</span>応募ゼロ保証</button>
+        <button class="sb-item" onclick="nav('notify',this)"><span class="sb-ico">🔔</span>通知設定</button>
+      </div>
+      <div class="sb-foot">
+        <div class="sb-user">
+          <div class="sb-avatar" id="sbAv">M</div>
+          <div><div class="sb-uname" id="sbUname">—</div><div class="sb-urole">オーナー</div></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="content" id="contentArea">
+
+      <!-- DASHBOARD -->
+      <div class="pg on" id="pg-dashboard">
+        <div class="kpi-grid">
+          <div class="kpi kc-or"><div class="kpi-lbl">今月の体入申込</div><div class="kpi-num" id="kpiApps">—</div><div class="kpi-sub">件</div><div class="kpi-ico">📝</div></div>
+          <div class="kpi kc-gr"><div class="kpi-lbl">対応済み</div><div class="kpi-num" id="kpiDone">—</div><div class="kpi-sub">件</div><div class="kpi-ico">✅</div></div>
+          <div class="kpi kc-bl"><div class="kpi-lbl">未対応</div><div class="kpi-num" id="kpiPending" style="color:var(--red)">—</div><div class="kpi-sub">要対応</div><div class="kpi-ico">⚠️</div></div>
+          <div class="kpi kc-re"><div class="kpi-lbl">先月の申込</div><div class="kpi-num" id="kpiLast">—</div><div class="kpi-sub" id="kpiGuar"></div><div class="kpi-ico">🛡️</div></div>
+        </div>
+        <div class="guar-banner" id="guarBanner" style="display:none;">
+          <div>
+            <div style="font-size:.68rem;color:rgba(255,255,255,.5);margin-bottom:4px;">🎁 応募ゼロ保証 適用中</div>
+            <div style="font-size:.95rem;font-weight:900;color:#fff;">来月の月額費用が<span style="color:#fbbf24;"> 無料 </span>になります</div>
+            <div style="font-size:.68rem;color:rgba(255,255,255,.55);margin-top:3px;" id="guarDetail"></div>
+          </div>
+          <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:10px 16px;text-align:center;">
+            <div style="font-size:.6rem;color:rgba(255,255,255,.5);margin-bottom:2px;">来月請求額</div>
+            <div style="font-size:1.4rem;font-weight:900;color:#4ade80;">¥0</div>
+          </div>
+        </div>
+        <div class="sbox">
+          <div class="shead"><div class="stitle">未対応の体入申込</div><button class="saction" onclick="nav('applies',document.querySelectorAll('.sb-item')[1])">すべて見る →</button></div>
+          <div id="dashList" style="padding:8px 12px;display:flex;flex-direction:column;gap:7px;"><div style="text-align:center;padding:20px;color:var(--lt);font-size:.82rem;">読み込み中...</div></div>
+        </div>
+        <div class="sbox">
+          <div class="shead"><div class="stitle">掲載ステータス</div></div>
+          <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:#f9f9f9;border-radius:8px;padding:12px 14px;"><div style="font-size:.63rem;color:var(--lt);margin-bottom:3px;">掲載状態</div><div style="font-size:.9rem;font-weight:900;color:var(--dk);" id="statusLbl">—</div></div>
+            <div style="background:#f9f9f9;border-radius:8px;padding:12px 14px;"><div style="font-size:.63rem;color:var(--lt);margin-bottom:3px;">契約プラン</div><div style="font-size:.9rem;font-weight:900;color:var(--or);" id="planLbl">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPLIES -->
+      <div class="pg" id="pg-applies">
+        <div class="sbox">
+          <div class="shead"><div class="stitle">体入申込一覧</div><button class="saction" onclick="exportCSV()">CSV出力</button></div>
+          <div style="padding:8px 14px;border-bottom:1px solid var(--bd);background:#fafbfc;">
+            <select class="form-fi" id="filterSt" onchange="renderApplies()" style="width:auto;padding:5px 10px;font-size:.75rem;">
+              <option value="all">すべての状態</option><option value="pending">未対応</option><option value="done">対応済み</option><option value="cancelled">キャンセル</option>
+            </select>
+          </div>
+          <div class="tbl-wrap"><table class="tbl"><thead><tr><th>申込者</th><th>メール</th><th>電話</th><th>希望日時</th><th>経験</th><th>状態</th><th>申込日</th><th>操作</th></tr></thead><tbody id="applyTbody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--lt);">読み込み中...</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- STORE -->
+      <div class="pg" id="pg-store">
+        <div class="sbox" style="max-width:700px;">
+          <div class="shead"><div class="stitle">店舗情報を編集</div><button class="saction" onclick="saveStore()">💾 保存</button></div>
+          <div class="form-grid">
+
+            <!-- 基本情報 -->
+            <div style="font-size:.7rem;font-weight:900;color:var(--or);letter-spacing:1px;padding:4px 0 2px;border-bottom:2px solid var(--or3);margin-bottom:2px;">📋 基本情報</div>
+            <div class="row2">
+              <div class="form-fg"><label class="form-lbl req">店舗名</label><input class="form-fi" id="sName" type="text"></div>
+              <div class="form-fg"><label class="form-lbl">業種</label><select class="form-fi" id="sGenre"><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option><option>スナック</option><option>ガールズバー</option><option>バー</option></select></div>
+            </div>
+            <div class="form-fg">
+              <label class="form-lbl">住所 <span style="font-weight:400;color:var(--lt);font-size:.65rem;">（入力するとマップリンクが自動生成されます）</span></label>
+              <div style="display:flex;gap:8px;align-items:stretch;">
+                <input class="form-fi" id="sAddr" type="text" placeholder="東京都墨田区錦糸X-X-X ○○ビル 3F" style="flex:1;" oninput="updateMapLink()">
+                <button type="button" id="mapPreviewBtn" onclick="openMap()" style="display:none;padding:0 12px;background:var(--or3);border:1.5px solid var(--or);border-radius:7px;color:var(--or);font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;">🗺 確認</button>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="form-fg"><label class="form-lbl req">最低時給</label><input class="form-fi" id="sPayMin" type="number" placeholder="4000"></div>
+              <div class="form-fg"><label class="form-lbl req">最高時給</label><input class="form-fi" id="sPayMax" type="number" placeholder="10000"></div>
+            </div>
+            <div class="row2">
+              <div class="form-fg"><label class="form-lbl">営業時間</label><input class="form-fi" id="sHours" type="text" placeholder="例：20:00〜04:00"></div>
+              <div class="form-fg"><label class="form-lbl">最寄り駅・アクセス</label><input class="form-fi" id="sStation" type="text" placeholder="例：錦糸町駅 徒歩3分"></div>
+            </div>
+
+            <!-- 写真（5枚） -->
+            <div style="font-size:.7rem;font-weight:900;color:var(--or);letter-spacing:1px;padding:4px 0 2px;border-bottom:2px solid var(--or3);margin-bottom:2px;margin-top:8px;">📷 店舗写真（最大5枚）</div>
+            <div style="font-size:.68rem;color:var(--lt);margin-bottom:10px;">1枚目がメイン写真になります。JPG・PNG推奨。</div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;" id="photoGrid">
+              <div class="photo-slot" data-idx="0"><input type="file" accept="image/*" onchange="previewPhoto(this,0)" style="display:none;"><div class="photo-placeholder" onclick="this.previousElementSibling.click()"><span style="font-size:1.4rem;">📷</span><span style="font-size:.6rem;color:var(--lt);margin-top:3px;">メイン</span></div></div>
+              <div class="photo-slot" data-idx="1"><input type="file" accept="image/*" onchange="previewPhoto(this,1)" style="display:none;"><div class="photo-placeholder" onclick="this.previousElementSibling.click()"><span style="font-size:1.4rem;">＋</span><span style="font-size:.6rem;color:var(--lt);margin-top:3px;">写真2</span></div></div>
+              <div class="photo-slot" data-idx="2"><input type="file" accept="image/*" onchange="previewPhoto(this,2)" style="display:none;"><div class="photo-placeholder" onclick="this.previousElementSibling.click()"><span style="font-size:1.4rem;">＋</span><span style="font-size:.6rem;color:var(--lt);margin-top:3px;">写真3</span></div></div>
+              <div class="photo-slot" data-idx="3"><input type="file" accept="image/*" onchange="previewPhoto(this,3)" style="display:none;"><div class="photo-placeholder" onclick="this.previousElementSibling.click()"><span style="font-size:1.4rem;">＋</span><span style="font-size:.6rem;color:var(--lt);margin-top:3px;">写真4</span></div></div>
+              <div class="photo-slot" data-idx="4"><input type="file" accept="image/*" onchange="previewPhoto(this,4)" style="display:none;"><div class="photo-placeholder" onclick="this.previousElementSibling.click()"><span style="font-size:1.4rem;">＋</span><span style="font-size:.6rem;color:var(--lt);margin-top:3px;">写真5</span></div></div>
+            </div>
+
+            <!-- 店舗PR（詳細区分） -->
+            <div style="font-size:.7rem;font-weight:900;color:var(--or);letter-spacing:1px;padding:4px 0 2px;border-bottom:2px solid var(--or3);margin-bottom:2px;margin-top:8px;">📝 店舗PR・詳細情報</div>
+            <div class="form-fg"><label class="form-lbl">キャッチコピー <span style="font-weight:400;color:var(--lt);font-size:.65rem;">（一覧に表示される一言PR）</span></label><input class="form-fi" id="sCatch" type="text" placeholder="例：未経験から月収50万も夢じゃない！アットホームなお店です"></div>
+            <div class="form-fg"><label class="form-lbl">お店の雰囲気・特徴</label><textarea class="form-fi" id="sAtmosphere" rows="3" placeholder="お店の雰囲気、客層、スタッフの人数など自由に記入&#10;例：常連客が多く、アットホームな雰囲気です。スタッフ同士も仲が良く、みんな仲良しです。"></textarea></div>
+            <div class="form-fg"><label class="form-lbl">給与・待遇の詳細</label><textarea class="form-fi" id="sSalary" rows="3" placeholder="時給以外の収入・ボーナスなど&#10;例：指名バック30%・同伴手当5,000円・入店祝い金あり・交通費全額支給"></textarea></div>
+            <div class="form-fg"><label class="form-lbl">応募資格・こんな方に来てほしい</label><textarea class="form-fi" id="sTarget" rows="2" placeholder="例：未経験大歓迎！明るく元気な方、週2日〜OK、副業・掛け持ちも歓迎します"></textarea></div>
+            <div class="form-fg"><label class="form-lbl">体験入店について</label><textarea class="form-fi" id="sTrial" rows="2" placeholder="例：体験入店は私服でOK！まずは見学だけでも大歓迎。お気軽にご連絡ください。"></textarea></div>
+
+            <!-- 特典・条件 -->
+            <div style="font-size:.7rem;font-weight:900;color:var(--or);letter-spacing:1px;padding:4px 0 2px;border-bottom:2px solid var(--or3);margin-bottom:2px;margin-top:8px;">✅ 特典・条件</div>
+            <div class="form-fg">
+              <div class="cb-grid" id="featCbs">
+                <label class="cbi"><input type="checkbox" value="体験入店OK"> 体験入店OK</label>
+                <label class="cbi"><input type="checkbox" value="日払いOK"> 日払いOK</label>
+                <label class="cbi"><input type="checkbox" value="週1〜OK"> 週1〜OK</label>
+                <label class="cbi"><input type="checkbox" value="未経験歓迎"> 未経験歓迎</label>
+                <label class="cbi"><input type="checkbox" value="掛け持ちOK"> 掛け持ちOK</label>
+                <label class="cbi"><input type="checkbox" value="送迎あり"> 送迎あり</label>
+                <label class="cbi"><input type="checkbox" value="寮完備"> 寮完備</label>
+                <label class="cbi"><input type="checkbox" value="ドレス貸出"> ドレス貸出</label>
+                <label class="cbi"><input type="checkbox" value="ノルマなし"> ノルマなし</label>
+                <label class="cbi"><input type="checkbox" value="交通費支給"> 交通費支給</label>
+                <label class="cbi"><input type="checkbox" value="入店祝い金"> 入店祝い金</label>
+              </div>
+            </div>
+
+            <button class="save-btn" onclick="saveStore()">変更を保存する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="pg" id="pg-schedule">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:700px;">
+          <div class="sbox">
+            <div class="shead"><div class="stitle">定休日設定</div></div>
+            <div style="padding:16px;">
+              <p style="font-size:.72rem;color:var(--lt);margin-bottom:12px;">チェックした曜日が体入カレンダーで定休日になります</p>
+              <div id="closedDays">
+                <div class="toggle-row"><span class="toggle-title">日曜日</span><label class="tog"><input type="checkbox" data-dow="0"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">月曜日</span><label class="tog"><input type="checkbox" data-dow="1"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">火曜日</span><label class="tog"><input type="checkbox" data-dow="2"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">水曜日</span><label class="tog"><input type="checkbox" data-dow="3"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">木曜日</span><label class="tog"><input type="checkbox" data-dow="4"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">金曜日</span><label class="tog"><input type="checkbox" data-dow="5"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">土曜日</span><label class="tog"><input type="checkbox" data-dow="6"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+              </div>
+              <button class="save-btn" style="margin-top:12px;width:100%;" onclick="saveSchedule()">保存する</button>
+            </div>
+          </div>
+          <div class="sbox">
+            <div class="shead"><div class="stitle">体入受付時間帯</div></div>
+            <div style="padding:16px;">
+              <p style="font-size:.72rem;color:var(--lt);margin-bottom:10px;">ONにした時間帯が申込カレンダーに表示されます</p>
+              <div id="acceptHours">
+                <div class="toggle-row"><span class="toggle-title">18:00〜</span><label class="tog"><input type="checkbox" data-h="18:00〜"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">19:00〜</span><label class="tog"><input type="checkbox" data-h="19:00〜"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">20:00〜</span><label class="tog"><input type="checkbox" data-h="20:00〜" checked><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">21:00〜</span><label class="tog"><input type="checkbox" data-h="21:00〜" checked><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">22:00〜</span><label class="tog"><input type="checkbox" data-h="22:00〜"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+                <div class="toggle-row"><span class="toggle-title">23:00〜</span><label class="tog"><input type="checkbox" data-h="23:00〜"><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+              </div>
+              <button class="save-btn" style="margin-top:10px;width:100%;" onclick="saveSchedule()">保存する</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAN -->
+      <div class="pg" id="pg-plan">
+        <div style="max-width:640px;display:flex;flex-direction:column;gap:16px;">
+          <div class="sbox" id="curPlanBox" style="display:none;">
+            <div class="shead"><div class="stitle">現在の契約プラン</div></div>
+            <div style="padding:16px;"><div style="border:2px solid var(--or);border-radius:10px;padding:16px;background:var(--or3);">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+                <div><div style="font-size:.65rem;color:var(--or);font-weight:700;margin-bottom:3px;">契約中</div><div style="font-size:1.1rem;font-weight:900;color:var(--dk);" id="cpName">—</div></div>
+                <div style="text-align:right;"><div style="font-size:1.4rem;font-weight:900;color:var(--or);" id="cpPrice">—</div><div style="font-size:.6rem;color:var(--lt);">/月（税込）</div></div>
+              </div>
+              <div style="font-size:.72rem;color:var(--md);" id="cpFeats">—</div>
+            </div></div>
+          </div>
+          <div class="sbox">
+            <div class="shead"><div class="stitle" id="planFormTitle">プランを選んでお申し込み</div></div>
+            <div class="plan-grid">
+              <div class="plan-card" id="pc-light" onclick="selPlan('light')"><div class="plan-ico">🌱</div><div class="plan-name">ライト</div><div class="plan-feats">求人1件・体入月20件<br>メールサポート</div><div class="plan-price">¥25,000<span class="plan-per">/月</span></div></div>
+              <div class="plan-card pop sel" id="pc-standard" onclick="selPlan('standard')"><div class="plan-ico">⭐</div><div class="plan-name">スタンダード</div><div class="plan-feats">求人3件・体入無制限<br>PICK UPバッジ・優先表示</div><div class="plan-price">¥30,000<span class="plan-per">/月</span></div></div>
+              <div class="plan-card" id="pc-premium" onclick="selPlan('premium')"><div class="plan-ico">👑</div><div class="plan-name">プレミアム</div><div class="plan-feats">求人10件・トップバナー<br>専任担当・月次レポート</div><div class="plan-price" style="color:#8b5cf6;">¥55,000<span class="plan-per">/月</span></div></div>
+            </div>
+            <div style="padding:0 16px 20px;" id="payFormArea">
+              <div style="margin-bottom:14px;"><label style="font-size:.72rem;font-weight:700;color:#555;display:block;margin-bottom:7px;">クレジットカード情報</label><div id="stripe-el"></div><div id="stripe-err" style="display:none;font-size:.72rem;color:var(--red);margin-top:5px;"></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1.5px solid #f0f0f0;margin-bottom:16px;"><div style="font-size:.82rem;font-weight:700;color:#555;">合計（月額・税込）</div><div style="font-size:1.5rem;font-weight:900;color:var(--or);" id="payAmt">¥30,000</div></div>
+              <button id="payBtn" onclick="doPayment()" style="width:100%;background:linear-gradient(135deg,#1a1a2e,#2d3561);color:#fff;border:none;padding:14px;border-radius:8px;font-size:.92rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 14px rgba(26,26,46,.3);"><span id="payBtnTxt">掲載申請・お支払い →</span></button>
+              <div style="text-align:center;font-size:.62rem;color:var(--lt);margin-top:10px;">🔒 SSL暗号化 · Powered by Stripe</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GUARANTEE -->
+      <div class="pg" id="pg-guarantee">
+        <div class="sbox" style="max-width:600px;">
+          <div class="shead"><div class="stitle">🛡️ 応募ゼロ保証</div></div>
+          <div style="padding:16px;">
+            <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:8px;padding:14px;margin-bottom:16px;">
+              <div style="font-size:.82rem;font-weight:900;color:#15803d;margin-bottom:8px;">保証ルール</div>
+              <div style="font-size:.73rem;color:#166534;line-height:1.9;">
+                📌 当月の体入申込が <strong>0件</strong> だった場合<br>
+                📌 翌月の月額費用を <strong>無料（¥0）</strong> にします<br>
+                📌 毎月1日に前月実績を自動集計・判定<br>
+                📌 Stripeの請求が自動でスキップされます<br>
+                📌 対象：全プラン（ライト・スタンダード・プレミアム）
+              </div>
+            </div>
+            <div style="font-size:.8rem;font-weight:900;color:var(--dk);margin-bottom:10px;">月別実績</div>
+            <div id="guarHistory"><div style="text-align:center;padding:20px;color:var(--lt);font-size:.78rem;">読み込み中...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFY -->
+      <div class="pg" id="pg-notify">
+        <div class="sbox" style="max-width:500px;">
+          <div class="shead"><div class="stitle">通知設定</div></div>
+          <div style="padding:16px;">
+            <div class="toggle-row"><div><div class="toggle-title">体入申込の通知</div><div class="toggle-sub">新しい申込が届いた時にメール</div></div><label class="tog"><input type="checkbox" id="ntApply" checked><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+            <div class="toggle-row"><div><div class="toggle-title">前日リマインダー</div><div class="toggle-sub">体入の前日18時に送信</div></div><label class="tog"><input type="checkbox" id="ntRemind" checked><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+            <div class="toggle-row"><div><div class="toggle-title">保証適用通知</div><div class="toggle-sub">応募ゼロ保証が適用された時</div></div><label class="tog"><input type="checkbox" id="ntGuarantee" checked><div class="tog-track"></div><div class="tog-thumb"></div></label></div>
+            <div class="form-fg" style="margin-top:10px;"><label class="form-lbl">通知先メール</label><input class="form-fi" id="ntEmail" type="email"></div>
+            <button class="save-btn" style="margin-top:12px;" onclick="saveNotify()">保存する</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- content -->
+  </div><!-- body -->
+</div><!-- shell -->
+
+<div class="toast" id="toast"><span id="toastIco"></span><span id="toastMsg"></span></div>
+
+<script>
+const SB_URL  = 'https://ljvovzmjqesspzikglna.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
+const STRIPE_PK = 'pk_test_51T8gMs8AxMbjBDeeYy91QBFr687oMDm1ldNRvBA81PwyjoYytD7TLemhDVeix3nFrJQzNUNamiPRbNogG5LzCml000M74b0tO6';
+
+const sb = supabase.createClient(SB_URL, SB_ANON);
+const stripe = Stripe(STRIPE_PK);
+const elements = stripe.elements();
+let card = null;
+
+let user = null, owner = null, applies = [], selPlanId = 'standard';
+
+const PLANS = {
+  light:    { name:'🌱 ライト',    price:'¥25,000', feats:'求人1件・体入月20件・メールサポート' },
+  standard: { name:'⭐ スタンダード', price:'¥30,000', feats:'求人3件・体入無制限・PICKUPバッジ・優先表示' },
+  premium:  { name:'👑 プレミアム',  price:'¥55,000', feats:'求人10件・トップバナー・専任担当・月次レポート' },
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const n = new Date();
+  document.getElementById('hdrDate').textContent = n.getFullYear()+'/'+(n.getMonth()+1).toString().padStart(2,'0')+'/'+n.getDate().toString().padStart(2,'0');
+
+  card = elements.create('card',{style:{base:{fontFamily:'sans-serif',fontSize:'15px',color:'#1a1a2e','::placeholder':{color:'#aab7c4'}},invalid:{color:'#e53935'}},hidePostalCode:true});
+  card.mount('#stripe-el');
+  card.on('change',e=>{const el=document.getElementById('stripe-err');if(e.error){el.textContent=e.error.message;el.style.display='block';}else el.style.display='none';});
+
+  const {data:{session}} = await sb.auth.getSession();
+  if(session){user=session.user;await showShell();}
+  sb.auth.onAuthStateChange(async(ev,ses)=>{
+    if(ev==='SIGNED_IN'&&ses){user=ses.user;await showShell();}
+    else if(ev==='SIGNED_OUT'){user=null;showLogin();}
+  });
+});
+
+async function showShell(){
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('shell').classList.add('open');
+  await loadOwner();
+  await loadDash();
+}
+function showLogin(){
+  document.getElementById('loginWrap').style.display='flex';
+  document.getElementById('shell').classList.remove('open');
+}
+
+// AUTH
+function switchTab(t){
+  document.getElementById('lTabLogin').className='l-tab'+(t==='login'?' on':'');
+  document.getElementById('lTabReg').className='l-tab'+(t==='register'?' on':'');
+  document.getElementById('fLogin').style.display=t==='login'?'block':'none';
+  document.getElementById('fReg').style.display=t==='register'?'block':'none';
+  document.getElementById('loginErr').className='err-box';
+}
+
+async function doLogin(){
+  const email=document.getElementById('lEmail').value.trim();
+  const pw=document.getElementById('lPw').value;
+  const err=document.getElementById('loginErr');
+  if(!email||!pw){err.textContent='入力してください';err.className='err-box show';return;}
+  setBtnLoad('loginBtn',true,'ログイン中...');
+  const {error}=await sb.auth.signInWithPassword({email,password:pw});
+  setBtnLoad('loginBtn',false,'ログイン →');
+  if(error){err.textContent='メールアドレスかパスワードが違います';err.className='err-box show';}
+}
+
+async function doRegister(){
+  const store=document.getElementById('rStore').value.trim();
+  const email=document.getElementById('rEmail').value.trim();
+  const pw=document.getElementById('rPw').value;
+  const err=document.getElementById('loginErr');
+  if(!store){err.textContent='店舗名を入力してください';err.className='err-box show';return;}
+  if(!email.includes('@')){err.textContent='メールアドレスを確認してください';err.className='err-box show';return;}
+  if(pw.length<8){err.textContent='パスワードは8文字以上';err.className='err-box show';return;}
+  setBtnLoad('regBtn',true,'登録中...');
+  const {data,error}=await sb.auth.signUp({email,password:pw,options:{data:{store_name:store}}});
+  setBtnLoad('regBtn',false,'オーナー登録する →');
+  if(error){err.textContent=error.message;err.className='err-box show';return;}
+  if(data.user){await sb.from('owners').insert({user_id:data.user.id,store_name:store,email,status:'pending'});}
+  err.textContent='確認メールを送信しました。メールのリンクをクリックして認証完了後、ログインしてください。';
+  err.style.background='#dcfce7';err.style.color='#15803d';err.className='err-box show';
+}
+
+async function sendReset(){
+  const email=document.getElementById('lEmail').value.trim();
+  if(!email){const err=document.getElementById('loginErr');err.textContent='メールアドレスを入力してください';err.className='err-box show';return;}
+  await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/owner.html'});
+  const err=document.getElementById('loginErr');
+  err.textContent='パスワードリセットメールを送信しました';
+  err.style.background='#dcfce7';err.style.color='#15803d';err.className='err-box show';
+}
+
+async function doLogout(){await sb.auth.signOut();}
+
+// OWNER DATA
+async function loadOwner(){
+  if(!user)return;
+  const {data}=await sb.from('owners').select('*').eq('user_id',user.id).single();
+  owner=data;
+  if(!owner){
+    const sn=user.user_metadata?.store_name||user.email.split('@')[0];
+    const {data:no}=await sb.from('owners').insert({user_id:user.id,store_name:sn,email:user.email,status:'pending'}).select().single();
+    owner=no;
+  }
+  if(!owner)return;
+  const name=owner.store_name||'オーナー';
+  const ini=name.charAt(0).toUpperCase();
+  document.getElementById('hdrName').textContent=name;
+  document.getElementById('sbAv').textContent=ini;
+  document.getElementById('sbUname').textContent=name;
+  // フォームに反映
+  document.getElementById('sName').value=owner.store_name||'';
+  document.getElementById('sAddr').value=owner.address||'';
+  document.getElementById('sPayMin').value=owner.hourly_min||'';
+  document.getElementById('sPayMax').value=owner.hourly_max||'';
+  document.getElementById('sHours').value=owner.hours||'';
+  document.getElementById('sDesc').value=owner.description||'';
+  if(owner.genre)document.getElementById('sGenre').value=owner.genre;
+  if(owner.features){document.querySelectorAll('#featCbs input').forEach(cb=>{cb.checked=owner.features.includes(cb.value);});}
+  if(owner.closed_days){document.querySelectorAll('#closedDays input[data-dow]').forEach(cb=>{cb.checked=owner.closed_days.includes(parseInt(cb.dataset.dow));});}
+  if(owner.accept_hours){document.querySelectorAll('#acceptHours input[data-h]').forEach(cb=>{cb.checked=owner.accept_hours.includes(cb.dataset.h);});}
+  if(owner.email)document.getElementById('ntEmail').value=owner.email;
+  // プラン
+  if(owner.plan&&owner.status==='active'){
+    const p=PLANS[owner.plan];
+    document.getElementById('curPlanBox').style.display='block';
+    document.getElementById('cpName').textContent=p.name;
+    document.getElementById('cpPrice').textContent=p.price;
+    document.getElementById('cpFeats').textContent=p.feats;
+    document.getElementById('planFormTitle').textContent='プランを変更する';
+    document.getElementById('payBtnTxt').textContent='プランを変更する →';
+  }
+  selPlan(owner.plan||'standard');
+  // ステータス
+  const stMap={active:['#22c55e','✅ 掲載中'],pending:['#f59e0b','⏳ 審査中'],suspended:['#e53935','❌ 停止中']};
+  const [c,l]=stMap[owner.status]||['#ccc','—'];
+  document.getElementById('statusLbl').innerHTML='<span style="width:8px;height:8px;border-radius:50%;background:'+c+';display:inline-block;margin-right:5px;"></span>'+l;
+  document.getElementById('planLbl').textContent=owner.plan?PLANS[owner.plan]?.name||'—':'未契約';
+}
+
+// DASHBOARD
+async function loadDash(){
+  if(!owner)return;
+  const {data:apps}=await sb.from('applications').select('*').eq('store_name',owner.store_name).order('created_at',{ascending:false});
+  applies=apps||[];
+  const now=new Date();
+  const ms=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
+  const lms=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
+  const lme=new Date(now.getFullYear(),now.getMonth(),0,23,59,59).toISOString();
+  const thisM=applies.filter(a=>a.created_at>=ms);
+  const lastM=applies.filter(a=>a.created_at>=lms&&a.created_at<=lme);
+  const pend=applies.filter(a=>!a.status||a.status==='pending');
+  document.getElementById('kpiApps').textContent=thisM.length;
+  document.getElementById('kpiDone').textContent=thisM.filter(a=>a.status==='done').length;
+  document.getElementById('kpiPending').textContent=pend.length;
+  document.getElementById('kpiLast').textContent=lastM.length;
+  if(pend.length>0){const b=document.getElementById('sbBadge');b.style.display='inline';b.textContent=pend.length;}
+  if(lastM.length===0&&owner.status==='active'){
+    document.getElementById('guarBanner').style.display='flex';
+    document.getElementById('guarDetail').textContent='先月（'+(now.getMonth())+'月）の体入申込：0件 → 保証条件を満たしました';
+    document.getElementById('kpiGuar').innerHTML='<span style="color:#22c55e;font-weight:700;">🎁 来月無料！</span>';
+  }
+  const dl=document.getElementById('dashList');
+  const show=pend.slice(0,3);
+  if(!show.length){dl.innerHTML='<div style="text-align:center;padding:20px;color:var(--lt);font-size:.82rem;">未対応の申込はありません</div>';return;}
+  dl.innerHTML=show.map(a=>`<div style="background:#f9f9f9;border-radius:8px;padding:11px 13px;display:flex;align-items:flex-start;gap:10px;border:1px solid var(--bd);">
+    <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--or),#ff8c33);color:#fff;font-size:.85rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${(a.applicant_name||'?').charAt(0)}</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:.8rem;font-weight:700;color:var(--dk);">${a.applicant_name||'—'}（${a.age||'—'}）</div>
+      <div style="font-size:.66rem;color:var(--md);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.preferred_date||''} ${a.preferred_time||''} ｜ ${a.phone||a.email||'—'}</div>
+      <div style="display:flex;gap:5px;margin-top:7px;">
+        <button onclick="updStatus('${a.id}','done')" style="font-size:.64rem;font-weight:700;padding:3px 9px;border:none;background:#22c55e;color:#fff;border-radius:4px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">対応済</button>
+        <button onclick="updStatus('${a.id}','cancelled')" style="font-size:.64rem;font-weight:700;padding:3px 9px;border:1.5px solid var(--bd);background:#fff;color:var(--md);border-radius:4px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">キャンセル</button>
+      </div>
+    </div>
+    <div style="font-size:.6rem;color:var(--lt);flex-shrink:0;">${ago(a.created_at)}</div>
+  </div>`).join('');
+}
+
+// APPLIES
+function renderApplies(){
+  const st=document.getElementById('filterSt').value;
+  let a=applies;
+  if(st!=='all')a=a.filter(x=>(x.status||'pending')===st);
+  const tb=document.getElementById('applyTbody');
+  if(!a.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--lt);">申込がありません</td></tr>';return;}
+  const bm={pending:'ab-rev',done:'ab-on',cancelled:'ab-off'};
+  const lm={pending:'未対応',done:'対応済み',cancelled:'キャンセル'};
+  tb.innerHTML=a.map(x=>{const s=x.status||'pending';return`<tr>
+    <td><div class="td-main">${x.applicant_name||'—'}</div><div class="td-sub">${x.age||''}</div></td>
+    <td style="font-size:.72rem;">${x.email||'—'}</td>
+    <td style="font-size:.72rem;">${x.phone||'—'}</td>
+    <td>${x.preferred_date||''} ${x.preferred_time||''}</td>
+    <td>${x.experience||'—'}</td>
+    <td><span class="abadge ${bm[s]}">${lm[s]}</span></td>
+    <td style="font-size:.68rem;">${ago(x.created_at)}</td>
+    <td><div class="tacts">
+      ${s==='pending'?`<button class="tact ok" onclick="updStatus('${x.id}','done')">対応済</button>`:''}
+      ${s==='pending'?`<button class="tact danger" onclick="updStatus('${x.id}','cancelled')">キャンセル</button>`:''}
+      ${s!=='pending'?`<button class="tact danger" onclick="delApply('${x.id}')">削除</button>`:''}
+    </div></td>
+  </tr>`;}).join('');
+}
+
+async function updStatus(id,status){
+  await sb.from('applications').update({status}).eq('id',id);
+  applies=applies.map(a=>a.id===id?{...a,status}:a);
+  renderApplies();loadDash();toast('✅','更新しました');
+}
+async function delApply(id){
+  await sb.from('applications').delete().eq('id',id);
+  applies=applies.filter(a=>a.id!==id);
+  renderApplies();toast('🗑','削除しました');
+}
+
+function exportCSV(){
+  const rows=[['申込者','年齢','メール','電話','LINE','希望日','希望時間','状態','申込日']];
+  applies.forEach(a=>rows.push([a.applicant_name||'',a.age||'',a.email||'',a.phone||'',a.contact||'',a.preferred_date||'',a.preferred_time||'',a.status||'pending',a.created_at?.slice(0,10)||'']));
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='体入申込一覧.csv';a.click();
+  toast('📥','CSVダウンロード完了');
+}
+
+// STORE
+async function saveStore(){
+  if(!user)return;
+  const feats=[];document.querySelectorAll('#featCbs input:checked').forEach(cb=>feats.push(cb.value));
+  const desc = [
+    document.getElementById('sCatch')?.value.trim(),
+    document.getElementById('sAtmosphere')?.value.trim() ? '【雰囲気】' + document.getElementById('sAtmosphere').value.trim() : '',
+    document.getElementById('sSalary')?.value.trim() ? '【給与・待遇】' + document.getElementById('sSalary').value.trim() : '',
+    document.getElementById('sTarget')?.value.trim() ? '【こんな方に】' + document.getElementById('sTarget').value.trim() : '',
+    document.getElementById('sTrial')?.value.trim() ? '【体験入店】' + document.getElementById('sTrial').value.trim() : '',
+  ].filter(Boolean).join('\n\n');
+  const payload={store_name:document.getElementById('sName').value.trim(),genre:document.getElementById('sGenre').value,address:document.getElementById('sAddr').value.trim(),hourly_min:parseInt(document.getElementById('sPayMin').value)||null,hourly_max:parseInt(document.getElementById('sPayMax').value)||null,hours:document.getElementById('sHours').value.trim(),station:document.getElementById('sStation')?.value.trim()||'',description:desc,features:feats};
+  const {data,error}=owner?await sb.from('owners').update(payload).eq('user_id',user.id).select().single():await sb.from('owners').insert({...payload,user_id:user.id}).select().single();
+  if(error){toast('❌','エラー: '+error.message);return;}
+  owner=data;
+  await sb.from('stores').update({...payload,status:'active'}).eq('owner_id',owner?.id);
+  document.getElementById('hdrName').textContent=payload.store_name;
+  document.getElementById('sbUname').textContent=payload.store_name;
+  toast('✅','店舗情報を保存しました');
+}
+
+// SCHEDULE
+async function saveSchedule(){
+  const cd=[];document.querySelectorAll('#closedDays input:checked').forEach(cb=>cd.push(parseInt(cb.dataset.dow)));
+  const ah=[];document.querySelectorAll('#acceptHours input:checked').forEach(cb=>ah.push(cb.dataset.h));
+  await sb.from('owners').update({closed_days:cd,accept_hours:ah}).eq('user_id',user.id);
+  toast('✅','設定を保存しました');
+}
+
+// NOTIFY
+async function saveNotify(){
+  const email=document.getElementById('ntEmail').value.trim();
+  await sb.from('owners').update({email}).eq('user_id',user.id);
+  toast('✅','通知設定を保存しました');
+}
+
+// GUARANTEE HISTORY
+async function loadGuarantee(){
+  if(!owner)return;
+  const {data}=await sb.from('guarantee_history').select('*').eq('owner_id',owner.id).order('target_month',{ascending:false}).limit(12);
+  const el=document.getElementById('guarHistory');
+  if(!data?.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--lt);font-size:.78rem;">履歴がありません</div>';return;}
+  el.innerHTML=data.map(g=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:8px;background:${g.is_free?'#f0fdf4':'#f9f9f9'};border:1.5px solid ${g.is_free?'#86efac':'var(--bd)'};margin-bottom:8px;">
+    <div><div style="font-size:.82rem;font-weight:700;color:var(--dk);">${g.target_month}</div><div style="font-size:.68rem;color:var(--md);margin-top:2px;">申込件数：${g.app_count}件</div></div>
+    <div>${g.is_free?'<span style="background:#dcfce7;color:#15803d;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;">🎁 無料適用</span>':'<span style="font-size:.68rem;color:var(--lt);">通常請求</span>'}</div>
+  </div>`).join('');
+}
+
+// PLAN & PAYMENT
+function selPlan(p){
+  selPlanId=p;
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('pc-'+p).classList.add('sel');
+  document.getElementById('payAmt').textContent=PLANS[p].price;
+}
+
+async function doPayment(){
+  const btn=document.getElementById('payBtn');const txt=document.getElementById('payBtnTxt');
+  btn.disabled=true;txt.textContent='処理中...';
+  try{
+    const {paymentMethod,error}=await stripe.createPaymentMethod({type:'card',card});
+    if(error)throw new Error(error.message);
+    const {data:{session}}=await sb.auth.getSession();
+    const token=session?.access_token;
+    const res=await fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentMethodId:paymentMethod.id,planId:selPlanId,storeName:owner?.store_name})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'決済エラー');
+    if(data.clientSecret){const {error:ce}=await stripe.confirmCardPayment(data.clientSecret);if(ce)throw new Error(ce.message);}
+    await loadOwner();toast('✅','掲載申請が完了しました！');
+    nav('dashboard',document.querySelector('.sb-item'));
+  }catch(e){
+    const el=document.getElementById('stripe-err');el.textContent=e.message;el.style.display='block';
+  }finally{btn.disabled=false;txt.textContent=owner?.status==='active'?'プランを変更する →':'掲載申請・お支払い →';}
+}
+
+// NAV
+const NAV={
+  dashboard:['ダッシュボード','概要'],
+  applies:['体入申込一覧','申込管理'],
+  store:['店舗情報を編集','編集'],
+  schedule:['定休日・受付設定','スケジュール'],
+  plan:['契約プラン・決済','プラン'],
+  guarantee:['応募ゼロ保証','保証履歴'],
+  notify:['通知設定','設定'],
+};
+function nav(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('on'));
+  const pg=document.getElementById('pg-'+id);if(pg)pg.classList.add('on');
+  if(btn)btn.classList.add('on');
+  const t=NAV[id]||[id,''];
+  document.getElementById('hdrTitle').innerHTML=t[0]+' <small>'+t[1]+'</small>';
+  closeSb();document.getElementById('contentArea').scrollTop=0;
+  if(id==='applies')renderApplies();
+  if(id==='guarantee')loadGuarantee();
+}
+
+function toggleSb(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sbOverlay').classList.toggle('show');}
+function closeSb(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');}
+
+let toastT;
+function toast(ico,msg){document.getElementById('toastIco').textContent=ico;document.getElementById('toastMsg').textContent=msg;const el=document.getElementById('toast');el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2800);}
+function setBtnLoad(id,on,txt){const b=document.getElementById(id);if(!b)return;b.disabled=on;b.style.opacity=on?'.6':'1';b.textContent=txt;}
+function ago(iso){if(!iso)return'—';const d=Date.now()-new Date(iso).getTime();const m=Math.floor(d/60000);if(m<60)return m+'分前';const h=Math.floor(m/60);if(h<24)return h+'時間前';return Math.floor(h/24)+'日前';}
+</script>
+</body>
+</html>
