@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiara — 管理者ダッシュボード</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans JP',sans-serif;
+  background:#f4f4f4;color:#222;
+  min-height:100vh;overflow-x:hidden;
+}
+:root{
+  --or:#ff6b00;--or2:#ff8c33;--or3:#fff3e8;
+  --wh:#fff;--gr:#f4f4f4;--bd:#e5e5e5;
+  --dk:#333;--md:#777;--lt:#aaa;
+  --red:#e53935;--grn:#2e7d32;--blu:#1565c0;
+  --hdr:60px;
+}
+img{display:block;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#f4f4f4;}
+::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px;}
+
+/* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+.hdr{
+  background:var(--wh);
+  border-bottom:3px solid var(--or);
+  position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  height:var(--hdr);
+}
+.hdr-inner{
+  max-width:1280px;margin:0 auto;
+  display:flex;align-items:center;
+  padding:0 20px;height:100%;gap:16px;
+}
+.hdr-menu{
+  display:none;background:none;border:none;
+  cursor:pointer;font-size:1.3rem;color:var(--md);padding:4px;
+}
+.logo{
+  font-size:1.5rem;font-weight:900;color:var(--or);
+  letter-spacing:-0.5px;white-space:nowrap;text-decoration:none;
+}
+.logo small{
+  font-size:.5rem;font-weight:700;color:var(--lt);
+  letter-spacing:1.5px;display:block;margin-top:-3px;
+}
+.hdr-search{
+  flex:1;max-width:500px;position:relative;
+}
+.hdr-search input{
+  width:100%;padding:9px 42px 9px 14px;
+  border:2px solid var(--bd);border-radius:6px;
+  font-size:.85rem;color:var(--dk);
+  font-family:'Noto Sans JP',sans-serif;
+  outline:none;transition:border-color .13s;
+}
+.hdr-search input:focus{border-color:var(--or);}
+.hdr-search button{
+  position:absolute;right:0;top:0;bottom:0;
+  background:var(--or);color:var(--wh);border:none;
+  padding:0 14px;border-radius:0 6px 6px 0;
+  cursor:pointer;font-size:.85rem;
+}
+.hdr-nav{display:flex;gap:6px;align-items:center;}
+.hnav-tab{
+  background:transparent;border:none;
+  color:var(--md);font-size:.8rem;font-weight:700;
+  padding:8px 14px;border-radius:6px;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;transition:all .13s;
+  white-space:nowrap;
+}
+.hnav-tab.on,.hnav-tab:hover{background:var(--or3);color:var(--or);}
+.hnav-tab.on{color:var(--or);border-bottom:2px solid var(--or);}
+.hdr-btns{display:flex;gap:7px;}
+.hbtn{
+  border:2px solid var(--or);font-size:.75rem;font-weight:700;
+  padding:7px 14px;border-radius:6px;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;white-space:nowrap;transition:all .13s;
+}
+.hbtn.out{background:var(--wh);color:var(--or);}
+.hbtn.fill{background:var(--or);color:var(--wh);}
+.hbtn:hover{opacity:.85;}
+
+/* ══════════════════════════════
+   PAGES
+══════════════════════════════ */
+.page{display:none;}
+.page.on{display:block;}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero{
+  background:linear-gradient(135deg,var(--or) 0%,#ff9100 100%);
+  padding:36px 20px 30px;
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:220px;height:220px;border-radius:50%;
+  background:rgba(255,255,255,.08);pointer-events:none;
+}
+.hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.hero-tag{
+  display:inline-block;background:rgba(255,255,255,.2);
+  color:var(--wh);font-size:.72rem;font-weight:700;
+  padding:4px 12px;border-radius:4px;margin-bottom:12px;
+}
+.hero h1{
+  font-size:2rem;font-weight:900;color:var(--wh);
+  line-height:1.35;margin-bottom:6px;
+}
+.hero h1 mark{
+  background:rgba(255,255,255,.22);color:var(--wh);
+  padding:0 8px;border-radius:3px;
+}
+.hero-sub{font-size:.82rem;color:rgba(255,255,255,.85);margin-bottom:20px;}
+.hero-stats{display:flex;gap:10px;flex-wrap:wrap;}
+.hs{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:8px;padding:10px 16px;text-align:center;min-width:90px;
+}
+.hs-n{font-size:1.2rem;font-weight:900;color:var(--wh);line-height:1;}
+.hs-l{font-size:.58rem;color:rgba(255,255,255,.75);margin-top:3px;}
+
+/* ══════════════════════════════
+   SEARCH BOX (hero bottom)
+══════════════════════════════ */
+.search-box{
+  background:var(--wh);
+  max-width:1280px;margin:0 auto;
+  border-radius:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);
+  border:1px solid var(--bd);
+  margin-top:-18px;position:relative;z-index:10;
+  overflow:hidden;
+}
+.sb-rows{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);}
+.sb-row{
+  flex:1;display:flex;align-items:center;
+  padding:13px 16px;gap:10px;
+  border-right:1px solid var(--bd);
+}
+.sb-row:last-of-type{border-right:none;}
+.sb-ico{font-size:1rem;color:var(--or);flex-shrink:0;}
+.sb-in{
+  flex:1;border:none;outline:none;
+  font-size:.88rem;color:var(--dk);
+  font-family:'Noto Sans JP',sans-serif;background:transparent;
+}
+.sb-in::placeholder{color:var(--lt);}
+.sb-badge{
+  background:var(--or3);color:var(--or);
+  font-size:.68rem;font-weight:700;
+  padding:4px 10px;border-radius:4px;
+  cursor:pointer;border:1px solid rgba(255,107,0,.2);
+  white-space:nowrap;
+}
+.sb-btn{
+  display:block;width:100%;
+  background:var(--or);color:var(--wh);
+  border:none;padding:15px;
+  font-size:.95rem;font-weight:900;cursor:pointer;
+  letter-spacing:2px;font-family:'Noto Sans JP',sans-serif;
+  transition:opacity .13s;
+}
+.sb-btn:hover{opacity:.9;}
+
+/* ══════════════════════════════
+   MAIN LAYOUT (PC: sidebar + content)
+══════════════════════════════ */
+.main-wrap{
+  max-width:1280px;margin:24px auto 40px;
+  padding:0 20px;
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:24px;
+  align-items:start;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  position:sticky;top:calc(var(--hdr) + 16px);
+  display:flex;flex-direction:column;gap:14px;
+}
+.sbox{
+  background:var(--wh);border:1px solid var(--bd);
+  border-radius:10px;overflow:hidden;
+}
+.sbox-title{
+  background:#f9f9f9;border-bottom:1px solid var(--bd);
+  padding:11px 16px;font-size:.8rem;font-weight:900;color:var(--dk);
+  display:flex;align-items:center;gap:7px;
+}
+.sbox-title::before{
+  content:'';width:3px;height:13px;
+  background:var(--or);border-radius:2px;flex-shrink:0;
+}
+.sbox-body{padding:14px 16px;}
+.stags{display:flex;flex-wrap:wrap;gap:6px;}
+.stag{
+  border:1.5px solid var(--bd);background:var(--wh);
+  color:var(--dk);font-size:.73rem;font-weight:500;
+  padding:5px 11px;border-radius:20px;
+  cursor:pointer;transition:all .12s;
+  font-family:'Noto Sans JP',sans-serif;
+}
+.stag.on{border-color:var(--or);background:var(--or3);color:var(--or);font-weight:700;}
+.rng-row{display:flex;flex-direction:column;gap:8px;}
+.rng-lbl{display:flex;justify-content:space-between;font-size:.72rem;color:var(--md);}
+.rng-lbl span:last-child{color:var(--or);font-weight:700;}
+input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
+.sbox-cbs{padding:12px 16px;display:flex;flex-direction:column;gap:6px;}
+.scb{
+  display:flex;align-items:center;gap:8px;
+  font-size:.76rem;color:var(--dk);cursor:pointer;
+  padding:3px 0;
+}
+.scb input{accent-color:var(--or);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.sidebar-apply{
+  display:block;width:100%;
+  background:var(--or);color:var(--wh);border:none;
+  padding:13px;border-radius:8px;
+  font-size:.88rem;font-weight:900;cursor:pointer;
+  letter-spacing:1px;font-family:'Noto Sans JP',sans-serif;
+  transition:opacity .13s;
+}
+.sidebar-apply:hover{opacity:.88;}
+
+/* ── CONTENT AREA ── */
+.content-area{}
+.result-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;flex-wrap:wrap;gap:8px;
+}
+.result-cnt{font-size:.88rem;color:var(--dk);}
+.result-cnt strong{font-size:1.1rem;font-weight:900;color:var(--or);}
+.sort-row{display:flex;gap:6px;}
+.srt{
+  border:1.5px solid var(--bd);background:var(--wh);
+  color:var(--md);font-size:.7rem;font-weight:700;
+  padding:5px 12px;border-radius:20px;
+  cursor:pointer;font-family:'Noto Sans JP',sans-serif;
+  transition:all .12s;
+}
+.srt.on{background:var(--or);border-color:var(--or);color:var(--wh);}
+
+/* ── JOB GRID ── */
+.jgrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;
+}
+
+/* ── JOB CARD ── */
+.jcard{
+  background:var(--wh);border:1px solid var(--bd);
+  border-radius:10px;overflow:hidden;
+  position:relative;cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  transition:box-shadow .18s,transform .18s;
+  animation:cIn .35s ease both;
+  display:flex;flex-direction:column;
+}
+.jcard:hover{box-shadow:0 6px 24px rgba(0,0,0,.12);transform:translateY(-2px);}
+@keyframes cIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.jcard:nth-child(2){animation-delay:.05s}
+.jcard:nth-child(3){animation-delay:.1s}
+.jcard:nth-child(4){animation-delay:.15s}
+.jcard:nth-child(5){animation-delay:.2s}
+.jcard:nth-child(6){animation-delay:.25s}
+
+/* badges */
+.cbadges{
+  position:absolute;top:10px;left:10px;
+  display:flex;gap:4px;flex-wrap:wrap;z-index:2;
+}
+.cbdg{
+  font-size:.6rem;font-weight:700;
+  padding:3px 8px;border-radius:3px;letter-spacing:.5px;
+  backdrop-filter:blur(4px);
+}
+.b-pick{background:#ff6b00;color:#fff;}
+.b-new{background:#1565c0;color:#fff;}
+.b-urg{background:#e53935;color:#fff;}
+.b-hi{background:#2e7d32;color:#fff;}
+
+/* card image */
+.c-img{
+  height:170px;overflow:hidden;
+  background:#eee;position:relative;flex-shrink:0;
+}
+.c-img img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease;}
+.jcard:hover .c-img img{transform:scale(1.04);}
+.c-img-ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);
+}
+.cip-ico{font-size:2rem;}
+.cip-nm{font-size:.66rem;color:var(--lt);font-weight:700;letter-spacing:1px;}
+.c-img-type{
+  position:absolute;bottom:8px;left:10px;z-index:2;
+  background:rgba(0,0,0,.6);color:#fff;
+  font-size:.6rem;font-weight:700;
+  padding:3px 8px;border-radius:3px;
+}
+.c-bm{
+  position:absolute;top:8px;right:10px;z-index:3;
+  background:rgba(255,255,255,.9);border:none;
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;cursor:pointer;color:#ccc;
+  box-shadow:0 1px 4px rgba(0,0,0,.15);transition:all .13s;
+}
+.c-bm:hover,.c-bm.on{color:var(--red);}
+
+/* card body */
+.c-body{padding:13px 13px 11px;flex:1;display:flex;flex-direction:column;}
+.c-name{font-size:.98rem;font-weight:900;color:var(--dk);margin-bottom:1px;line-height:1.3;}
+.c-loc{font-size:.7rem;color:var(--md);margin-bottom:8px;display:flex;align-items:center;gap:3px;}
+.c-pay{
+  background:var(--or3);border:1px solid rgba(255,107,0,.15);
+  border-radius:6px;padding:8px 10px;margin-bottom:8px;
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
+}
+.cp-lbl{font-size:.62rem;color:var(--md);}
+.cp-main{font-size:1.45rem;font-weight:900;color:var(--or);line-height:1;}
+.cp-max{font-size:.72rem;color:var(--md);}
+.cp-tag{
+  font-size:.6rem;font-weight:700;
+  background:var(--wh);color:var(--or);
+  border:1px solid rgba(255,107,0,.25);
+  padding:2px 7px;border-radius:3px;margin-left:auto;
+}
+.c-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.chip{
+  font-size:.66rem;color:var(--dk);
+  border:1px solid var(--bd);background:var(--wh);
+  padding:3px 8px;border-radius:3px;
+}
+.c-desc{
+  font-size:.74rem;color:var(--md);line-height:1.7;
+  display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden;
+  margin-bottom:10px;flex:1;
+}
+.c-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:10px;border-top:1px solid var(--bd);margin-top:auto;
+}
+.c-date{font-size:.64rem;color:var(--lt);display:flex;align-items:center;gap:4px;}
+.ndot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;
+  animation:blink 1.6s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.c-apply{
+  background:var(--or);color:var(--wh);border:none;
+  padding:9px 18px;border-radius:6px;
+  font-size:.75rem;font-weight:900;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;
+  box-shadow:0 3px 10px rgba(255,107,0,.3);
+  transition:all .13s;white-space:nowrap;
+}
+.c-apply:hover{opacity:.88;}
+
+/* ── PAGINATION ── */
+.pag{
+  display:flex;justify-content:center;gap:5px;
+  padding:28px 0 0;
+}
+.pg{
+  width:36px;height:36px;border-radius:6px;
+  border:1.5px solid var(--bd);background:var(--wh);
+  color:var(--md);font-size:.8rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;transition:all .12s;
+}
+.pg.on{background:var(--or);border-color:var(--or);color:var(--wh);}
+.pg:hover:not(.on){border-color:var(--or);color:var(--or);}
+
+/* ══════════════════════════════
+   OWNER PAGE (PC)
+══════════════════════════════ */
+.owner-wrap{max-width:900px;margin:28px auto 40px;padding:0 20px;}
+.owner-hero{
+  background:linear-gradient(135deg,var(--or),#ff9100);
+  border-radius:12px;padding:32px 30px;
+  margin-bottom:24px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.owner-hero::after{
+  content:'';position:absolute;right:-30px;top:-30px;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,.08);pointer-events:none;
+}
+.oh-inner{position:relative;z-index:1;}
+.owner-hero h2{font-size:1.7rem;font-weight:900;color:var(--wh);margin-bottom:6px;}
+.owner-hero p{font-size:.82rem;color:rgba(255,255,255,.85);}
+.o-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.o-col{display:flex;flex-direction:column;gap:16px;}
+.osec{background:var(--wh);border:1px solid var(--bd);border-radius:10px;overflow:hidden;}
+.osec-title{
+  background:#f9f9f9;border-bottom:1px solid var(--bd);
+  padding:12px 18px;font-size:.82rem;font-weight:900;color:var(--dk);
+  display:flex;align-items:center;gap:7px;
+}
+.osec-title::before{content:'';width:3px;height:13px;background:var(--or);border-radius:2px;}
+.osec-body{padding:16px 18px;}
+.plans{display:flex;flex-direction:column;gap:8px;}
+.pc{
+  border:2px solid var(--bd);border-radius:8px;
+  padding:13px 15px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  transition:all .15s;position:relative;background:var(--wh);
+}
+.pc.sel{border-color:var(--or);background:var(--or3);}
+.pc.pop::after{
+  content:'人気';position:absolute;top:-9px;right:12px;
+  background:var(--or);color:var(--wh);
+  font-size:.58rem;font-weight:900;padding:2px 10px;border-radius:3px;
+}
+.pc-ico{font-size:1.4rem;flex-shrink:0;}
+.pc-info{flex:1;}
+.pc-name{font-size:.88rem;font-weight:900;color:var(--dk);margin-bottom:1px;}
+.pc-feats{font-size:.65rem;color:var(--md);line-height:1.6;}
+.pc-price{text-align:right;flex-shrink:0;}
+.pc-main{font-size:1.3rem;font-weight:900;color:var(--or);line-height:1;}
+.pc-per{font-size:.58rem;color:var(--lt);}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.fg:last-child{margin-bottom:0;}
+.fl{font-size:.72rem;font-weight:700;color:var(--dk);}
+.fl.req::after{content:' *';color:var(--red);}
+.fi{
+  padding:10px 12px;border:1.5px solid var(--bd);border-radius:6px;
+  font-size:.86rem;color:var(--dk);background:var(--wh);outline:none;
+  font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .13s;
+}
+.fi:focus{border-color:var(--or);}
+textarea.fi{resize:vertical;min-height:80px;}
+select.fi{appearance:none;cursor:pointer;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row2 .fg{margin-bottom:0;}
+.img-upload{
+  border:2px dashed var(--bd);border-radius:8px;
+  background:#fafafa;text-align:center;
+  padding:22px;cursor:pointer;
+  transition:all .18s;position:relative;overflow:hidden;
+}
+.img-upload:hover{border-color:var(--or);background:var(--or3);}
+.img-upload.has{border-style:solid;border-color:var(--or);padding:0;}
+.img-upload.has img{width:100%;height:160px;object-fit:cover;border-radius:5px;}
+.img-upload input[type=file]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.iup-ico{font-size:1.8rem;margin-bottom:7px;color:var(--lt);}
+.iup-txt{font-size:.78rem;font-weight:700;color:var(--dk);margin-bottom:3px;}
+.iup-sub{font-size:.64rem;color:var(--lt);}
+.iup-change{
+  position:absolute;inset:0;background:rgba(0,0,0,.45);
+  color:#fff;font-size:.72rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .18s;border-radius:5px;
+}
+.img-upload.has:hover .iup-change{opacity:1;}
+.cb-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px;}
+.cbi{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 11px;border:1.5px solid var(--bd);border-radius:20px;
+  cursor:pointer;font-size:.73rem;color:var(--dk);
+  transition:all .12s;font-weight:500;
+}
+.cbi:hover{border-color:var(--or);color:var(--or);}
+.cbi input{accent-color:var(--or);width:13px;height:13px;cursor:pointer;}
+.plan-bar{
+  background:#f9f9f9;border:1px solid var(--bd);border-radius:8px;
+  padding:13px 16px;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.pb-l{font-size:.67rem;color:var(--md);margin-bottom:2px;}
+.pb-n{font-size:.9rem;font-weight:900;color:var(--dk);}
+.pb-p{font-size:1.5rem;font-weight:900;color:var(--or);line-height:1;}
+.pb-per{font-size:.6rem;color:var(--lt);}
+.big-btn{
+  display:block;width:100%;
+  background:var(--or);color:var(--wh);border:none;
+  padding:15px;border-radius:8px;
+  font-size:.95rem;font-weight:900;cursor:pointer;
+  letter-spacing:1.5px;font-family:'Noto Sans JP',sans-serif;
+  box-shadow:0 4px 14px rgba(255,107,0,.3);transition:opacity .13s;
+}
+.big-btn:hover{opacity:.88;}
+.submit-note{font-size:.65rem;color:var(--lt);text-align:center;margin-top:8px;}
+
+/* ══════════════════════════════
+   BOTTOM NAV (スマホのみ)
+══════════════════════════════ */
+.bnav{display:none;}
+
+/* ══════════════════════════════
+   MODAL (3-step bottom sheet)
+══════════════════════════════ */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:500;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+  padding:20px;
+}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--wh);border-radius:14px;
+  width:100%;max-width:500px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  transform:scale(.94) translateY(20px);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  max-height:90vh;overflow-y:auto;
+}
+.modal-bg.open .modal{transform:scale(1) translateY(0);}
+.m-prog{background:#eee;height:3px;}
+.mpfill{height:100%;background:var(--or);transition:width .3s ease;}
+.m-steps{display:flex;padding:16px 20px 0;}
+.ms{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;}
+.ms::after{content:'';position:absolute;top:10px;left:50%;right:-50%;height:1.5px;background:#eee;z-index:0;}
+.ms:last-child::after{display:none;}
+.ms-dot{
+  width:21px;height:21px;border-radius:50%;
+  border:2px solid #e0e0e0;background:var(--wh);
+  font-size:.62rem;color:var(--lt);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;z-index:1;transition:all .2s;
+}
+.ms.done .ms-dot{background:var(--or);border-color:var(--or);color:#fff;}
+.ms.act .ms-dot{border-color:var(--or);color:var(--or);}
+.ms-lbl{font-size:.55rem;color:var(--lt);}
+.ms.act .ms-lbl,.ms.done .ms-lbl{color:var(--or);font-weight:700;}
+.m-head{padding:14px 20px 0;position:relative;}
+.m-close{
+  position:absolute;top:0;right:20px;background:#f0f0f0;border:none;
+  width:26px;height:26px;border-radius:50%;cursor:pointer;
+  font-size:.8rem;color:var(--md);
+  display:flex;align-items:center;justify-content:center;
+}
+.m-close:hover{background:var(--bd);}
+.m-store{font-size:.68rem;font-weight:700;color:var(--or);}
+.m-title{font-size:1.05rem;font-weight:900;color:var(--dk);margin-top:2px;}
+.m-body{padding:14px 20px 12px;}
+.sp{display:none;}
+.sp.act{display:flex;flex-direction:column;gap:12px;}
+.rw2m{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.date-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.dopt{
+  background:#f9f9f9;border:1.5px solid var(--bd);
+  border-radius:8px;padding:9px 5px;text-align:center;cursor:pointer;transition:all .13s;
+  position:relative;
+}
+.dopt:hover:not(.closed):not(.past){background:#fff;border-color:var(--or);}
+.dopt.pk{background:var(--or);border-color:var(--or);}
+.dopt.pk *{color:#fff!important;}
+.dopt.closed{background:#f9f9f9;cursor:not-allowed;opacity:.5;}
+.dopt.closed .do-d{color:var(--lt);}
+.dopt.closed::after{content:'定休';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);font-size:.48rem;color:var(--red);font-weight:700;letter-spacing:.5px;}
+.dopt.past{opacity:.35;cursor:not-allowed;}
+.do-w{font-size:.55rem;color:var(--lt);letter-spacing:1px;}
+.do-d{font-size:1.35rem;font-weight:900;color:var(--dk);line-height:1.1;}
+.do-m{font-size:.58rem;color:var(--lt);}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.cal-nav-btn{background:none;border:1.5px solid var(--bd);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:.85rem;color:var(--md);display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.cal-nav-btn:hover{border-color:var(--or);color:var(--or);}
+.cal-month{font-size:.82rem;font-weight:700;color:var(--dk);}
+.cal-legend{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;}
+.cal-leg-item{display:flex;align-items:center;gap:4px;font-size:.62rem;color:var(--md);}
+.cal-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.trow{display:flex;flex-wrap:wrap;gap:7px;}
+.topt{
+  border:1.5px solid var(--bd);background:var(--wh);
+  padding:7px 13px;border-radius:6px;
+  font-size:.76rem;font-weight:700;cursor:pointer;
+  color:var(--dk);font-family:'Noto Sans JP',sans-serif;transition:all .13s;
+}
+.topt.pk{background:var(--or);border-color:var(--or);color:#fff;}
+.conf-card{background:#f9f9f9;border:1.5px solid var(--bd);border-radius:8px;padding:14px;}
+.cc-ttl{font-size:.9rem;font-weight:900;color:var(--dk);margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--bd);}
+.cc-row{display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:6px;}
+.cc-l{color:var(--md);}
+.cc-v{font-weight:700;color:var(--dk);}
+.conf-note{font-size:.7rem;color:var(--md);line-height:1.75;background:var(--or3);border-left:3px solid var(--or);padding:9px 12px;border-radius:0 6px 6px 0;}
+.m-foot{padding:0 20px 20px;display:flex;gap:8px;}
+.btn-back{flex:1;background:var(--wh);color:var(--md);border:1.5px solid var(--bd);padding:12px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.btn-next{flex:2;background:var(--or);color:#fff;border:none;padding:12px;border-radius:8px;font-size:.88rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 12px rgba(255,107,0,.3);}
+.btn-sub{flex:2;background:#2e7d32;color:#fff;border:none;padding:12px;border-radius:8px;font-size:.88rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.msuc{display:none;padding:30px 20px 24px;text-align:center;flex-direction:column;align-items:center;gap:12px;}
+.msuc.show{display:flex;}
+.suc-ico{width:64px;height:64px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:1.8rem;animation:popIn .38s cubic-bezier(.4,0,.2,1);box-shadow:0 6px 20px rgba(255,107,0,.3);}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.suc-ttl{font-size:1.3rem;font-weight:900;color:var(--dk);}
+.suc-sub{font-size:.76rem;color:var(--md);line-height:1.85;}
+.suc-close{background:var(--or);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:.85rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:4px;}
+
+/* ══════════════════════════════
+   RESPONSIVE: TABLET (≤ 1024px)
+══════════════════════════════ */
+@media(max-width:1024px){
+  .main-wrap{
+    grid-template-columns:220px 1fr;
+    gap:18px;padding:0 16px;
+  }
+  .hero h1{font-size:1.6rem;}
+  .hdr-search{max-width:320px;}
+  .hnav-tab{padding:8px 10px;font-size:.75rem;}
+  .o-grid{grid-template-columns:1fr;}
+}
+
+/* ══════════════════════════════
+   RESPONSIVE: MOBILE (≤ 768px)
+══════════════════════════════ */
+@media(max-width:768px){
+  /* Header */
+  .hdr-menu{display:block;}
+  .hdr-search,.hnav-tab,.hdr-btns{display:none;}
+  .logo{flex:1;text-align:center;}
+
+  /* Hero */
+  .hero{padding:22px 14px 20px;}
+  .hero h1{font-size:1.35rem;}
+  .hero-stats .hs{min-width:auto;flex:1;padding:8px 10px;}
+
+  /* Search box */
+  .search-box{margin:0 10px;margin-top:-16px;}
+  .sb-rows{flex-direction:column;}
+  .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:11px 14px;}
+  .sb-row:last-of-type{border-bottom:none;}
+
+  /* Main layout: single column */
+  .main-wrap{
+    grid-template-columns:1fr;
+    margin:14px auto 80px;
+    padding:0 10px;gap:0;
+  }
+
+  /* Sidebar becomes horizontal filter strip */
+  .sidebar{
+    position:static;
+    flex-direction:column;
+    margin-bottom:14px;
+  }
+  /* Compact mode for mobile sidebar */
+  .sbox{border-radius:8px;}
+
+  /* Cards become 1 column */
+  .jgrid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  /* Card image */
+  .c-img{height:150px;}
+
+  /* Owner */
+  .owner-wrap{padding:0 10px;margin-top:16px;margin-bottom:80px;}
+  .owner-hero{padding:24px 18px;border-radius:10px;}
+  .owner-hero h2{font-size:1.3rem;}
+  .o-grid{grid-template-columns:1fr;}
+
+  /* Bottom nav */
+  .bnav{
+    display:flex;
+    position:fixed;bottom:0;left:0;right:0;
+    background:var(--wh);border-top:1px solid var(--bd);
+    z-index:300;box-shadow:0 -2px 10px rgba(0,0,0,.08);
+  }
+  .bnav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:2px;padding:9px 4px 11px;
+    cursor:pointer;border:none;background:transparent;
+  }
+  .bnav-item.on .ni{color:var(--or);}
+  .bnav-item.on .nl{color:var(--or);font-weight:700;}
+  .ni{font-size:1.2rem;color:var(--lt);}
+  .nl{font-size:.55rem;color:var(--lt);font-family:'Noto Sans JP',sans-serif;}
+
+  /* Modal: bottom sheet on mobile */
+  .modal-bg{align-items:flex-end;padding:0;}
+  .modal{border-radius:16px 16px 0 0;max-width:100%;max-height:88vh;}
+  .modal-bg.open .modal{transform:none;}
+  .modal-bg:not(.open) .modal{transform:translateY(100%)!important;}
+}
+
+/* ══════════════════════════════
+   RESPONSIVE: SMALL MOBILE (≤ 380px)
+══════════════════════════════ */
+@media(max-width:380px){
+  .hero h1{font-size:1.15rem;}
+  .hdr-inner{padding:0 12px;}
+  .main-wrap{padding:0 8px;}
+  .owner-wrap{padding:0 8px;}
+}
+
+/* ══════════════════════════════
+   ADMIN: LOGIN OVERLAY
+══════════════════════════════ */
+.admin-login-bg{
+  position:fixed;inset:0;z-index:9000;
+  background:linear-gradient(135deg,#1a1a2e 0%,#2d2d44 100%);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.admin-login-box{
+  background:#fff;border-radius:14px;
+  width:100%;max-width:380px;
+  box-shadow:0 24px 80px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+.alb-top{
+  background:linear-gradient(135deg,#1a1a2e,#3d3d5c);
+  padding:28px 28px 22px;text-align:center;
+}
+.alb-icon{
+  width:52px;height:52px;border-radius:12px;
+  background:var(--or);margin:0 auto 12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;font-weight:900;color:#fff;
+}
+.alb-title{font-size:1.1rem;font-weight:900;color:#fff;letter-spacing:1px;}
+.alb-sub{font-size:.68rem;color:rgba(255,255,255,.4);margin-top:3px;letter-spacing:2px;}
+.alb-body{padding:24px 28px;}
+.alb-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.alb-label{font-size:.72rem;font-weight:700;color:#555;}
+.alb-input{
+  padding:11px 13px;border:1.5px solid var(--bd);border-radius:8px;
+  font-size:.9rem;color:#222;outline:none;
+  font-family:'Noto Sans JP',sans-serif;transition:border-color .13s;
+}
+.alb-input:focus{border-color:var(--or);}
+.alb-btn{
+  width:100%;background:var(--or);color:#fff;border:none;
+  padding:13px;border-radius:8px;font-size:.9rem;font-weight:900;
+  cursor:pointer;letter-spacing:1px;font-family:'Noto Sans JP',sans-serif;
+  box-shadow:0 4px 14px rgba(255,107,0,.3);transition:opacity .13s;margin-top:4px;
+}
+.alb-btn:hover{opacity:.88;}
+.alb-err{display:none;font-size:.73rem;color:var(--red);background:#fee2e2;border-radius:6px;padding:8px 12px;margin-bottom:10px;}
+.alb-err.show{display:block;}
+.alb-hint{font-size:.65rem;color:var(--lt);text-align:center;margin-top:14px;}
+
+/* ══════════════════════════════
+   ADMIN: LAYOUT (全画面オーバーレイ)
+══════════════════════════════ */
+.admin-shell{
+  display:none;
+  position:fixed;inset:0;z-index:8000;
+  background:#f0f2f5;
+  flex-direction:column;
+}
+.admin-shell.open{display:flex;}
+
+/* ── Admin Header ── */
+.adm-hdr{
+  height:54px;background:#fff;border-bottom:1px solid #e5e8ef;
+  display:flex;align-items:center;padding:0 20px;gap:14px;
+  flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.06);z-index:10;
+}
+.adm-sb-toggle{
+  background:none;border:none;font-size:1.2rem;color:#777;
+  cursor:pointer;padding:4px;display:none;
+}
+.adm-logo{
+  display:flex;align-items:center;gap:9px;flex-shrink:0;
+}
+.adm-logo-icon{
+  width:30px;height:30px;border-radius:7px;background:var(--or);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.82rem;font-weight:900;color:#fff;flex-shrink:0;
+}
+.adm-logo-text{font-size:.8rem;font-weight:900;color:#1a1a2e;letter-spacing:.5px;}
+.adm-logo-badge{
+  font-size:.55rem;background:#1a1a2e;color:#fff;
+  padding:2px 7px;border-radius:3px;letter-spacing:2px;font-weight:700;
+}
+.adm-title{font-size:.9rem;font-weight:900;color:#1a1a2e;flex:1;}
+.adm-title small{font-size:.62rem;color:#9ca3af;font-weight:400;margin-left:6px;}
+.adm-hdr-right{display:flex;align-items:center;gap:8px;}
+.adm-date{font-size:.7rem;color:#9ca3af;white-space:nowrap;}
+.adm-notif{
+  position:relative;width:32px;height:32px;border-radius:7px;
+  background:#f4f4f4;border:1px solid #e5e5e5;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;
+}
+.adm-notif-dot{
+  position:absolute;top:5px;right:5px;width:7px;height:7px;
+  border-radius:50%;background:var(--red);border:1.5px solid #fff;
+}
+.adm-exit{
+  background:none;border:1.5px solid #e5e5e5;color:#777;
+  font-size:.72rem;font-weight:700;padding:6px 12px;border-radius:6px;
+  cursor:pointer;font-family:'Noto Sans JP',sans-serif;
+  transition:all .13s;white-space:nowrap;
+}
+.adm-exit:hover{border-color:var(--red);color:var(--red);}
+
+/* ── Admin Body ── */
+.adm-body{display:flex;flex:1;overflow:hidden;}
+
+/* ── Admin Sidebar ── */
+.adm-sidebar{
+  width:210px;background:#1a1a2e;flex-shrink:0;
+  display:flex;flex-direction:column;overflow-y:auto;
+  transition:transform .25s ease;
+}
+.adm-sb-sec{padding:8px 10px 3px;}
+.adm-sb-lbl{
+  font-size:.55rem;color:rgba(255,255,255,.25);
+  letter-spacing:3px;text-transform:uppercase;
+  padding:0 8px;margin-bottom:3px;
+}
+.adm-sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:7px;cursor:pointer;
+  color:rgba(255,255,255,.5);font-size:.78rem;font-weight:500;
+  border:none;background:transparent;width:100%;text-align:left;
+  font-family:'Noto Sans JP',sans-serif;transition:all .12s;
+  white-space:nowrap;
+}
+.adm-sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);}
+.adm-sb-item.on{background:rgba(255,107,0,.15);color:#ff8c33;}
+.adm-si-ico{font-size:.95rem;flex-shrink:0;width:16px;text-align:center;}
+.adm-si-bdg{
+  margin-left:auto;font-size:.57rem;font-weight:900;
+  padding:2px 6px;border-radius:8px;
+}
+.bdg-red{background:var(--red);color:#fff;}
+.bdg-yel{background:#f59e0b;color:#1a1a2e;}
+.bdg-grn{background:#22c55e;color:#fff;}
+.adm-sb-foot{
+  margin-top:auto;padding:12px 10px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.adm-user{display:flex;align-items:center;gap:9px;padding:6px 8px;}
+.adm-avatar{
+  width:30px;height:30px;border-radius:50%;background:var(--or);
+  color:#fff;font-size:.78rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.adm-user-name{font-size:.74rem;font-weight:700;color:#fff;}
+.adm-user-role{font-size:.58rem;color:rgba(255,255,255,.3);letter-spacing:1px;}
+
+/* ── Admin Content ── */
+.adm-content{flex:1;overflow-y:auto;padding:20px;}
+.adm-page{display:none;}
+.adm-page.on{display:block;animation:pgIn .22s ease;}
+@keyframes pgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* KPI Grid */
+.adm-kpi-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;
+}
+.adm-kpi{
+  background:#fff;border:1px solid #e5e8ef;border-radius:10px;
+  padding:16px 18px;position:relative;overflow:hidden;
+  transition:box-shadow .14s;
+}
+.adm-kpi:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.adm-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kc-or::before{background:var(--or);}
+.kc-gr::before{background:#22c55e;}
+.kc-bl::before{background:#3b82f6;}
+.kc-pu::before{background:#8b5cf6;}
+.kc-re::before{background:var(--red);}
+.adm-kpi-lbl{font-size:.66rem;color:#6b7280;font-weight:700;letter-spacing:.5px;margin-bottom:7px;}
+.adm-kpi-num{font-size:1.7rem;font-weight:900;color:#1a1a2e;line-height:1;margin-bottom:4px;}
+.adm-kpi-sub{font-size:.68rem;display:flex;align-items:center;gap:3px;}
+.adm-kpi-ico{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.8rem;opacity:.1;}
+.up{color:#22c55e;}.dn{color:var(--red);}
+
+/* Section box */
+.adm-sbox{background:#fff;border:1px solid #e5e8ef;border-radius:10px;overflow:hidden;margin-bottom:18px;}
+.adm-sbox:last-child{margin-bottom:0;}
+.adm-shead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid #e5e8ef;background:#fafbfc;
+}
+.adm-stitle{
+  font-size:.82rem;font-weight:900;color:#1a1a2e;
+  display:flex;align-items:center;gap:7px;
+}
+.adm-stitle::before{content:'';width:3px;height:13px;background:var(--or);border-radius:2px;flex-shrink:0;}
+.adm-saction{
+  font-size:.7rem;color:var(--or);cursor:pointer;font-weight:700;
+  background:#fff3e8;border:1px solid rgba(255,107,0,.2);
+  padding:4px 11px;border-radius:5px;transition:all .13s;white-space:nowrap;
+}
+.adm-saction:hover{background:var(--or);color:#fff;}
+
+/* Dashboard grid */
+.adm-dash-grid{display:grid;grid-template-columns:1fr 300px;gap:18px;}
+
+/* Bar chart */
+.adm-bars{display:flex;flex-direction:column;gap:9px;padding:14px 16px;}
+.adm-br{display:flex;align-items:center;gap:10px;}
+.adm-bl{font-size:.7rem;color:#777;width:65px;text-align:right;flex-shrink:0;}
+.adm-bt{flex:1;background:#f0f2f5;border-radius:3px;height:9px;overflow:hidden;}
+.adm-bf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--or),#ff8c33);transition:width 1.1s ease;}
+.adm-bv{font-size:.68rem;font-weight:700;color:var(--or);width:36px;flex-shrink:0;}
+
+/* Mini stats */
+.adm-mini{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:14px 16px;}
+.adm-ms{background:#f0f2f5;border-radius:7px;padding:11px 13px;}
+.adm-ms-l{font-size:.63rem;color:#777;margin-bottom:3px;}
+.adm-ms-n{font-size:1.2rem;font-weight:900;color:#1a1a2e;}
+.adm-ms-s{font-size:.63rem;color:#9ca3af;margin-top:1px;}
+
+/* App list */
+.adm-apps{padding:8px 12px;display:flex;flex-direction:column;gap:7px;}
+.adm-app{
+  background:#f9f9f9;border-radius:8px;padding:11px 13px;
+  display:flex;align-items:flex-start;gap:10px;border:1px solid #e5e8ef;
+  transition:all .12s;
+}
+.adm-app:hover{border-color:var(--or);background:#fff3e8;}
+.adm-ava{
+  width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--or),#ff8c33);
+  color:#fff;font-size:.85rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.adm-app-info{flex:1;min-width:0;}
+.adm-app-name{font-size:.8rem;font-weight:700;color:#1a1a2e;}
+.adm-app-store{font-size:.66rem;color:#777;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.adm-app-time{font-size:.6rem;color:#aaa;flex-shrink:0;}
+.adm-app-acts{display:flex;gap:5px;margin-top:6px;}
+.adm-aa{
+  font-size:.64rem;font-weight:700;padding:3px 9px;border-radius:4px;
+  border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .12s;
+}
+.adm-aa-ok{background:#22c55e;color:#fff;}
+.adm-aa-ng{background:#f0f2f5;color:#777;border:1px solid #e5e5e5;}
+
+/* Revenue */
+.adm-rev-bars{padding:0 16px 14px;}
+.adm-rbar{margin-bottom:10px;}
+.adm-rbl{display:flex;justify-content:space-between;font-size:.7rem;color:#777;margin-bottom:4px;}
+.adm-rbl span:last-child{font-weight:700;color:#1a1a2e;}
+.adm-rtrack{background:#f0f2f5;border-radius:3px;height:8px;overflow:hidden;}
+.adm-rfill{height:100%;border-radius:3px;transition:width 1.2s ease;}
+
+/* Table */
+.adm-tbl-wrap{overflow-x:auto;}
+.adm-tbl{width:100%;border-collapse:collapse;}
+.adm-tbl th{
+  text-align:left;font-size:.62rem;font-weight:700;
+  color:#9ca3af;letter-spacing:1.5px;text-transform:uppercase;
+  padding:9px 14px;border-bottom:1.5px solid #e5e8ef;
+  background:#fafbfc;white-space:nowrap;
+}
+.adm-tbl td{
+  padding:11px 14px;border-bottom:1px solid #e5e8ef;
+  font-size:.78rem;color:#333;vertical-align:middle;
+}
+.adm-tbl tr:last-child td{border-bottom:none;}
+.adm-tbl tr:hover td{background:#fafbfc;}
+.td-main{font-weight:700;}
+.td-sub{font-size:.66rem;color:#aaa;margin-top:1px;}
+
+/* Badges */
+.abadge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:.63rem;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;
+}
+.abadge::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.ab-on{background:#dcfce7;color:#15803d;}.ab-on::before{background:#22c55e;}
+.ab-rev{background:#fef9c3;color:#854d0e;}.ab-rev::before{background:#f59e0b;}
+.ab-off{background:#fee2e2;color:#991b1b;}.ab-off::before{background:var(--red);}
+.ab-new{background:#dbeafe;color:#1d4ed8;}.ab-new::before{background:#3b82f6;}
+.plan-tag{font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:3px;letter-spacing:.5px;}
+.pt-pr{background:#8b5cf6;color:#fff;}
+.pt-st{background:var(--or);color:#fff;}
+.pt-lt{background:#e5e8ef;color:#6b7280;}
+
+/* Table actions */
+.adm-tacts{display:flex;gap:4px;flex-wrap:nowrap;}
+.adm-tact{
+  font-size:.64rem;font-weight:700;padding:4px 9px;
+  border:1.5px solid #e5e8ef;border-radius:4px;
+  cursor:pointer;background:#fff;color:#777;
+  font-family:'Noto Sans JP',sans-serif;transition:all .11s;white-space:nowrap;
+}
+.adm-tact:hover{border-color:var(--or);color:var(--or);}
+.adm-tact.ok{color:#22c55e;}.adm-tact.ok:hover{border-color:#22c55e;background:#dcfce7;}
+.adm-tact.danger{color:var(--red);}.adm-tact.danger:hover{border-color:var(--red);background:#fee2e2;}
+
+/* Filter row */
+.adm-filter-row{
+  padding:10px 14px;display:flex;gap:7px;flex-wrap:wrap;
+  border-bottom:1px solid #e5e8ef;background:#fafbfc;
+}
+.adm-fsel{
+  padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:6px;
+  font-size:.74rem;font-family:'Noto Sans JP',sans-serif;outline:none;cursor:pointer;
+  background:#fff;color:#333;transition:border-color .12s;
+}
+.adm-fsel:focus{border-color:var(--or);}
+.adm-fbtn{
+  padding:5px 13px;background:var(--or);color:#fff;
+  border:none;border-radius:6px;font-size:.74rem;font-weight:700;
+  cursor:pointer;font-family:'Noto Sans JP',sans-serif;
+}
+
+/* Plan cards */
+.adm-plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px 16px;}
+.adm-pc{border:1.5px solid #e5e8ef;border-radius:8px;padding:14px;position:relative;background:#fff;}
+.adm-pc.sel{border-color:var(--or);}
+.adm-pc-name{font-size:.85rem;font-weight:900;color:#1a1a2e;margin-bottom:2px;}
+.adm-pc-price{font-size:1.5rem;font-weight:900;color:var(--or);margin-bottom:8px;}
+.adm-pc-feats{display:flex;flex-direction:column;gap:4px;font-size:.72rem;color:#777;}
+.adm-pc-cnt{margin-top:10px;font-size:.72rem;color:#aaa;}
+.adm-pc-cnt strong{font-size:1rem;color:#1a1a2e;}
+.adm-pc-edit{
+  margin-top:10px;width:100%;padding:7px;background:var(--or3);
+  color:var(--or);border:1px solid rgba(255,107,0,.2);border-radius:6px;
+  font-size:.72rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;
+}
+
+/* Settings form */
+.adm-settings{max-width:540px;padding:16px;}
+.adm-sfg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.adm-sfg:last-child{margin-bottom:0;}
+.adm-sfl{font-size:.72rem;font-weight:700;color:#555;}
+.adm-sfi{
+  padding:10px 12px;border:1.5px solid #e5e8ef;border-radius:7px;
+  font-size:.86rem;color:#222;outline:none;
+  font-family:'Noto Sans JP',sans-serif;transition:border-color .12s;
+}
+.adm-sfi:focus{border-color:var(--or);}
+select.adm-sfi{appearance:none;cursor:pointer;}
+.adm-toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;background:#f9f9f9;border-radius:8px;
+  border:1px solid #e5e8ef;margin-bottom:9px;
+}
+.adm-toggle-info-title{font-size:.82rem;font-weight:700;color:#1a1a2e;}
+.adm-toggle-info-sub{font-size:.68rem;color:#9ca3af;margin-top:1px;}
+.adm-tog{
+  position:relative;width:42px;height:22px;flex-shrink:0;cursor:pointer;
+}
+.adm-tog input{opacity:0;width:0;height:0;}
+.adm-tog-track{
+  position:absolute;inset:0;border-radius:11px;background:#ccc;transition:.2s;
+}
+.adm-tog input:checked+.adm-tog-track{background:var(--or);}
+.adm-tog-thumb{
+  position:absolute;height:16px;width:16px;left:3px;bottom:3px;
+  background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.adm-tog input:checked~.adm-tog-thumb{transform:translateX(20px);}
+.adm-save-btn{
+  background:var(--or);color:#fff;border:none;padding:12px 24px;border-radius:8px;
+  font-size:.88rem;font-weight:900;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;
+  box-shadow:0 3px 10px rgba(255,107,0,.3);transition:opacity .13s;
+}
+.adm-save-btn:hover{opacity:.88;}
+
+/* Admin Modal */
+.adm-modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:9500;display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.adm-modal-bg.open{opacity:1;pointer-events:all;}
+.adm-modal{
+  background:#fff;border-radius:12px;width:100%;max-width:500px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  transform:scale(.95) translateY(14px);
+  transition:transform .24s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;max-height:88vh;overflow-y:auto;
+}
+.adm-modal-bg.open .adm-modal{transform:scale(1) translateY(0);}
+.adm-modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid #e5e8ef;background:#fafbfc;
+}
+.adm-modal-title{font-size:.88rem;font-weight:900;color:#1a1a2e;}
+.adm-modal-close{background:none;border:none;font-size:1rem;color:#777;cursor:pointer;padding:3px;}
+.dow-label:has(input:checked){border-color:var(--or)!important;background:#fff3e8;color:var(--or);}
+.dow-label:hover{border-color:var(--or)!important;}
+.adm-modal-body{padding:18px;}
+.adm-modal-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.adm-modal-fg:last-child{margin-bottom:0;}
+.adm-modal-lbl{font-size:.7rem;font-weight:700;color:#555;}
+.adm-modal-inp{
+  padding:9px 12px;border:1.5px solid #e5e8ef;border-radius:6px;
+  font-size:.85rem;color:#222;outline:none;width:100%;
+  font-family:'Noto Sans JP',sans-serif;transition:border-color .12s;
+}
+.adm-modal-inp:focus{border-color:var(--or);}
+select.adm-modal-inp{appearance:none;cursor:pointer;}
+textarea.adm-modal-inp{resize:vertical;min-height:80px;}
+.adm-modal-foot{
+  padding:12px 18px;border-top:1px solid #e5e8ef;
+  display:flex;gap:7px;justify-content:flex-end;
+}
+.adm-mbtn{padding:8px 18px;border-radius:6px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .12s;}
+.adm-mb-cancel{background:#fff;color:#777;border:1.5px solid #e5e8ef;}
+.adm-mb-cancel:hover{background:#f0f2f5;}
+.adm-mb-ok{background:var(--or);color:#fff;border:none;box-shadow:0 3px 10px rgba(255,107,0,.3);}
+.adm-mb-ok:hover{opacity:.88;}
+.adm-mb-approve{background:#22c55e;color:#fff;border:none;}
+.adm-mb-danger{background:var(--red);color:#fff;border:none;}
+
+/* Review detail */
+.adm-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.adm-di{background:#f9f9f9;border-radius:6px;padding:10px 12px;}
+.adm-di-l{font-size:.63rem;color:#9ca3af;margin-bottom:2px;}
+.adm-di-v{font-size:.85rem;font-weight:700;color:#1a1a2e;}
+
+/* Toast */
+.adm-toast{
+  position:fixed;bottom:22px;right:22px;
+  background:#1a1a2e;color:#fff;
+  padding:11px 16px;border-radius:8px;
+  font-size:.78rem;font-weight:700;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  z-index:9999;transform:translateY(70px);opacity:0;
+  transition:all .28s cubic-bezier(.4,0,.2,1);
+  display:flex;align-items:center;gap:7px;
+}
+.adm-toast.show{transform:translateY(0);opacity:1;}
+
+/* Overlay for mobile sidebar */
+.adm-sb-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:100;
+}
+.adm-sb-overlay.show{display:block;}
+
+/* Admin Responsive */
+@media(max-width:900px){
+  .adm-kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .adm-dash-grid{grid-template-columns:1fr;}
+  .adm-plan-grid{grid-template-columns:1fr;}
+}
+@media(max-width:680px){
+  .adm-sidebar{
+    position:fixed;top:54px;left:0;bottom:0;z-index:200;
+    transform:translateX(-100%);
+  }
+  .adm-sidebar.open{transform:translateX(0);}
+  .adm-sb-toggle{display:block;}
+  .adm-date{display:none;}
+  .adm-kpi-grid{grid-template-columns:1fr 1fr;}
+  .adm-content{padding:12px;}
+}
+@media(max-width:420px){
+  .adm-kpi-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  .adm-kpi-num{font-size:1.3rem;}
+}
+</style>
+<style>body { background:#f0f2f5; }</style>
+</head>
+<body>
+
+<div class="admin-login-bg" id="adminLoginBg" style="display:none;">
+  <div class="admin-login-box">
+    <div class="alb-top">
+      <div class="alb-icon">T</div>
+      <div class="alb-title">Tiara Admin</div>
+      <div class="alb-sub">管理者ログイン</div>
+    </div>
+    <div class="alb-body">
+      <div class="alb-err" id="alb-err">IDまたはパスワードが違います</div>
+      <div class="alb-fg">
+        <label class="alb-label">管理者ID</label>
+        <input class="alb-input" id="adm-id" type="text" placeholder="admin" autocomplete="username">
+      </div>
+      <div class="alb-fg">
+        <label class="alb-label">パスワード</label>
+        <input class="alb-input" id="adm-pw" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="alb-btn" onclick="tryAdminLogin()">ログイン →</button>
+      <div class="alb-hint">デモ用: ID「admin」/ PW「tiara2025」</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     ADMIN: SHELL
+══════════════════════════════ -->
+<div class="admin-shell" id="adminShell">
+
+  <!-- Header -->
+  <div class="adm-hdr">
+    <button class="adm-sb-toggle" onclick="toggleAdmSb()">☰</button>
+    <div class="adm-logo">
+      <div class="adm-logo-icon">T</div>
+      <div>
+        <div class="adm-logo-text">Tiara</div>
+      </div>
+      <span class="adm-logo-badge">ADMIN</span>
+    </div>
+    <div class="adm-title" id="admTitle">ダッシュボード <small>概要</small></div>
+    <div class="adm-hdr-right">
+      <div class="adm-date" id="admDate"></div>
+      <div class="adm-notif" onclick="admToast('🔔','通知はありません')">🔔<div class="adm-notif-dot"></div></div>
+      <button class="adm-exit" onclick="exitAdmin()">← サイトに戻る</button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="adm-body">
+    <div class="adm-sb-overlay" id="admSbOverlay" onclick="closeAdmSb()"></div>
+
+    <!-- Sidebar -->
+    <nav class="adm-sidebar" id="admSidebar">
+      <div class="adm-sb-sec">
+        <div class="adm-sb-lbl">Main</div>
+        <button class="adm-sb-item on" onclick="admNav('dashboard',this)"><span class="adm-si-ico">📊</span>ダッシュボード</button>
+        <button class="adm-sb-item" onclick="admNav('applies',this)"><span class="adm-si-ico">📝</span>体入申込管理<span class="adm-si-bdg bdg-red">8</span></button>
+        <button class="adm-sb-item" onclick="admNav('stores',this)"><span class="adm-si-ico">🏪</span>掲載店舗管理</button>
+        <button class="adm-sb-item" onclick="admNav('pending',this)"><span class="adm-si-ico">⏳</span>掲載審査<span class="adm-si-bdg bdg-yel">5</span></button>
+      </div>
+      <div class="adm-sb-sec">
+        <div class="adm-sb-lbl">Revenue</div>
+        <button class="adm-sb-item" onclick="admNav('revenue',this)"><span class="adm-si-ico">💴</span>売上管理</button>
+        <button class="adm-sb-item" onclick="admNav('plans',this)"><span class="adm-si-ico">📦</span>プラン管理</button>
+      </div>
+      <div class="adm-sb-sec">
+        <div class="adm-sb-lbl">System</div>
+        <button class="adm-sb-item" onclick="admNav('users',this)"><span class="adm-si-ico">👥</span>会員管理</button>
+        <button class="adm-sb-item" onclick="admNav('notify',this)"><span class="adm-si-ico">🔔</span>通知設定<span class="adm-si-bdg bdg-grn">NEW</span></button>
+        <button class="adm-sb-item" onclick="admNav('settings',this)"><span class="adm-si-ico">⚙️</span>システム設定</button>
+      </div>
+      <div class="adm-sb-foot">
+        <div class="adm-user">
+          <div class="adm-avatar">A</div>
+          <div><div class="adm-user-name">管理者</div><div class="adm-user-role">Super Admin</div></div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="adm-content">
+
+      <!-- ═ DASHBOARD ═ -->
+      <div class="adm-page on" id="adm-dashboard">
+        <div class="adm-kpi-grid">
+          <div class="adm-kpi kc-or"><div class="adm-kpi-lbl">掲載店舗数</div><div class="adm-kpi-num">47</div><div class="adm-kpi-sub"><span class="up">▲3</span>&nbsp;今月新規</div><div class="adm-kpi-ico">🏪</div></div>
+          <div class="adm-kpi kc-gr"><div class="adm-kpi-lbl">体入申込（今月）</div><div class="adm-kpi-num">284</div><div class="adm-kpi-sub"><span class="up">▲18%</span>&nbsp;先月比</div><div class="adm-kpi-ico">📝</div></div>
+          <div class="adm-kpi kc-bl"><div class="adm-kpi-lbl">月間売上</div><div class="adm-kpi-num">¥1.84M</div><div class="adm-kpi-sub"><span class="up">▲12%</span>&nbsp;先月比</div><div class="adm-kpi-ico">💴</div></div>
+          <div class="adm-kpi kc-pu"><div class="adm-kpi-lbl">審査待ち</div><div class="adm-kpi-num" style="color:#f59e0b">5</div><div class="adm-kpi-sub" style="color:#9ca3af">要対応あり</div><div class="adm-kpi-ico">⏳</div></div>
+        </div>
+        <div class="adm-dash-grid">
+          <div>
+            <div class="adm-sbox">
+              <div class="adm-shead"><div class="adm-stitle">最新 体入申込</div><button class="adm-saction" onclick="admNav('applies',document.querySelectorAll('.adm-sb-item')[1])">すべて見る →</button></div>
+              <div class="adm-apps">
+                <div class="adm-app"><div class="adm-ava">さ</div><div class="adm-app-info"><div class="adm-app-name">さくら（21歳）<span class="abadge ab-new" style="margin-left:5px">未経験</span></div><div class="adm-app-store">Club Magnolia — キャバクラ｜3月12日 19:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">10分前</div></div>
+                <div class="adm-app"><div class="adm-ava">れ</div><div class="adm-app-info"><div class="adm-app-name">れいな（24歳）<span class="abadge ab-on" style="margin-left:5px">経験あり</span></div><div class="adm-app-store">Lounge ESTRELLA — ラウンジ｜3月13日 20:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">42分前</div></div>
+                <div class="adm-app"><div class="adm-ava">み</div><div class="adm-app-info"><div class="adm-app-name">みな（19歳）<span class="abadge ab-new" style="margin-left:5px">未経験</span></div><div class="adm-app-store">NIGHT VENUS — クラブ｜3月14日 21:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">1時間前</div></div>
+                <div class="adm-app"><div class="adm-ava">ゆ</div><div class="adm-app-info"><div class="adm-app-name">ゆか（26歳）<span class="abadge ab-on" style="margin-left:5px">経験あり</span></div><div class="adm-app-store">スナック 桜並木｜3月15日 20:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">3時間前</div></div>
+              </div>
+            </div>
+            <div class="adm-sbox" style="margin-top:18px">
+              <div class="adm-shead"><div class="adm-stitle">業種別アクセス（今月）</div></div>
+              <div class="adm-bars">
+                <div class="adm-br"><span class="adm-bl">キャバクラ</span><div class="adm-bt"><div class="adm-bf" style="width:0" data-w="88%"></div></div><span class="adm-bv">2,140</span></div>
+                <div class="adm-br"><span class="adm-bl">ラウンジ</span><div class="adm-bt"><div class="adm-bf" style="width:0" data-w="62%"></div></div><span class="adm-bv">1,508</span></div>
+                <div class="adm-br"><span class="adm-bl">クラブ</span><div class="adm-bt"><div class="adm-bf" style="width:0" data-w="48%"></div></div><span class="adm-bv">1,168</span></div>
+                <div class="adm-br"><span class="adm-bl">スナック</span><div class="adm-bt"><div class="adm-bf" style="width:0" data-w="35%"></div></div><span class="adm-bv">851</span></div>
+                <div class="adm-br"><span class="adm-bl">Gバー</span><div class="adm-bt"><div class="adm-bf" style="width:0" data-w="27%"></div></div><span class="adm-bv">657</span></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="adm-sbox">
+              <div class="adm-shead"><div class="adm-stitle">売上サマリー（3月）</div></div>
+              <div style="padding:14px 16px 4px;font-size:1.8rem;font-weight:900;color:#1a1a2e">¥1,840,000<span style="font-size:.7rem;color:#9ca3af;font-weight:400"> 税込</span></div>
+              <div class="adm-rev-bars">
+                <div class="adm-rbar"><div class="adm-rbl"><span>プレミアム×3</span><span>¥239,400</span></div><div class="adm-rtrack"><div class="adm-rfill" style="width:0;background:#8b5cf6" data-w="13%"></div></div></div>
+                <div class="adm-rbar"><div class="adm-rbl"><span>スタンダード×21</span><span>¥835,800</span></div><div class="adm-rtrack"><div class="adm-rfill" style="width:0;background:var(--or)" data-w="46%"></div></div></div>
+                <div class="adm-rbar"><div class="adm-rbl"><span>ライト×23</span><span>¥455,400</span></div><div class="adm-rtrack"><div class="adm-rfill" style="width:0;background:#3b82f6" data-w="25%"></div></div></div>
+                <div class="adm-rbar"><div class="adm-rbl"><span>オプション</span><span>¥309,400</span></div><div class="adm-rtrack"><div class="adm-rfill" style="width:0;background:#22c55e" data-w="17%"></div></div></div>
+              </div>
+            </div>
+            <div class="adm-sbox" style="margin-top:16px">
+              <div class="adm-shead"><div class="adm-stitle">今月の指標</div></div>
+              <div class="adm-mini">
+                <div class="adm-ms"><div class="adm-ms-l">平均時給</div><div class="adm-ms-n">¥4,520</div><div class="adm-ms-s"><span class="up">▲¥80</span></div></div>
+                <div class="adm-ms"><div class="adm-ms-l">申込転換率</div><div class="adm-ms-n">23%</div><div class="adm-ms-s"><span class="up">▲2%</span></div></div>
+                <div class="adm-ms"><div class="adm-ms-l">継続率</div><div class="adm-ms-n">87%</div><div class="adm-ms-s"><span class="dn">▼1%</span></div></div>
+                <div class="adm-ms"><div class="adm-ms-l">新規店舗</div><div class="adm-ms-n">3</div><div class="adm-ms-s">今月</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═ 体入申込管理 ═ -->
+      <div class="adm-page" id="adm-applies">
+        <div class="adm-sbox">
+          <div class="adm-shead"><div class="adm-stitle">体入申込一覧</div><button class="adm-saction" onclick="admToast('📥','CSVをダウンロードしました')">CSV出力</button></div>
+          <div class="adm-filter-row">
+            <select class="adm-fsel"><option>すべての状態</option><option>未対応</option><option>対応済</option><option>キャンセル</option></select>
+            <select class="adm-fsel"><option>すべての店舗</option><option>Club Magnolia</option><option>Lounge ESTRELLA</option><option>NIGHT VENUS</option></select>
+            <select class="adm-fsel"><option>すべての期間</option><option>今日</option><option>今週</option><option>今月</option></select>
+            <button class="adm-fbtn">絞り込む</button>
+          </div>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申込者</th><th>店舗</th><th>希望日時</th><th>経験</th><th>連絡先</th><th>状態</th><th>申込日</th><th>操作</th></tr></thead><tbody>
+            <tr><td><div class="td-main">さくら（21歳）</div></td><td><div class="td-main">Club Magnolia</div><div class="td-sub">キャバクラ</div></td><td>3月12日（水）19:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @sakura123</td><td><span class="abadge ab-rev">未対応</span></td><td>10分前</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-tact danger" onclick="admToast('🗑','キャンセルしました')">キャンセル</button></div></td></tr>
+            <tr><td><div class="td-main">れいな（24歳）</div></td><td><div class="td-main">Lounge ESTRELLA</div><div class="td-sub">ラウンジ</div></td><td>3月13日（木）20:00〜</td><td><span class="abadge ab-on">経験あり</span></td><td>090-XXXX-1234</td><td><span class="abadge ab-rev">未対応</span></td><td>42分前</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-tact danger" onclick="admToast('🗑','キャンセルしました')">キャンセル</button></div></td></tr>
+            <tr><td><div class="td-main">みな（19歳）</div></td><td><div class="td-main">NIGHT VENUS</div><div class="td-sub">クラブ</div></td><td>3月14日（金）21:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @mina_night</td><td><span class="abadge ab-on">対応済</span></td><td>1時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+            <tr><td><div class="td-main">ゆか（26歳）</div></td><td><div class="td-main">スナック 桜並木</div><div class="td-sub">スナック</div></td><td>3月15日（土）20:00〜</td><td><span class="abadge ab-on">3年以上</span></td><td>090-XXXX-5678</td><td><span class="abadge ab-on">対応済</span></td><td>3時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+            <tr><td><div class="td-main">あい（22歳）</div></td><td><div class="td-main">Girls Bar SAKURA</div><div class="td-sub">ガールズバー</div></td><td>3月16日（日）18:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @ai_bar</td><td><span class="abadge ab-off">キャンセル</span></td><td>昨日</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═ 掲載店舗管理 ═ -->
+      <div class="adm-page" id="adm-stores">
+        <div class="adm-sbox">
+          <div class="adm-shead"><div class="adm-stitle">掲載店舗一覧</div><button class="adm-saction" onclick="openAdmModal('add')">＋ 店舗を追加</button></div>
+          <div class="adm-filter-row">
+            <select class="adm-fsel"><option>すべての状態</option><option>掲載中</option><option>審査中</option><option>停止中</option></select>
+            <select class="adm-fsel"><option>すべてのプラン</option><option>プレミアム</option><option>スタンダード</option><option>ライト</option></select>
+            <select class="adm-fsel"><option>すべての業種</option><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option></select>
+          </div>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>店舗名</th><th>業種</th><th>プラン</th><th>状態</th><th>体入件数</th><th>掲載開始</th><th>次回更新</th><th>操作</th></tr></thead><tbody>
+            <tr><td><div class="td-main">Club Magnolia</div><div class="td-sub">田中 花子 · 03-0000-0001</div></td><td>キャバクラ</td><td><span class="plan-tag pt-pr">Premium</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>32件</strong></td><td>2025/01/01</td><td>2025/04/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">Lounge ESTRELLA</div><div class="td-sub">鈴木 一郎 · 03-0000-0002</div></td><td>ラウンジ</td><td><span class="plan-tag pt-st">Standard</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>18件</strong></td><td>2025/02/01</td><td>2025/04/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">スナック 桜並木</div><div class="td-sub">山田 花子 · 03-0000-0003</div></td><td>スナック</td><td><span class="plan-tag pt-lt">Light</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>7件</strong></td><td>2025/01/15</td><td>2025/04/15</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">NIGHT VENUS</div><div class="td-sub">佐藤 太郎 · 03-0000-0004</div></td><td>クラブ</td><td><span class="plan-tag pt-st">Standard</span></td><td><span class="abadge ab-rev">審査中</span></td><td>—</td><td>—</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td><div class="td-main">Girls Bar SAKURA</div><div class="td-sub">伊藤 美咲 · 03-0000-0005</div></td><td>Gバー</td><td><span class="plan-tag pt-lt">Light</span></td><td><span class="abadge ab-off">停止中</span></td><td><strong>0件</strong></td><td>2025/02/01</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('▶','掲載を再開しました')">再開</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═ 掲載審査 ═ -->
+      <div class="adm-page" id="adm-pending">
+        <div class="adm-sbox">
+          <div class="adm-shead"><div class="adm-stitle">掲載申請 審査一覧</div><span style="font-size:.73rem;color:#854d0e;font-weight:700;background:#fef9c3;padding:4px 10px;border-radius:5px;">5件 審査待ち</span></div>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申請日</th><th>店舗名</th><th>業種</th><th>プラン</th><th>担当者</th><th>連絡先</th><th>操作</th></tr></thead><tbody>
+            <tr><td>3月7日 22:10</td><td><div class="td-main">NIGHT VENUS</div></td><td>クラブ</td><td><span class="plan-tag pt-st">Standard</span></td><td>佐藤 太郎</td><td>03-0000-0004</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td>3月7日 18:44</td><td><div class="td-main">Lounge Bijou</div></td><td>ラウンジ</td><td><span class="plan-tag pt-pr">Premium</span></td><td>中村 里奈</td><td>03-0000-0006</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td>3月6日 14:30</td><td><div class="td-main">Club Fleur</div></td><td>キャバクラ</td><td><span class="plan-tag pt-st">Standard</span></td><td>小林 健一</td><td>03-0000-0007</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td>3月5日 21:00</td><td><div class="td-main">スナック 月見</div></td><td>スナック</td><td><span class="plan-tag pt-lt">Light</span></td><td>田中 優子</td><td>03-0000-0009</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═ 売上管理 ═ -->
+      <div class="adm-page" id="adm-revenue">
+        <div class="adm-kpi-grid">
+          <div class="adm-kpi kc-or"><div class="adm-kpi-lbl">今月売上</div><div class="adm-kpi-num">¥1.84M</div><div class="adm-kpi-sub"><span class="up">▲12%</span></div><div class="adm-kpi-ico">💴</div></div>
+          <div class="adm-kpi kc-gr"><div class="adm-kpi-lbl">年間売上（累計）</div><div class="adm-kpi-num">¥18.6M</div><div class="adm-kpi-sub"><span class="up">▲24%</span>&nbsp;昨年比</div><div class="adm-kpi-ico">📈</div></div>
+          <div class="adm-kpi kc-bl"><div class="adm-kpi-lbl">平均契約単価</div><div class="adm-kpi-num">¥39,100</div><div class="adm-kpi-sub"><span class="up">▲¥800</span></div><div class="adm-kpi-ico">💳</div></div>
+          <div class="adm-kpi kc-re"><div class="adm-kpi-lbl">未払い件数</div><div class="adm-kpi-num" style="color:var(--red)">2</div><div class="adm-kpi-sub" style="color:#9ca3af">要確認</div><div class="adm-kpi-ico">⚠️</div></div>
+        </div>
+        <div class="adm-sbox">
+          <div class="adm-shead"><div class="adm-stitle">月次売上明細</div><button class="adm-saction" onclick="admToast('📥','CSVをダウンロードしました')">CSV出力</button></div>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>店舗名</th><th>プラン</th><th>金額</th><th>支払方法</th><th>ステータス</th><th>支払日</th><th>操作</th></tr></thead><tbody>
+            <tr><td><div class="td-main">Club Magnolia</div></td><td><span class="plan-tag pt-pr">Premium</span></td><td><strong>¥79,800</strong></td><td>クレジット</td><td><span class="abadge ab-on">支払済</span></td><td>2025/03/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="admToast('🧾','領収書を発行しました')">領収書</button></div></td></tr>
+            <tr><td><div class="td-main">Lounge ESTRELLA</div></td><td><span class="plan-tag pt-st">Standard</span></td><td><strong>¥39,800</strong></td><td>銀行振込</td><td><span class="abadge ab-on">支払済</span></td><td>2025/03/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="admToast('🧾','領収書を発行しました')">領収書</button></div></td></tr>
+            <tr><td><div class="td-main">NIGHT VENUS</div></td><td><span class="plan-tag pt-st">Standard</span></td><td><strong>¥39,800</strong></td><td>クレジット</td><td><span class="abadge ab-rev">未払い</span></td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('📧','催促メールを送信しました')">催促</button></div></td></tr>
+            <tr><td><div class="td-main">スナック 桜並木</div></td><td><span class="plan-tag pt-lt">Light</span></td><td><strong>¥19,800</strong></td><td>銀行振込</td><td><span class="abadge ab-on">支払済</span></td><td>2025/03/05</td><td><div class="adm-tacts"><button class="adm-tact" onclick="admToast('🧾','領収書を発行しました')">領収書</button></div></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═ プラン管理 ═ -->
+      <div class="adm-page" id="adm-plans">
+        <div class="adm-sbox">
+          <div class="adm-shead"><div class="adm-stitle">プラン一覧・編集</div></div>
+          <div class="adm-plan-grid">
+            <div class="adm-pc"><div class="adm-pc-name">🌱 ライト</div><div class="adm-pc-price">¥19,800<span style="font-size:.65rem;color:#9ca3af;font-weight:400">/月</span></div><div class="adm-pc-feats"><span>📋 求人掲載: 1件</span><span>📝 体入申込: 月20件</span><span>💬 メールサポート</span></div><div class="adm-pc-cnt">契約数: <strong>23社</strong></div><button class="adm-pc-edit" onclick="openAdmModal('plan')">編集する</button></div>
+            <div class="adm-pc sel"><div class="adm-pc-name">⭐ スタンダード <span class="abadge ab-new" style="font-size:.58rem">人気</span></div><div class="adm-pc-price">¥39,800<span style="font-size:.65rem;color:#9ca3af;font-weight:400">/月</span></div><div class="adm-pc-feats"><span>📋 求人掲載: 3件</span><span>📝 体入申込: 無制限</span><span>⭐ PICK UPバッジ</span><span>🔝 優先表示</span></div><div class="adm-pc-cnt">契約数: <strong>21社</strong></div><button class="adm-pc-edit" onclick="openAdmModal('plan')">編集する</button></div>
+            <div class="adm-pc"><div class="adm-pc-name">👑 プレミアム</div><div class="adm-pc-price" style="color:#8b5cf6">¥79,800<span style="font-size:.65rem;color:#9ca3af;font-weight:400">/月</span></div><div class="adm-pc-feats"><span>📋 求人掲載: 10件</span><span>📝 体入申込: 無制限</span><span>🏆 トップバナー</span><span>👤 専任担当者</span></div><div class="adm-pc-cnt">契約数: <strong>3社</strong></div><button class="adm-pc-edit" onclick="openAdmModal('plan')">編集する</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═ 会員管理 ═ -->
+      <div class="adm-page" id="adm-users">
+        <div class="adm-sbox">
+          <div class="adm-shead"><div class="adm-stitle">求職者会員一覧</div><button class="adm-saction" onclick="admToast('📥','CSVをダウンロードしました')">CSV出力</button></div>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>名前</th><th>年齢</th><th>登録日</th><th>申込件数</th><th>お気に入り</th><th>最終ログイン</th><th>操作</th></tr></thead><tbody>
+            <tr><td><div class="td-main">さくら</div></td><td>21歳</td><td>2025/01/15</td><td>3件</td><td>5件</td><td>10分前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🚫','アカウントを停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">れいな</div></td><td>24歳</td><td>2025/02/01</td><td>8件</td><td>12件</td><td>42分前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🚫','アカウントを停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">みな</div></td><td>19歳</td><td>2025/03/01</td><td>1件</td><td>2件</td><td>1時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🚫','アカウントを停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">ゆか</div></td><td>26歳</td><td>2024/11/20</td><td>15件</td><td>8件</td><td>3時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🚫','アカウントを停止しました')">停止</button></div></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═ 通知設定 ═ -->
+      <div class="adm-page" id="adm-notify">
+        <div class="adm-sbox" style="max-width:560px">
+          <div class="adm-shead"><div class="adm-stitle">通知設定</div></div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+            <div class="adm-toggle-row"><div><div class="adm-toggle-info-title">体入申込通知</div><div class="adm-toggle-info-sub">新しい体入申込があった時</div></div><label class="adm-tog"><input type="checkbox" checked><div class="adm-tog-track"></div><div class="adm-tog-thumb"></div></label></div>
+            <div class="adm-toggle-row"><div><div class="adm-toggle-info-title">掲載申請通知</div><div class="adm-toggle-info-sub">新しい掲載申請があった時</div></div><label class="adm-tog"><input type="checkbox" checked><div class="adm-tog-track"></div><div class="adm-tog-thumb"></div></label></div>
+            <div class="adm-toggle-row"><div><div class="adm-toggle-info-title">未払い通知</div><div class="adm-toggle-info-sub">支払い期限が近い・超過した時</div></div><label class="adm-tog"><input type="checkbox"><div class="adm-tog-track"></div><div class="adm-tog-thumb"></div></label></div>
+            <div class="adm-toggle-row"><div><div class="adm-toggle-info-title">日次レポートメール</div><div class="adm-toggle-info-sub">毎朝9時に前日の集計を送信</div></div><label class="adm-tog"><input type="checkbox" checked><div class="adm-tog-track"></div><div class="adm-tog-thumb"></div></label></div>
+            <div class="adm-sfg" style="margin-top:6px"><label class="adm-sfl">通知先メールアドレス</label><input type="email" class="adm-sfi" value="admin@tiara.jp"></div>
+            <button class="adm-save-btn" onclick="admToast('✅','設定を保存しました')">設定を保存する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═ システム設定 ═ -->
+      <div class="adm-page" id="adm-settings">
+        <div class="adm-sbox" style="max-width:560px">
+          <div class="adm-shead"><div class="adm-stitle">システム設定</div></div>
+          <div class="adm-settings">
+            <div class="adm-sfg"><label class="adm-sfl">サイト名</label><input class="adm-sfi" type="text" value="Tiara — 錦糸町 夜のお仕事求人"></div>
+            <div class="adm-sfg"><label class="adm-sfl">掲載エリア</label><input class="adm-sfi" type="text" value="東京都墨田区錦糸町"></div>
+            <div class="adm-sfg"><label class="adm-sfl">問い合わせメール</label><input class="adm-sfi" type="email" value="info@tiara.jp"></div>
+            <div class="adm-sfg"><label class="adm-sfl">LINE公式ID</label><input class="adm-sfi" type="text" value="@tiara_kinshi"></div>
+            <div class="adm-sfg"><label class="adm-sfl">新規掲載申請の受付</label><select class="adm-sfi"><option>受付中</option><option>停止中</option></select></div>
+            <div class="adm-sfg"><label class="adm-sfl">メンテナンスモード</label><select class="adm-sfi"><option>OFF（通常公開中）</option><option>ON（メンテナンス中）</option></select></div>
+            <button class="adm-save-btn" onclick="admToast('✅','設定を保存しました')">設定を保存する</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /adm-content -->
+  </div><!-- /adm-body -->
+</div><!-- /admin-shell -->
+
+
+
+<!-- ══ Admin Modal ══ -->
+<div class="adm-modal-bg" id="admModalBg">
+  <div class="adm-modal">
+    <div class="adm-modal-head">
+      <div class="adm-modal-title" id="admModalTitle">編集</div>
+      <button class="adm-modal-close" onclick="closeAdmModal()">✕</button>
+    </div>
+    <div class="adm-modal-body" id="admModalBody"></div>
+    <div class="adm-modal-foot" id="admModalFoot"></div>
+  </div>
+</div>
+
+<!-- ══ Admin Toast ══ -->
+<div class="adm-toast" id="admToast"><span id="admToastIco"></span><span id="admToastMsg"></span></div>
+
+
+
+<script>
+
+const storeConfig = {
+  'Club Magnolia':    { closed:[0,1], hours:['20:00〜','21:00〜','22:00〜'] },
+  'Lounge ESTRELLA':  { closed:[0,2], hours:['19:00〜','20:00〜','21:00〜'] },
+  'スナック 桜並木':  { closed:[0,1,2], hours:['20:00〜','21:00〜'] },
+  'NIGHT VENUS':      { closed:[1], hours:['21:00〜','22:00〜','23:00〜'] },
+  'Rouge Lounge':     { closed:[0], hours:['20:00〜','21:00〜','22:00〜'] },
+  'Girls Bar SAKURA': { closed:[0,1], hours:['18:00〜','19:00〜','20:00〜','21:00〜'] },
+};
+
+
+window.addEventListener('load', function() {
+  document.getElementById('adminLoginBg').style.display = 'flex';
+});
+</script>
+
+<script>
+/* ══ ADMIN LOGIN ══ */
+function openAdminLogin() {
+  document.getElementById('adminLoginBg').style.display = 'flex';
+  document.getElementById('adm-id').value = '';
+  document.getElementById('adm-pw').value = '';
+  document.getElementById('alb-err').classList.remove('show');
+}
+function tryAdminLogin() {
+  const id = document.getElementById('adm-id').value.trim();
+  const pw = document.getElementById('adm-pw').value;
+  if (id === 'admin' && pw === 'tiara2025') {
+    document.getElementById('adminLoginBg').style.display = 'none';
+    document.getElementById('adminShell').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    const n = new Date();
+    document.getElementById('admDate').textContent =
+      `${n.getFullYear()}/${String(n.getMonth()+1).padStart(2,'0')}/${String(n.getDate()).padStart(2,'0')} ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+    setTimeout(() => {
+      document.querySelectorAll('.adm-bf[data-w]').forEach(el => el.style.width = el.dataset.w);
+      document.querySelectorAll('.adm-rfill[data-w]').forEach(el => el.style.width = el.dataset.w);
+    }, 300);
+  } else {
+    document.getElementById('alb-err').classList.add('show');
+  }
+}
+document.getElementById('adm-pw').addEventListener('keydown', e => { if (e.key === 'Enter') tryAdminLogin(); });
+
+function exitAdmin() {
+  document.getElementById('adminShell').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ══ ADMIN NAV ══ */
+const admTitles = {
+  dashboard:'ダッシュボード', applies:'体入申込管理',
+  stores:'掲載店舗管理', pending:'掲載審査',
+  revenue:'売上管理', plans:'プラン管理',
+  users:'会員管理', notify:'通知設定', settings:'システム設定'
+};
+const admSubs = {
+  dashboard:'概要', applies:'申込一覧',
+  stores:'店舗一覧', pending:'審査待ち 5件',
+  revenue:'売上明細', plans:'プラン一覧',
+  users:'会員一覧', notify:'メール通知', settings:'サイト設定'
+};
+function admNav(id, btn) {
+  document.querySelectorAll('.adm-page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.adm-sb-item').forEach(b => b.classList.remove('on'));
+  const pg = document.getElementById('adm-' + id);
+  if (pg) pg.classList.add('on');
+  if (btn) btn.classList.add('on');
+  document.getElementById('admTitle').innerHTML =
+    `${admTitles[id]||id} <small>${admSubs[id]||''}</small>`;
+  if (id === 'dashboard' || id === 'revenue') {
+    setTimeout(() => {
+      document.querySelectorAll('.adm-bf[data-w]').forEach(el => el.style.width = el.dataset.w);
+      document.querySelectorAll('.adm-rfill[data-w]').forEach(el => el.style.width = el.dataset.w);
+    }, 100);
+  }
+  closeAdmSb();
+  document.querySelector('.adm-content').scrollTop = 0;
+}
+
+/* ══ SIDEBAR MOBILE ══ */
+function toggleAdmSb() {
+  document.getElementById('admSidebar').classList.toggle('open');
+  document.getElementById('admSbOverlay').classList.toggle('show');
+}
+function closeAdmSb() {
+  document.getElementById('admSidebar').classList.remove('open');
+  document.getElementById('admSbOverlay').classList.remove('show');
+}
+
+/* ══ ADMIN MODAL ══ */
+const admModals = {
+  edit: {
+    title: '店舗情報を編集',
+    body: `
+    <div style="display:flex;gap:10px;margin-bottom:13px">
+      <div style="flex:1"><label class="adm-modal-lbl">店舗名</label><input class="adm-modal-inp" type="text" value="Club Magnolia" style="width:100%"></div>
+      <div style="width:110px"><label class="adm-modal-lbl">業種</label><select class="adm-modal-inp" style="width:100%"><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option><option>スナック</option></select></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:13px">
+      <div style="flex:1"><label class="adm-modal-lbl">プラン</label><select class="adm-modal-inp" style="width:100%"><option>プレミアム</option><option>スタンダード</option><option>ライト</option></select></div>
+      <div style="flex:1"><label class="adm-modal-lbl">状態</label><select class="adm-modal-inp" style="width:100%"><option>掲載中</option><option>停止中</option></select></div>
+    </div>
+    <div style="margin-bottom:13px">
+      <label class="adm-modal-lbl" style="display:block;margin-bottom:6px">定休日設定</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem;transition:all .12s" class="dow-label">
+          <input type="checkbox" value="0" style="accent-color:var(--red)"> 日
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem;transition:all .12s" class="dow-label">
+          <input type="checkbox" value="1" checked style="accent-color:var(--or)"> 月
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem;transition:all .12s" class="dow-label">
+          <input type="checkbox" value="2" style="accent-color:var(--or)"> 火
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem;transition:all .12s" class="dow-label">
+          <input type="checkbox" value="3" style="accent-color:var(--or)"> 水
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem;transition:all .12s" class="dow-label">
+          <input type="checkbox" value="4" style="accent-color:var(--or)"> 木
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem;transition:all .12s" class="dow-label">
+          <input type="checkbox" value="5" style="accent-color:var(--or)"> 金
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 10px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem;transition:all .12s" class="dow-label">
+          <input type="checkbox" value="6" style="accent-color:var(--or)"> 土
+        </label>
+      </div>
+      <div style="font-size:.62rem;color:#9ca3af;margin-top:5px">チェックした曜日が体入カレンダーで定休日（選択不可）になります</div>
+    </div>
+    <div style="margin-bottom:13px">
+      <label class="adm-modal-lbl" style="display:block;margin-bottom:6px">体入受付時間帯</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="admTimeSlots">
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem"><input type="checkbox" checked style="accent-color:var(--or)"> 19:00〜</label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem"><input type="checkbox" checked style="accent-color:var(--or)"> 20:00〜</label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem"><input type="checkbox" style="accent-color:var(--or)"> 21:00〜</label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem"><input type="checkbox" style="accent-color:var(--or)"> 22:00〜</label>
+        <label style="display:flex;align-items:center;gap:4px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.74rem"><input type="checkbox" style="accent-color:var(--or)"> 23:00〜</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:13px">
+      <div style="flex:1"><label class="adm-modal-lbl">体入受入上限（日）</label><input class="adm-modal-inp" type="number" value="3" min="1" max="10" style="width:100%"></div>
+      <div style="flex:1"><label class="adm-modal-lbl">事前告知（日前まで）</label><input class="adm-modal-inp" type="number" value="1" min="0" max="7" style="width:100%"></div>
+    </div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">管理メモ</label><textarea class="adm-modal-inp" placeholder="メモを入力..." rows="2"></textarea></div>`,
+    foot: `<button class="adm-mbtn adm-mb-cancel" onclick="closeAdmModal()">キャンセル</button>
+    <button class="adm-mbtn adm-mb-ok" onclick="saveStoreSettings()">保存する</button>`
+  },
+  add: {
+    title: '新規店舗を追加',
+    body: `<div class="adm-modal-fg"><label class="adm-modal-lbl">店舗名 *</label><input class="adm-modal-inp" type="text" placeholder="例：Club Magnolia"></div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">業種 *</label><select class="adm-modal-inp"><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option><option>スナック</option></select></div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">プラン *</label><select class="adm-modal-inp"><option>スタンダード</option><option>プレミアム</option><option>ライト</option></select></div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">担当者名</label><input class="adm-modal-inp" type="text" placeholder="田中 花子"></div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">電話番号</label><input class="adm-modal-inp" type="tel" placeholder="03-XXXX-XXXX"></div>`,
+    foot: `<button class="adm-mbtn adm-mb-cancel" onclick="closeAdmModal()">キャンセル</button>
+    <button class="adm-mbtn adm-mb-ok" onclick="closeAdmModal();admToast('✅','店舗を追加しました')">追加する</button>`
+  },
+  review: {
+    title: '申請内容を確認',
+    body: `<div class="adm-detail-grid">
+    <div class="adm-di"><div class="adm-di-l">店舗名</div><div class="adm-di-v">NIGHT VENUS</div></div>
+    <div class="adm-di"><div class="adm-di-l">業種</div><div class="adm-di-v">クラブ</div></div>
+    <div class="adm-di"><div class="adm-di-l">プラン</div><div class="adm-di-v">スタンダード</div></div>
+    <div class="adm-di"><div class="adm-di-l">申請日</div><div class="adm-di-v">3月7日 22:10</div></div>
+    <div class="adm-di"><div class="adm-di-l">担当者</div><div class="adm-di-v">佐藤 太郎</div></div>
+    <div class="adm-di"><div class="adm-di-l">電話</div><div class="adm-di-v">03-0000-0004</div></div>
+    </div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">審査メモ（却下理由など）</label><textarea class="adm-modal-inp" placeholder="メモを入力..."></textarea></div>`,
+    foot: `<button class="adm-mbtn adm-mb-cancel" onclick="closeAdmModal()">閉じる</button>
+    <button class="adm-mbtn adm-mb-danger" onclick="closeAdmModal();admToast('❌','却下しました')">却下</button>
+    <button class="adm-mbtn adm-mb-approve" onclick="closeAdmModal();admToast('✅','承認しました')">承認する</button>`
+  },
+  plan: {
+    title: 'プランを編集',
+    body: `<div class="adm-modal-fg"><label class="adm-modal-lbl">プラン名</label><input class="adm-modal-inp" type="text" value="スタンダード"></div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">月額料金（円・税込）</label><input class="adm-modal-inp" type="number" value="39800"></div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">求人掲載数</label><input class="adm-modal-inp" type="number" value="3"></div>
+    <div class="adm-modal-fg"><label class="adm-modal-lbl">体入申込上限（0=無制限）</label><input class="adm-modal-inp" type="number" value="0"></div>`,
+    foot: `<button class="adm-mbtn adm-mb-cancel" onclick="closeAdmModal()">キャンセル</button>
+    <button class="adm-mbtn adm-mb-ok" onclick="closeAdmModal();admToast('✅','プランを更新しました')">保存する</button>`
+  }
+};
+function openAdmModal(type) {
+  const c = admModals[type];
+  if (!c) return;
+  document.getElementById('admModalTitle').textContent = c.title;
+  document.getElementById('admModalBody').innerHTML = c.body;
+  document.getElementById('admModalFoot').innerHTML = c.foot;
+  document.getElementById('admModalBg').classList.add('open');
+}
+function closeAdmModal() {
+  document.getElementById('admModalBg').classList.remove('open');
+}
+document.getElementById('admModalBg').addEventListener('click', function(e) {
+  if (e.target === this) closeAdmModal();
+});
+
+/* ══ SAVE STORE SETTINGS ══ */
+function saveStoreSettings() {
+  // Collect closed days
+  const closedDays = [];
+  document.querySelectorAll('.dow-label input:checked').forEach(cb => closedDays.push(parseInt(cb.value)));
+  // Collect time slots
+  const hours = [];
+  document.querySelectorAll('#admTimeSlots input:checked').forEach(cb => {
+    hours.push(cb.parentElement.textContent.trim());
+  });
+  // Get store name
+  const storeName = document.querySelector('.adm-modal-inp[type=text]')?.value;
+  // Update storeConfig
+  if (storeName && typeof storeConfig !== 'undefined') {
+    storeConfig[storeName] = { closed: closedDays, hours: hours.length ? hours : ['20:00〜','21:00〜'] };
+  }
+  closeAdmModal();
+  admToast('✅', `${storeName} の設定を保存しました`);
+}
+
+/* ══ TOAST ══ */
+let admToastTimer;
+function admToast(icon, msg) {
+  document.getElementById('admToastIco').textContent = icon;
+  document.getElementById('admToastMsg').textContent = msg;
+  const t = document.getElementById('admToast');
+  t.classList.add('show');
+  clearTimeout(admToastTimer);
+  admToastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+
+
+</body>
+</html>
