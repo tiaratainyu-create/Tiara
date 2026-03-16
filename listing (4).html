@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiara for Owner — 錦糸町エリア 夜のお仕事 掲載募集</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;color:#222;background:#fff;overflow-x:hidden;}
+:root{
+  --or:#ff6b00;--or2:#ff8c00;--or3:#fff3e8;--or4:#ffe8d0;
+  --dk:#1a1a2e;--md:#555;--lt:#888;--bd:#e0e0e0;
+  --red:#e53935;--grn:#2e7d32;--yel:#f59e0b;
+}
+img{display:block;}
+
+/* ══ NAV ══ */
+.nav{background:#fff;border-bottom:3px solid var(--or);position:sticky;top:0;z-index:900;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:16px;}
+.logo{font-size:1.4rem;font-weight:900;color:var(--or);text-decoration:none;letter-spacing:-0.5px;white-space:nowrap;}
+.logo small{font-size:.5rem;font-weight:700;color:#aaa;letter-spacing:1.5px;display:block;margin-top:-3px;}
+.nav-links{display:flex;gap:20px;margin-left:auto;align-items:center;}
+.nav-link{color:#555;font-size:.78rem;font-weight:500;text-decoration:none;transition:color .15s;white-space:nowrap;}
+.nav-link:hover{color:var(--or);}
+.nav-cta{background:var(--or);color:#fff;padding:9px 20px;border-radius:6px;font-size:.78rem;font-weight:900;text-decoration:none;white-space:nowrap;transition:opacity .15s;}
+.nav-cta:hover{opacity:.88;}
+.nav-login{border:2px solid var(--or);color:var(--or);padding:8px 16px;border-radius:6px;font-size:.78rem;font-weight:700;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.nav-login:hover{background:var(--or3);}
+@media(max-width:768px){.nav-links{display:none;}}
+
+/* ══ HERO ══ */
+.hero{background:linear-gradient(135deg,#fff8f0 0%,#fff3e8 100%);border-bottom:1px solid var(--bd);}
+.hero-inner{max-width:1200px;margin:0 auto;padding:48px 20px 0;display:grid;grid-template-columns:1fr 480px;gap:40px;align-items:end;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:var(--or);color:#fff;font-size:.68rem;font-weight:900;padding:5px 14px;border-radius:20px;margin-bottom:18px;letter-spacing:.5px;}
+.hero h1{font-size:2.6rem;font-weight:900;color:var(--dk);line-height:1.25;margin-bottom:14px;}
+.hero h1 em{color:var(--or);font-style:normal;}
+.hero-sub{font-size:.9rem;color:#555;line-height:1.85;margin-bottom:24px;max-width:480px;}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.hero-badge{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--bd);border-radius:8px;padding:8px 14px;font-size:.75rem;font-weight:700;color:#333;}
+.hero-badge .ico{font-size:1.1rem;}
+.hero-btn{display:inline-flex;align-items:center;gap:8px;background:var(--or);color:#fff;padding:16px 36px;border-radius:8px;font-size:1rem;font-weight:900;text-decoration:none;box-shadow:0 6px 20px rgba(255,107,0,.35);transition:all .18s;margin-bottom:12px;}
+.hero-btn:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,0,.45);}
+.hero-note{font-size:.7rem;color:#aaa;margin-bottom:36px;}
+.hero-stats{display:flex;gap:0;background:#fff;border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:0;}
+.hstat{flex:1;padding:14px 12px;text-align:center;border-right:1px solid var(--bd);}
+.hstat:last-child{border-right:none;}
+.hstat-n{font-size:1.6rem;font-weight:900;color:var(--or);line-height:1;}
+.hstat-l{font-size:.6rem;color:#888;margin-top:3px;line-height:1.4;}
+
+/* Hero right: mockup */
+.hero-mockup{background:#1a1a2e;border-radius:16px 16px 0 0;overflow:hidden;box-shadow:0 -8px 40px rgba(0,0,0,.25);}
+.hm-bar{background:#2d3561;padding:10px 14px;display:flex;align-items:center;gap:6px;}
+.hm-dot{width:10px;height:10px;border-radius:50%;}
+.hm-dot1{background:#ff5f57;}
+.hm-dot2{background:#febc2e;}
+.hm-dot3{background:#28c840;}
+.hm-url{flex:1;background:rgba(255,255,255,.08);border-radius:4px;padding:4px 10px;font-size:.65rem;color:rgba(255,255,255,.4);margin:0 10px;}
+.hm-body{padding:14px;}
+.hm-cards{display:flex;flex-direction:column;gap:8px;}
+.hm-card{background:#fff;border-radius:10px;overflow:hidden;display:flex;height:80px;}
+.hm-card-img{width:80px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem;}
+.hm-card-img.c1{background:linear-gradient(135deg,#ff6b00,#ff9100);}
+.hm-card-img.c2{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+.hm-card-img.c3{background:linear-gradient(135deg,#0ea5e9,#0284c7);}
+.hm-card-body{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;}
+.hm-card-name{font-size:.72rem;font-weight:900;color:#1a1a2e;margin-bottom:2px;}
+.hm-card-pay{font-size:.85rem;font-weight:900;color:var(--or);margin-bottom:3px;}
+.hm-card-chips{display:flex;gap:3px;}
+.hm-chip{font-size:.52rem;background:#f0f0f0;color:#555;padding:2px 5px;border-radius:2px;}
+.hm-card-right{padding:10px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:4px;}
+.hm-apply-btn{background:var(--or);color:#fff;font-size:.58rem;font-weight:900;padding:4px 8px;border-radius:4px;white-space:nowrap;}
+.hm-views{font-size:.55rem;color:#aaa;}
+.hm-badge{position:relative;}
+.hm-bdg{font-size:.52rem;font-weight:900;padding:2px 6px;border-radius:2px;background:var(--or);color:#fff;}
+.hm-new{background:#0ea5e9;}
+
+/* ══ TICKER ══ */
+.ticker{background:var(--or);padding:8px 0;overflow:hidden;}
+.ticker-inner{display:flex;animation:tick 20s linear infinite;white-space:nowrap;}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{font-size:.72rem;font-weight:700;color:#fff;padding:0 28px;opacity:.85;}
+.ticker-item::before{content:'✦';margin-right:10px;opacity:.6;}
+
+/* ══ FEATURES ══ */
+.features{background:#fff;padding:72px 20px;}
+.sec-inner{max-width:1200px;margin:0 auto;}
+.sec-label{display:inline-flex;align-items:center;gap:6px;background:var(--or3);color:var(--or);font-size:.68rem;font-weight:900;padding:5px 14px;border-radius:20px;margin-bottom:12px;letter-spacing:.5px;}
+.sec-title{font-size:2rem;font-weight:900;color:var(--dk);margin-bottom:8px;line-height:1.3;}
+.sec-title em{color:var(--or);font-style:normal;}
+.sec-sub{font-size:.88rem;color:#666;line-height:1.85;margin-bottom:44px;max-width:560px;}
+
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--bd);border-radius:12px;overflow:hidden;border:2px solid var(--bd);}
+.feat{background:#fff;padding:28px 24px;}
+.feat-ico-wrap{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px;}
+.fi-or{background:var(--or3);}
+.fi-bl{background:#eff6ff;}
+.fi-gr{background:#f0fdf4;}
+.fi-pu{background:#f5f3ff;}
+.fi-ye{background:#fefce8;}
+.fi-pi{background:#fdf2f8;}
+.feat-title{font-size:.95rem;font-weight:900;color:var(--dk);margin-bottom:7px;}
+.feat-desc{font-size:.76rem;color:#666;line-height:1.85;}
+
+/* ══ PLANS ══ */
+.plans-sec{background:#f7f8fa;padding:72px 20px;}
+.plans-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px;}
+.plan{background:#fff;border-radius:14px;border:2px solid var(--bd);overflow:hidden;transition:all .2s;display:flex;flex-direction:column;}
+.plan:hover{border-color:var(--or);box-shadow:0 12px 40px rgba(255,107,0,.1);transform:translateY(-4px);}
+.plan.pop{border-color:var(--or);}
+.plan-head{padding:24px 22px 20px;border-bottom:1px solid var(--bd);position:relative;}
+.plan-pop-tag{position:absolute;top:-1px;right:18px;background:var(--or);color:#fff;font-size:.6rem;font-weight:900;padding:4px 12px;border-radius:0 0 8px 8px;}
+.plan-icon{font-size:1.6rem;margin-bottom:10px;}
+.plan-name{font-size:1rem;font-weight:900;color:var(--dk);margin-bottom:4px;}
+.plan-price-row{display:flex;align-items:baseline;gap:3px;}
+.plan-price{font-size:2.2rem;font-weight:900;color:var(--or);line-height:1;}
+.plan-price.pr{color:#8b5cf6;}
+.plan-per{font-size:.72rem;color:#aaa;}
+.plan-tax{font-size:.64rem;color:#aaa;margin-top:2px;}
+.plan-body{padding:20px 22px;flex:1;display:flex;flex-direction:column;}
+.plan-feats{display:flex;flex-direction:column;gap:8px;flex:1;margin-bottom:20px;}
+.pf{display:flex;align-items:flex-start;gap:8px;font-size:.76rem;color:#333;}
+.pf-check{color:var(--grn);font-weight:900;flex-shrink:0;line-height:1.5;}
+.pf-x{color:#ccc;flex-shrink:0;line-height:1.5;}
+.pf.off{color:#bbb;}
+.plan-cta{display:block;width:100%;padding:13px;border-radius:8px;font-size:.88rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .18s;text-align:center;text-decoration:none;}
+.plan-cta-main{background:var(--or);color:#fff;border:none;box-shadow:0 4px 14px rgba(255,107,0,.3);}
+.plan-cta-main:hover{opacity:.9;}
+.plan-cta-outline{background:#fff;color:var(--or);border:2px solid var(--or);}
+.plan-cta-outline:hover{background:var(--or3);}
+.plan-guarantee{text-align:center;font-size:.66rem;color:var(--grn);font-weight:700;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:3px;}
+.plans-note{text-align:center;font-size:.75rem;color:#aaa;margin-top:20px;}
+
+/* ══ GUARANTEE ══ */
+.guar-sec{background:#fff;padding:72px 20px;}
+.guar-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-top:44px;}
+.guar-left{}
+.guar-card{background:linear-gradient(135deg,#0d0d1a,#1a1a2e);border-radius:16px;padding:28px;color:#fff;}
+.gc-title{font-size:.68rem;color:rgba(255,255,255,.4);letter-spacing:2px;margin-bottom:18px;}
+.gc-flow{display:flex;flex-direction:column;gap:0;}
+.gc-row{display:flex;align-items:stretch;gap:0;}
+.gc-line{display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0;}
+.gc-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;flex-shrink:0;}
+.gc-dot-or{background:var(--or);}
+.gc-dot-gr{background:#22c55e;}
+.gc-connector{width:2px;background:rgba(255,255,255,.1);flex:1;margin:3px 0;}
+.gc-content{flex:1;padding:0 0 20px 14px;}
+.gc-month{font-size:.65rem;color:rgba(255,255,255,.4);margin-bottom:4px;}
+.gc-label{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:6px;}
+.gc-detail{font-size:.7rem;color:rgba(255,255,255,.5);line-height:1.7;}
+.gc-free-box{background:rgba(34,197,94,.12);border:1.5px solid rgba(34,197,94,.3);border-radius:8px;padding:10px 14px;margin-top:4px;}
+.gc-free-label{font-size:.62rem;color:#4ade80;font-weight:700;margin-bottom:3px;}
+.gc-free-price{font-size:1.4rem;font-weight:900;color:#4ade80;line-height:1;}
+.gc-free-prev{font-size:.65rem;color:rgba(255,255,255,.3);text-decoration:line-through;margin-top:2px;}
+
+.guar-points{display:flex;flex-direction:column;gap:16px;}
+.gp{display:flex;align-items:flex-start;gap:14px;}
+.gp-ico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.gp-ico-or{background:var(--or3);}
+.gp-ico-gr{background:#f0fdf4;}
+.gp-ico-bl{background:#eff6ff;}
+.gp-ico-ye{background:#fefce8;}
+.gp-title{font-size:.88rem;font-weight:900;color:var(--dk);margin-bottom:4px;}
+.gp-desc{font-size:.75rem;color:#666;line-height:1.75;}
+
+/* ══ FLOW ══ */
+.flow-sec{background:#f7f8fa;padding:72px 20px;}
+.flow-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:44px;position:relative;}
+.flow-grid::before{content:'';position:absolute;top:32px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--or),var(--or2));z-index:0;}
+.flow-item{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;position:relative;z-index:1;}
+.flow-num{width:64px;height:64px;border-radius:50%;background:var(--or);color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 6px 18px rgba(255,107,0,.35);flex-shrink:0;}
+.flow-title{font-size:.86rem;font-weight:900;color:var(--dk);margin-bottom:6px;}
+.flow-desc{font-size:.72rem;color:#666;line-height:1.8;}
+
+/* ══ VOICE ══ */
+
+
+
+.voice-card:hover{box-shadow:0 8px 30px rgba(0,0,0,.1);transform:translateY(-3px);}
+.vc-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;}
+.vc-img1{background:linear-gradient(135deg,#ff6b00,#ff9100);}
+.vc-img2{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+.vc-img3{background:linear-gradient(135deg,#0ea5e9,#0284c7);}
+.vc-plan-tag{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.5);color:#fff;font-size:.6rem;font-weight:700;padding:3px 9px;border-radius:3px;}
+.vc-body{padding:18px;}
+.vc-stars{color:var(--or);font-size:.88rem;letter-spacing:2px;margin-bottom:10px;}
+.vc-text{font-size:.78rem;color:#444;line-height:1.85;margin-bottom:14px;}
+.vc-author{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--bd);}
+.vc-avatar{width:36px;height:36px;border-radius:50%;color:#fff;font-size:.82rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.va1{background:linear-gradient(135deg,var(--or),var(--or2));}
+.va2{background:linear-gradient(135deg,#8b5cf6,#6d28d9);}
+.va3{background:linear-gradient(135deg,#0ea5e9,#0284c7);}
+.vc-name{font-size:.78rem;font-weight:700;color:var(--dk);}
+.vc-store{font-size:.63rem;color:#aaa;}
+
+/* ══ FAQ ══ */
+.faq-sec{background:#f7f8fa;padding:72px 20px;}
+.faq-wrap{max-width:780px;margin:44px auto 0;display:flex;flex-direction:column;gap:8px;}
+.faq-item{background:#fff;border-radius:10px;border:1px solid var(--bd);overflow:hidden;}
+.fq{padding:16px 20px;font-size:.85rem;font-weight:700;color:var(--dk);cursor:pointer;display:flex;align-items:center;gap:12px;justify-content:space-between;}
+.fq:hover{background:var(--or3);}
+.fq-q{display:flex;align-items:center;gap:10px;}
+.fq-q::before{content:'Q';background:var(--or);color:#fff;width:22px;height:22px;border-radius:5px;font-size:.68rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fq-arr{font-size:.75rem;color:#aaa;transition:transform .25s;flex-shrink:0;}
+.faq-item.open .fq-arr{transform:rotate(180deg);}
+.faq-item.open .fq{background:var(--or3);color:var(--or);}
+.fa{display:none;padding:0 20px 16px 52px;font-size:.78rem;color:#666;line-height:1.85;}
+.faq-item.open .fa{display:block;}
+
+/* ══ CTA BOTTOM ══ */
+.cta-sec{background:var(--or);padding:72px 20px;text-align:center;}
+.cta-sec h2{font-size:2rem;font-weight:900;color:#fff;margin-bottom:10px;line-height:1.35;}
+.cta-sec p{font-size:.9rem;color:rgba(255,255,255,.85);margin-bottom:30px;}
+.cta-sec-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.cta-btn-main{background:#fff;color:var(--or);padding:15px 36px;border-radius:8px;font-size:.95rem;font-weight:900;text-decoration:none;box-shadow:0 6px 20px rgba(0,0,0,.15);transition:all .18s;}
+.cta-btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.2);}
+.cta-btn-sub{background:rgba(255,255,255,.15);color:#fff;padding:15px 28px;border-radius:8px;font-size:.9rem;font-weight:700;text-decoration:none;border:2px solid rgba(255,255,255,.4);transition:all .18s;}
+.cta-btn-sub:hover{background:rgba(255,255,255,.25);}
+.cta-notes{display:flex;gap:20px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.cta-note{font-size:.72rem;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:5px;}
+
+/* ══ FOOTER ══ */
+footer{background:#1a1a2e;padding:32px 20px;text-align:center;}
+.foot-logo{font-size:1.2rem;font-weight:900;color:var(--or);margin-bottom:6px;}
+footer p{font-size:.7rem;color:rgba(255,255,255,.3);}
+
+/* ══ MODAL ══ */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .22s;}
+.mbg.open{opacity:1;pointer-events:all;}
+.mbox{background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.3);transform:scale(.95) translateY(14px);transition:transform .24s cubic-bezier(.4,0,.2,1);}
+.mbg.open .mbox{transform:scale(1) translateY(0);}
+.mbox-top{background:linear-gradient(135deg,var(--or),var(--or2));padding:22px 24px;border-radius:16px 16px 0 0;position:relative;}
+.mbox-top h2{font-size:1.05rem;font-weight:900;color:#fff;margin-bottom:2px;}
+.mbox-top p{font-size:.7rem;color:rgba(255,255,255,.8);}
+.mbox-close{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.85rem;line-height:1;display:flex;align-items:center;justify-content:center;}
+.mbox-body{padding:22px 24px;}
+.m-prog{display:flex;gap:4px;margin-bottom:22px;}
+.m-prog-step{flex:1;height:4px;border-radius:2px;background:#e5e8ef;transition:background .3s;}
+.m-prog-step.on{background:var(--or);}
+.step-lbl{font-size:.68rem;font-weight:700;color:#aaa;letter-spacing:1px;margin-bottom:14px;}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:11px;}
+.fl{font-size:.72rem;font-weight:700;color:#555;}
+.fl.req::after{content:' *';color:var(--red);}
+.fi{padding:10px 13px;border:1.5px solid var(--bd);border-radius:7px;font-size:.88rem;color:#222;outline:none;font-family:'Noto Sans JP',sans-serif;width:100%;transition:border-color .13s;}
+.fi:focus{border-color:var(--or);}
+select.fi{appearance:none;cursor:pointer;}
+textarea.fi{resize:vertical;min-height:72px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cb-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.cbi{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1.5px solid var(--bd);border-radius:20px;cursor:pointer;font-size:.7rem;color:#333;transition:all .12s;}
+.cbi:has(input:checked){border-color:var(--or);background:var(--or3);color:var(--or);}
+.cbi input{accent-color:var(--or);cursor:pointer;}
+.plan-sel-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.psl{border:2px solid var(--bd);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;position:relative;}
+.psl.on{border-color:var(--or);background:var(--or3);}
+.psl.pop::after{content:'人気';position:absolute;top:-9px;right:12px;background:var(--or);color:#fff;font-size:.58rem;font-weight:900;padding:2px 10px;border-radius:3px;}
+.psl-ico{font-size:1.2rem;flex-shrink:0;}
+.psl-info{flex:1;}
+.psl-name{font-size:.85rem;font-weight:900;color:#1a1a2e;}
+.psl-feats{font-size:.62rem;color:#888;margin-top:1px;}
+.psl-price{text-align:right;flex-shrink:0;}
+.psl-main{font-size:1.1rem;font-weight:900;color:var(--or);line-height:1;}
+.psl-per{font-size:.58rem;color:#aaa;}
+.conf-box{background:#f7f8fa;border-radius:8px;padding:14px;margin-bottom:12px;border:1px solid var(--bd);}
+.conf-row{display:flex;justify-content:space-between;font-size:.76rem;margin-bottom:6px;}
+.conf-row:last-child{margin-bottom:0;}
+.conf-l{color:#888;}
+.conf-v{font-weight:700;color:#1a1a2e;}
+.pay-total{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1.5px solid #eee;margin-bottom:12px;}
+.pay-lbl{font-size:.8rem;font-weight:700;color:#555;}
+.pay-amt{font-size:1.4rem;font-weight:900;color:var(--or);}
+#stripe-el{border:1.5px solid var(--bd);border-radius:7px;padding:12px 13px;background:#fff;margin-bottom:6px;}
+#stripe-err{display:none;font-size:.72rem;color:var(--red);margin-bottom:8px;}
+.m-foot{display:flex;gap:8px;margin-top:6px;}
+.m-back{flex:1;background:#fff;color:#888;border:1.5px solid var(--bd);padding:11px;border-radius:7px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.m-next{flex:2;background:var(--or);color:#fff;border:none;padding:11px;border-radius:7px;font-size:.86rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 12px rgba(255,107,0,.3);transition:opacity .13s;}
+.m-next:disabled{opacity:.6;cursor:not-allowed;}
+.m-pay{flex:2;background:linear-gradient(135deg,#1a1a2e,#2d3561);color:#fff;border:none;padding:11px;border-radius:7px;font-size:.86rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.m-suc{display:none;flex-direction:column;align-items:center;padding:36px 24px;text-align:center;gap:14px;}
+.m-suc.show{display:flex;}
+.suc-ico{width:68px;height:68px;border-radius:50%;background:var(--grn);display:flex;align-items:center;justify-content:center;font-size:1.8rem;animation:popIn .38s cubic-bezier(.4,0,.2,1);box-shadow:0 6px 20px rgba(46,125,50,.3);}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.suc-title{font-size:1.15rem;font-weight:900;color:var(--dk);}
+.suc-sub{font-size:.78rem;color:#666;line-height:1.85;}
+.suc-btn{background:var(--or);color:#fff;border:none;padding:12px 32px;border-radius:7px;font-size:.85rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:4px;}
+.ssl-note{text-align:center;font-size:.62rem;color:#aaa;margin-top:8px;}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:32px;}
+  .hero-mockup{display:none;}
+  .feat-grid{grid-template-columns:repeat(2,1fr);}
+  .plans-wrap{grid-template-columns:1fr;}
+  .guar-layout{grid-template-columns:1fr;}
+  .flow-grid{grid-template-columns:repeat(2,1fr);}
+  .flow-grid::before{display:none;}
+  
+}
+@media(max-width:768px){
+  .hero{padding-top:80px;}
+  .hero h1{font-size:2rem;}
+  .feat-grid{grid-template-columns:1fr;}
+  .flow-grid{grid-template-columns:1fr 1fr;}
+  
+  .sec-title{font-size:1.7rem;}
+  .plans-wrap{gap:12px;}
+  .row2{grid-template-columns:1fr;}
+  .mbg{align-items:flex-end;padding:0;}
+  .mbox{border-radius:16px 16px 0 0;max-height:92vh;}
+  .mbg.open .mbox{transform:none;}
+}
+@media(max-width:480px){
+  .hero h1{font-size:1.7rem;}
+  .hero-stats{flex-wrap:wrap;}
+  .hstat{min-width:45%;}
+  .cta-sec h2{font-size:1.6rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">Tiara<small>for Owner</small></a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">特長</a>
+      <a href="#plans" class="nav-link">料金</a>
+      <a href="#guarantee" class="nav-link">保証</a>
+      <a href="#flow" class="nav-link">掲載の流れ</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+      <a href="owner.html" class="nav-login">ログイン</a>
+      <a href="#" class="nav-cta" onclick="openModal();return false;">無料で掲載申請</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">📍 錦糸町エリア限定 · 水商売専門求人</div>
+      <h1>夜のお仕事求人を<br><em>もっとスマートに。</em></h1>
+      <p class="hero-sub">キャバクラ・ラウンジ・スナックのオーナー様へ。<br>体験入店特化のマッチングプラットフォームで、<br>即戦力スタッフを最速採用しましょう。</p>
+      <div class="hero-badges">
+        <div class="hero-badge"><span class="ico">🛡️</span>応募ゼロ保証つき</div>
+        <div class="hero-badge"><span class="ico">⚡</span>最短2日で掲載開始</div>
+        <div class="hero-badge"><span class="ico">💳</span>初期費用¥0</div>
+        <div class="hero-badge"><span class="ico">📱</span>スマホ最適化</div>
+      </div>
+      <a href="#" class="hero-btn" onclick="openModal();return false;">✨ 無料で掲載申請する →</a>
+      <div class="hero-note">※ 審査後2営業日以内に掲載開始 · いつでも解約可能</div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-n" style="font-size:1.1rem;">¥0</div><div class="hstat-l">初期費用</div></div>
+        <div class="hstat"><div class="hstat-n" style="font-size:1.1rem;">最短2日</div><div class="hstat-l">掲載開始</div></div>
+        <div class="hstat"><div class="hstat-n" style="font-size:1.1rem;">いつでも</div><div class="hstat-l">解約OK</div></div>
+        <div class="hstat"><div class="hstat-n" style="font-size:1.1rem;">全プラン</div><div class="hstat-l">保証つき</div></div>
+      </div>
+    </div>
+    <!-- PC mockup -->
+    <div class="hero-mockup">
+      <div class="hm-bar">
+        <div class="hm-dot hm-dot1"></div>
+        <div class="hm-dot hm-dot2"></div>
+        <div class="hm-dot hm-dot3"></div>
+        <div class="hm-url">tiara-eight.vercel.app</div>
+      </div>
+      <div class="hm-body">
+        <div style="font-size:.58rem;color:rgba(255,255,255,.3);letter-spacing:2px;margin-bottom:10px;">LISTING PREVIEW</div>
+        <div class="hm-cards">
+          <div class="hm-card">
+            <div class="hm-card-img c1">🌸</div>
+            <div class="hm-card-body">
+              <div class="hm-card-name">Club Magnolia</div>
+              <div class="hm-card-pay">¥5,000〜¥12,000</div>
+              <div class="hm-card-chips"><span class="hm-chip">体験OK</span><span class="hm-chip">日払い</span><span class="hm-chip">未経験</span></div>
+            </div>
+            <div class="hm-card-right">
+              <div class="hm-bdg">PICK UP</div>
+              <div class="hm-apply-btn">体入応募</div>
+              <div class="hm-views">842 views</div>
+            </div>
+          </div>
+          <div class="hm-card">
+            <div class="hm-card-img c2">✦</div>
+            <div class="hm-card-body">
+              <div class="hm-card-name">Lounge ESTRELLA</div>
+              <div class="hm-card-pay">¥6,500〜¥15,000</div>
+              <div class="hm-card-chips"><span class="hm-chip">ノルマなし</span><span class="hm-chip">VIP</span></div>
+            </div>
+            <div class="hm-card-right">
+              <div class="hm-bdg hm-new">NEW</div>
+              <div class="hm-apply-btn">体入応募</div>
+              <div class="hm-views">512 views</div>
+            </div>
+          </div>
+          <div class="hm-card">
+            <div class="hm-card-img c3">🌙</div>
+            <div class="hm-card-body">
+              <div class="hm-card-name">NIGHT VENUS</div>
+              <div class="hm-card-pay">¥4,500〜¥10,000</div>
+              <div class="hm-card-chips"><span class="hm-chip">寮完備</span><span class="hm-chip">日払い</span></div>
+            </div>
+            <div class="hm-card-right">
+              <div class="hm-bdg" style="background:#e53935;">急募</div>
+              <div class="hm-apply-btn">体入応募</div>
+              <div class="hm-views">398 views</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">体験入店 特化マッチング</span>
+    <span class="ticker-item">錦糸町エリア限定</span>
+    <span class="ticker-item">応募ゼロ保証つき</span>
+    <span class="ticker-item">初期費用¥0</span>
+    <span class="ticker-item">最短2日で掲載</span>
+    <span class="ticker-item">スマホ最適化</span>
+    <span class="ticker-item">専用管理画面</span>
+    <span class="ticker-item">Stripe決済対応</span>
+    <span class="ticker-item">体験入店 特化マッチング</span>
+    <span class="ticker-item">錦糸町エリア限定</span>
+    <span class="ticker-item">応募ゼロ保証つき</span>
+    <span class="ticker-item">初期費用¥0</span>
+    <span class="ticker-item">最短2日で掲載</span>
+    <span class="ticker-item">スマホ最適化</span>
+    <span class="ticker-item">専用管理画面</span>
+    <span class="ticker-item">Stripe決済対応</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="sec-inner">
+    <div class="sec-label">WHY TIARA</div>
+    <div class="sec-title">Tiaraが選ばれる<em>理由</em></div>
+    <p class="sec-sub">錦糸町エリアの水商売専門だからこそできる、オーナー様のための採用支援。</p>
+    <div class="feat-grid">
+      <div class="feat"><div class="feat-ico-wrap fi-or">🎯</div><div class="feat-title">体入特化マッチング</div><div class="feat-desc">求職者が直接希望日を選んで申込。カレンダーUIで体入日程を管理できます。</div></div>
+      <div class="feat"><div class="feat-ico-wrap fi-bl">📍</div><div class="feat-title">錦糸町エリア限定</div><div class="feat-desc">エリアを絞ることで本気で通える求職者だけが応募。質の高いマッチングを実現。</div></div>
+      <div class="feat"><div class="feat-ico-wrap fi-gr">🛡️</div><div class="feat-title">応募ゼロ保証</div><div class="feat-desc">先月の申込が0件なら翌月無料。成果が出ない月は課金しない安心の料金体系。</div></div>
+      <div class="feat"><div class="feat-ico-wrap fi-pu">📱</div><div class="feat-title">スマホ最適化</div><div class="feat-desc">求職者の9割がスマホ検索。Tiaraはモバイルファーストで設計されています。</div></div>
+      <div class="feat"><div class="feat-ico-wrap fi-ye">⚡</div><div class="feat-title">最短2日で掲載開始</div><div class="feat-desc">申請から審査完了まで最短2営業日。急募案件にも素早く対応できます。</div></div>
+      <div class="feat"><div class="feat-ico-wrap fi-pi">📊</div><div class="feat-title">専用管理画面つき</div><div class="feat-desc">申込管理・定休日設定・保証確認まで、スマホから一元管理できます。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="plans-sec" id="plans">
+  <div class="sec-inner">
+    <div class="sec-label">PRICING</div>
+    <div class="sec-title">料金<em>プラン</em></div>
+    <p class="sec-sub">初期費用・違約金はすべて無料。月額のみのシンプルな料金体系です。</p>
+    <!-- 心理的アンカー：プレミアムを最初に提示してスタンダードを安く見せる -->
+    <div class="plans-wrap" style="direction:rtl;"><!-- rtlでプレミアムを左に -->
+
+      <!-- プレミアム（アンカー） -->
+      <div class="plan" style="direction:ltr;">
+        <div class="plan-head">
+          <div class="plan-icon">👑</div>
+          <div class="plan-name">プレミアム</div>
+          <div style="font-size:.72rem;color:#888;margin-bottom:8px;">大型店・急募・最大露出に</div>
+          <div class="plan-price-row">
+            <div class="plan-price pr">¥50,000</div>
+            <div class="plan-per">/月（税込）</div>
+          </div>
+        </div>
+        <div class="plan-body">
+          <div class="plan-feats">
+            <div class="pf"><span class="pf-check">✓</span>求人掲載 複数件</div>
+            <div class="pf"><span class="pf-check">✓</span>トップ・エリアおすすめ表示</div>
+            <div class="pf"><span class="pf-check">✓</span>SNS掲載・特集記事</div>
+            <div class="pf"><span class="pf-check">✓</span>体入申込管理画面</div>
+            <div class="pf"><span class="pf-check">✓</span>応募ゼロ保証</div>
+            
+          </div>
+          <a href="#" class="plan-cta plan-cta-outline" onclick="openModal('premium');return false;">このプランで申請する</a>
+          <div class="plan-guarantee">🛡️ 応募ゼロ保証つき</div>
+        </div>
+      </div>
+
+      <!-- スタンダード（推奨・中央） -->
+      <div class="plan pop" style="direction:ltr;">
+        <div class="plan-head">
+          <div class="plan-pop-tag">⭐ おすすめ</div>
+          <div class="plan-icon">⭐</div>
+          <div class="plan-name">スタンダード</div>
+          <div style="font-size:.72rem;color:var(--or);font-weight:700;margin-bottom:8px;">プレミアムの機能を40%OFFで</div>
+          <div class="plan-price-row">
+            <div class="plan-price">¥30,000</div>
+            <div class="plan-per">/月（税込）</div>
+          </div>
+          <div style="background:#fff3e8;border:1.5px solid var(--or);border-radius:6px;padding:6px 10px;margin-top:8px;font-size:.68rem;color:var(--or);font-weight:700;text-align:center;">
+            ⚡ 体入申込が0件なら翌月¥0
+          </div>
+        </div>
+        <div class="plan-body">
+          <div class="plan-feats">
+            <div class="pf"><span class="pf-check">✓</span>求人掲載 1件</div>
+            <div class="pf"><span class="pf-check">✓</span>写真アップロード</div>
+            <div class="pf"><span class="pf-check">✓</span>検索上位表示</div>
+            <div class="pf"><span class="pf-check">✓</span>PICK UPバッジ表示</div>
+            <div class="pf"><span class="pf-check">✓</span>体入申込管理画面</div>
+            <div class="pf"><span class="pf-check">✓</span><strong>応募ゼロ保証（翌月無料）</strong></div>
+          </div>
+          <a href="#" class="plan-cta plan-cta-main" onclick="openModal('standard');return false;">✨ このプランで申請する</a>
+          <div class="plan-guarantee">🛡️ 応募ゼロ保証つき</div>
+        </div>
+      </div>
+
+      <!-- ライト（おとり） -->
+      <div class="plan" style="direction:ltr;">
+        <div class="plan-head">
+          <div class="plan-icon">🌱</div>
+          <div class="plan-name">ライト</div>
+          <div style="font-size:.72rem;color:#888;margin-bottom:8px;">機能が限定されたプラン</div>
+          <div class="plan-price-row">
+            <div class="plan-price" style="font-size:1.7rem;">¥24,000</div>
+            <div class="plan-per">/月（税込）</div>
+          </div>
+          <!-- おとり効果：差額を強調 -->
+          <div style="font-size:.68rem;color:#aaa;margin-top:6px;">
+            スタンダードとの差額 <strong style="color:#555;">+¥6,000</strong> で<br>機能が大幅アップ
+          </div>
+        </div>
+        <div class="plan-body">
+          <div class="plan-feats">
+            <div class="pf"><span class="pf-check">✓</span>求人掲載 1件</div>
+            <div class="pf"><span class="pf-check">✓</span>写真アップロード</div>
+            <div class="pf"><span class="pf-check">✓</span>体入申込管理画面</div>
+            <div class="pf"><span class="pf-check">✓</span>応募ゼロ保証</div>
+            <div class="pf off"><span class="pf-x">—</span>検索上位表示</div>
+            <div class="pf off"><span class="pf-x">—</span>PICK UPバッジ</div>
+          </div>
+          <a href="#" class="plan-cta plan-cta-outline" onclick="openModal('light');return false;">このプランで申請する</a>
+          <div style="text-align:center;font-size:.65rem;color:#aaa;margin-top:10px;">
+            
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="plans-note">※ 初期費用・違約金はすべて¥0です。いつでも解約可能。</div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="guar-sec" id="guarantee">
+  <div class="sec-inner">
+    <div class="sec-label">ZERO APPLY GUARANTEE</div>
+    <div class="sec-title">体入が<em>0件</em>だったら、<br>翌月は<em>無料</em>。</div>
+    <div class="guar-layout">
+      <div class="guar-card">
+        <div class="gc-title">MONTHLY SIMULATION</div>
+        <div class="gc-flow">
+          <div class="gc-row">
+            <div class="gc-line"><div class="gc-dot gc-dot-or">1</div><div class="gc-connector"></div></div>
+            <div class="gc-content">
+              <div class="gc-month">1月</div>
+              <div class="gc-label">体入申込：あり</div>
+              <div class="gc-detail">通常通り月額料金が発生します</div>
+            </div>
+          </div>
+          <div class="gc-row">
+            <div class="gc-line"><div class="gc-dot gc-dot-or">2</div><div class="gc-connector"></div></div>
+            <div class="gc-content">
+              <div class="gc-month">2月</div>
+              <div class="gc-label">体入申込：0件</div>
+              <div class="gc-detail">保証条件を達成！<br>毎月1日に自動判定されます</div>
+            </div>
+          </div>
+          <div class="gc-row">
+            <div class="gc-line"><div class="gc-dot gc-dot-gr">3</div></div>
+            <div class="gc-content">
+              <div class="gc-month">3月の請求</div>
+              <div class="gc-label">翌月（3月）が自動で無料に</div>
+              <div class="gc-free-box">
+                <div class="gc-free-label">🎁 応募ゼロ保証 適用</div>
+                <div class="gc-free-price">¥0</div>
+                <div class="gc-free-prev">通常 ¥30,000</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="guar-points">
+        <div class="gp"><div class="gp-ico gp-ico-or">📌</div><div><div class="gp-title">判定条件</div><div class="gp-desc">当月の体入申込件数が0件の場合、翌月の月額費用が完全無料になります。</div></div></div>
+        <div class="gp"><div class="gp-ico gp-ico-gr">🤖</div><div><div class="gp-title">完全自動・申請不要</div><div class="gp-desc">毎月1日にシステムが自動で前月の申込件数を確認し、Stripeの請求を自動でスキップします。特別な申請は不要です。</div></div></div>
+        <div class="gp"><div class="gp-ico gp-ico-bl">📧</div><div><div class="gp-title">メールで自動通知</div><div class="gp-desc">保証が適用された月は、ご登録のメールアドレスに自動で通知が届きます。</div></div></div>
+        <div class="gp"><div class="gp-ico gp-ico-ye">✅</div><div><div class="gp-title">全プラン対象</div><div class="gp-desc">ライト・スタンダード・プレミアム、すべてのプランで応募ゼロ保証が適用されます。</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="flow-sec" id="flow">
+  <div class="sec-inner">
+    <div class="sec-label">HOW TO START</div>
+    <div class="sec-title">掲載開始まで<em>4ステップ</em></div>
+    <p class="sec-sub">申請からわずか2営業日で掲載スタート。難しい操作は一切ありません。</p>
+    <div class="flow-grid">
+      <div class="flow-item"><div class="flow-num">📝</div><div class="flow-title">①申請フォーム入力</div><div class="flow-desc">店舗名・業種・希望プランを入力。5分で完了します。</div></div>
+      <div class="flow-item"><div class="flow-num">💳</div><div class="flow-title">②クレカで決済</div><div class="flow-desc">Stripeで安全に決済。翌月から自動更新されます。</div></div>
+      <div class="flow-item"><div class="flow-num">🔍</div><div class="flow-title">③審査・掲載準備</div><div class="flow-desc">担当者が内容を確認。最短2営業日で完了します。</div></div>
+      <div class="flow-item"><div class="flow-num">🚀</div><div class="flow-title">④掲載スタート！</div><div class="flow-desc">求人が公開され、体入申込がマイページに届きます。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-sec" id="faq">
+  <div class="sec-inner" style="text-align:center;">
+    <div class="sec-label">FAQ</div>
+    <div class="sec-title">よくある<em>質問</em></div>
+    <div class="faq-wrap">
+      <div class="faq-item"><div class="fq" onclick="faqToggle(this)"><div class="fq-q">掲載できる業種を教えてください</div><span class="fq-arr">▼</span></div><div class="fa">キャバクラ・ラウンジ・クラブ・スナック・ガールズバー・バーなど、錦糸町エリアの水商売・夜のお仕事に対応しています。</div></div>
+      <div class="faq-item"><div class="fq" onclick="faqToggle(this)"><div class="fq-q">初期費用はかかりますか？</div><span class="fq-arr">▼</span></div><div class="fa">初期費用・違約金・成功報酬はすべて無料です。月額料金のみで、いつでも解約できます。</div></div>
+      <div class="faq-item"><div class="fq" onclick="faqToggle(this)"><div class="fq-q">審査はどれくらいかかりますか？</div><span class="fq-arr">▼</span></div><div class="fa">申請後、最短2営業日以内に担当者よりご連絡いたします。内容に不備がある場合は修正をお願いする場合があります。</div></div>
+      <div class="faq-item"><div class="fq" onclick="faqToggle(this)"><div class="fq-q">体入申込が来たらどうすればいいですか？</div><span class="fq-arr">▼</span></div><div class="fa">管理画面（owner.html）とメールに申込情報が届きます。申込者のメールアドレス・電話番号が記載されていますので、直接連絡して日程を確定してください。</div></div>
+      <div class="faq-item"><div class="fq" onclick="faqToggle(this)"><div class="fq-q">応募ゼロ保証の詳細を教えてください</div><span class="fq-arr">▼</span></div><div class="fa">当月の体入申込件数が0件だった場合、翌月の月額費用を¥0にします。毎月1日にシステムが自動で判定し、Stripeの請求を自動でスキップします。特別な申請は不要で、適用時はメールでお知らせします。</div></div>
+      <div class="faq-item"><div class="fq" onclick="faqToggle(this)"><div class="fq-q">掲載内容はいつでも変更できますか？</div><span class="fq-arr">▼</span></div><div class="fa">はい、管理画面からいつでも写真・PR文・給与・条件などを変更できます。変更は最大1時間以内に反映されます。</div></div>
+      <div class="faq-item"><div class="fq" onclick="faqToggle(this)"><div class="fq-q">解約はいつでもできますか？</div><span class="fq-arr">▼</span></div><div class="fa">はい、いつでも解約可能です。解約は管理画面または担当者への連絡で受け付けています。解約月の月額は日割り計算となります。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-sec">
+  <h2>まず無料で掲載申請してみませんか？</h2>
+  <p>初期費用¥0 · 審査2営業日以内 · 応募ゼロ保証つき · いつでも解約OK</p>
+  <div class="cta-sec-btns">
+    <a href="#" class="cta-btn-main" onclick="openModal();return false;">✨ 今すぐ掲載申請する →</a>
+    <a href="owner.html" class="cta-btn-sub">ログインはこちら</a>
+  </div>
+  <div class="cta-notes">
+    <span class="cta-note">🔒 SSL暗号化通信</span>
+    <span class="cta-note">💳 Stripe決済対応</span>
+    <span class="cta-note">📱 スマホ対応</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">Tiara for Owner</div>
+  <p>© 2025 Tiara · 錦糸町エリア限定 夜のお仕事求人プラットフォーム</p>
+</footer>
+
+<!-- MODAL -->
+<div class="mbg" id="modal">
+  <div class="mbox">
+    <div class="mbox-top">
+      <h2 id="mTitle">掲載申請フォーム</h2>
+      <p id="mSub">STEP 1 · 店舗情報を入力してください</p>
+      <button class="mbox-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mbox-body">
+      <div class="m-prog">
+        <div class="m-prog-step on" id="mp1"></div>
+        <div class="m-prog-step" id="mp2"></div>
+        <div class="m-prog-step" id="mp3"></div>
+      </div>
+
+      <!-- STEP1 -->
+      <div id="s1">
+        <div class="step-lbl">STEP 1 · 店舗情報</div>
+        <div class="fg"><label class="fl req">店舗名</label><input class="fi" id="mName" type="text" placeholder="例：Club Magnolia"></div>
+        <div class="row2">
+          <div class="fg"><label class="fl req">業種</label><select class="fi" id="mGenre"><option value="">選択</option><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option><option>スナック</option><option>ガールズバー</option><option>バー</option></select></div>
+          <div class="fg"><label class="fl">最寄り駅</label><input class="fi" id="mStation" type="text" value="錦糸町駅"></div>
+        </div>
+        <div class="row2">
+          <div class="fg"><label class="fl req">最低時給（円）</label><input class="fi" id="mMin" type="number" placeholder="4000"></div>
+          <div class="fg"><label class="fl req">最高時給（円）</label><input class="fi" id="mMax" type="number" placeholder="10000"></div>
+        </div>
+        <div class="fg"><label class="fl req">営業時間</label><input class="fi" id="mHours" type="text" placeholder="例：20:00〜04:00"></div>
+        <div class="fg">
+          <label class="fl">特典・条件</label>
+          <div class="cb-grid">
+            <label class="cbi"><input type="checkbox" value="体験入店OK"> 体験入店OK</label>
+            <label class="cbi"><input type="checkbox" value="日払いOK"> 日払いOK</label>
+            <label class="cbi"><input type="checkbox" value="未経験歓迎"> 未経験歓迎</label>
+            <label class="cbi"><input type="checkbox" value="週1〜OK"> 週1〜OK</label>
+            <label class="cbi"><input type="checkbox" value="送迎あり"> 送迎あり</label>
+            <label class="cbi"><input type="checkbox" value="寮完備"> 寮完備</label>
+            <label class="cbi"><input type="checkbox" value="ノルマなし"> ノルマなし</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP2 -->
+      <div id="s2" style="display:none;">
+        <div class="step-lbl">STEP 2 · プランと担当者情報</div>
+        <div class="plan-sel-list">
+          <div class="psl" id="psl-light" onclick="selPlan('light')"><span class="psl-ico">🌱</span><div class="psl-info"><div class="psl-name">ライト</div><div class="psl-feats">求人1件 · 写真3枚 · 体入管理</div></div><div class="psl-price"><div class="psl-main">¥24,000</div><div class="psl-per">/月</div></div></div>
+          <div class="psl pop on" id="psl-standard" onclick="selPlan('standard')"><span class="psl-ico">⭐</span><div class="psl-info"><div class="psl-name">スタンダード</div><div class="psl-feats">求人1件 · 検索上位 · PICKUPバッジ · 保証つき</div></div><div class="psl-price"><div class="psl-main">¥30,000</div><div class="psl-per">/月</div></div></div>
+          <div class="psl" id="psl-premium" onclick="selPlan('premium')"><span class="psl-ico">👑</span><div class="psl-info"><div class="psl-name">プレミアム</div><div class="psl-feats">掲載無制限 · トップ · SNS · 特集記事</div></div><div class="psl-price"><div class="psl-main" style="color:#8b5cf6;font-size:.85rem;">要相談</div></div></div>
+        </div>
+        <div class="fg"><label class="fl req">担当者名</label><input class="fi" id="mContact" type="text" placeholder="田中 花子"></div>
+        <div class="row2">
+          <div class="fg"><label class="fl req">メールアドレス</label><input class="fi" id="mEmail" type="email" placeholder="owner@example.com"></div>
+          <div class="fg"><label class="fl req">電話番号</label><input class="fi" id="mPhone" type="tel" placeholder="03-XXXX-XXXX"></div>
+        </div>
+      </div>
+
+      <!-- STEP3 -->
+      <div id="s3" style="display:none;">
+        <div class="step-lbl">STEP 3 · 確認とお支払い</div>
+        <div class="conf-box" id="confBox"></div>
+        <div class="fg"><label class="fl">クレジットカード情報</label><div id="stripe-el"></div><div id="stripe-err"></div></div>
+        <div class="pay-total"><span class="pay-lbl">月額（税込）</span><span class="pay-amt" id="payAmt">¥30,000</span></div>
+        <div class="ssl-note">🔒 SSL暗号化通信 · Powered by Stripe · いつでも解約可能</div>
+      </div>
+
+      <!-- 完了 -->
+      <div class="m-suc" id="mSuc">
+        <div class="suc-ico">✓</div>
+        <div class="suc-title">掲載申請が完了しました！</div>
+        <p class="suc-sub">2営業日以内に担当者よりご連絡いたします。<br>管理画面（<a href="owner.html" style="color:var(--or);">owner.html</a>）からご確認ください。</p>
+        <button class="suc-btn" onclick="closeModal()">閉じる</button>
+      </div>
+
+      <div class="m-foot" id="mFoot">
+        <button class="m-back" id="mBack" style="display:none;" onclick="mPrev()">← 戻る</button>
+        <button class="m-next" id="mNext" onclick="mNext2()">次へ →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STRIPE_PK = 'pk_test_51T8gMs8AxMbjBDeeYy91QBFr687oMDm1ldNRvBA81PwyjoYytD7TLemhDVeix3nFrJQzNUNamiPRbNogG5LzCml000M74b0tO6';
+const SB_URL  = 'https://ljvovzmjqesspzikglna.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
+
+const stripe = Stripe(STRIPE_PK);
+const sb = supabase.createClient(SB_URL, SB_ANON);
+const elems = stripe.elements();
+let card = null, mStep = 1, planId = 'standard';
+const PLANS = {
+  light:   { name:'ライトプラン',    price:'¥10,000〜' },
+  standard:{ name:'スタンダードプラン', price:'¥40,000〜' },
+  premium: { name:'プレミアムプラン', price:'要相談' },
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  card = elems.create('card', { style:{ base:{ fontFamily:'sans-serif', fontSize:'15px', color:'#222', '::placeholder':{ color:'#aab7c4' } }, invalid:{ color:'#e53935' } }, hidePostalCode:true });
+  card.mount('#stripe-el');
+  card.on('change', e => {
+    const el = document.getElementById('stripe-err');
+    if (e.error) { el.textContent = e.error.message; el.style.display = 'block'; }
+    else el.style.display = 'none';
+  });
+});
+
+function openModal(plan) {
+  if (plan) { planId = plan; selPlan(plan); }
+  mStep = 1; updateStep();
+  document.getElementById('mSuc').classList.remove('show');
+  document.getElementById('mFoot').style.display = 'flex';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+function updateStep() {
+  [1,2,3].forEach(n => {
+    document.getElementById('s'+n).style.display = n === mStep ? 'block' : 'none';
+    document.getElementById('mp'+n).className = 'm-prog-step' + (n <= mStep ? ' on' : '');
+  });
+  const t = ['店舗情報を入力','プラン選択と担当者情報','確認とお支払い'];
+  document.getElementById('mTitle').textContent = 'STEP ' + mStep + ' · ' + t[mStep-1];
+  document.getElementById('mSub').textContent = 'STEP ' + mStep + ' / 3';
+  document.getElementById('mBack').style.display = mStep > 1 ? 'block' : 'none';
+  const nb = document.getElementById('mNext');
+  if (mStep < 3) { nb.className = 'm-next'; nb.textContent = '次へ →'; nb.onclick = mNext2; }
+  else { nb.className = 'm-pay'; nb.textContent = '掲載申請・お支払い →'; nb.onclick = doPay; }
+}
+
+function mNext2() {
+  if (mStep === 1) {
+    if (!document.getElementById('mName').value.trim() || !document.getElementById('mGenre').value || !document.getElementById('mMin').value || !document.getElementById('mMax').value) {
+      alert('店舗名・業種・時給を入力してください'); return;
+    }
+  }
+  if (mStep === 2) {
+    if (!document.getElementById('mContact').value.trim() || !document.getElementById('mEmail').value.trim() || !document.getElementById('mPhone').value.trim()) {
+      alert('担当者名・メール・電話番号を入力してください'); return;
+    }
+    const feats = []; document.querySelectorAll('#s1 .cb-grid input:checked').forEach(cb => feats.push(cb.value));
+    document.getElementById('confBox').innerHTML = `
+      <div class="conf-row"><span class="conf-l">店舗名</span><span class="conf-v">${document.getElementById('mName').value}</span></div>
+      <div class="conf-row"><span class="conf-l">業種</span><span class="conf-v">${document.getElementById('mGenre').value}</span></div>
+      <div class="conf-row"><span class="conf-l">時給</span><span class="conf-v">¥${parseInt(document.getElementById('mMin').value).toLocaleString()}〜¥${parseInt(document.getElementById('mMax').value).toLocaleString()}</span></div>
+      <div class="conf-row"><span class="conf-l">プラン</span><span class="conf-v" style="color:var(--or)">${PLANS[planId].name}</span></div>
+      <div class="conf-row"><span class="conf-l">担当者</span><span class="conf-v">${document.getElementById('mContact').value}</span></div>
+      <div class="conf-row"><span class="conf-l">メール</span><span class="conf-v">${document.getElementById('mEmail').value}</span></div>`;
+    document.getElementById('payAmt').textContent = PLANS[planId].price;
+  }
+  if (mStep < 3) { mStep++; updateStep(); }
+}
+function mPrev() { if (mStep > 1) { mStep--; updateStep(); } }
+
+function selPlan(p) {
+  planId = p;
+  document.querySelectorAll('.psl').forEach(el => el.classList.remove('on'));
+  document.getElementById('psl-'+p).classList.add('on');
+}
+
+async function doPay() {
+  const btn = document.getElementById('mNext');
+  btn.disabled = true; btn.textContent = '処理中...';
+  try {
+    const { paymentMethod, error } = await stripe.createPaymentMethod({ type: 'card', card });
+    if (error) throw new Error(error.message);
+    const feats = []; document.querySelectorAll('#s1 .cb-grid input:checked').forEach(cb => feats.push(cb.value));
+    const res = await fetch('/api/create-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        paymentMethodId: paymentMethod.id,
+        planId,
+        ownerEmail: document.getElementById('mEmail').value.trim(),
+        ownerName: document.getElementById('mContact').value.trim(),
+        storeName: document.getElementById('mName').value.trim(),
+        genre: document.getElementById('mGenre').value,
+        payMin: parseInt(document.getElementById('mMin').value),
+        payMax: parseInt(document.getElementById('mMax').value),
+        phone: document.getElementById('mPhone').value.trim(),
+        features: feats,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '決済エラー');
+    if (data.clientSecret) { const { error: ce } = await stripe.confirmCardPayment(data.clientSecret); if (ce) throw new Error(ce.message); }
+    await sb.from('owners').insert({ store_name: document.getElementById('mName').value.trim(), genre: document.getElementById('mGenre').value, hourly_min: parseInt(document.getElementById('mMin').value), hourly_max: parseInt(document.getElementById('mMax').value), email: document.getElementById('mEmail').value.trim(), phone: document.getElementById('mPhone').value.trim(), features: feats, plan: planId, status: 'pending' });
+    document.getElementById('s3').style.display = 'none';
+    document.getElementById('mFoot').style.display = 'none';
+    document.getElementById('mSuc').classList.add('show');
+  } catch (e) {
+    const el = document.getElementById('stripe-err'); el.textContent = e.message; el.style.display = 'block';
+    btn.disabled = false; btn.textContent = '掲載申請・お支払い →';
+  }
+}
+
+function faqToggle(btn) { btn.parentElement.classList.toggle('open'); }
+window.addEventListener('scroll', () => { document.querySelector('.nav').style.boxShadow = window.scrollY > 20 ? '0 4px 16px rgba(0,0,0,.12)' : '0 2px 8px rgba(0,0,0,.08)'; });
+</script>
+</body>
+</html>
