@@ -1224,7 +1224,7 @@ function buildCard(s, idx) {
   const payTag = s.pay_bonus ? `<span class="cp-tag">${s.pay_bonus}</span>` : '';
 
   // カード用PR文（キャッチコピー優先、なければ最初のセクション内容）
-  const descBlocks = (s.description || '').split(/\n\n/).filter(Boolean);
+  const descBlocks = (s.pr_text || s.description || '').split(/\n\n/).filter(Boolean);
   const catchText = descBlocks.find(b => !/^【.+?】/.test(b)) || '';
   const firstSection = descBlocks.find(b => /^【.+?】/.test(b));
   const cardDesc = catchText || (firstSection ? firstSection.replace(/^【.+?】\s*/, '').trim() : '');
@@ -1324,7 +1324,7 @@ function openDetail(s) {
   document.getElementById('dtlChips').innerHTML = features.map(f => `<span class="chip">${f}</span>`).join('');
 
   // PR文
-  const rawDesc = s.description || '';
+  const rawDesc = s.pr_text || s.description || '';
   const SECTION_ICONS = {
     '雰囲気': '💃', '環境': '🏠', '給与': '💰', '給与・待遇': '💰', '待遇': '💰',
     'こんな方に': '🌸', '応募資格': '🌸', '体験入店': '👠', '体入': '👠',
