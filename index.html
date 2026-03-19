@@ -348,10 +348,15 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
   padding:3px 8px;border-radius:3px;
 }
 .c-desc{
-  font-size:.74rem;color:var(--md);line-height:1.7;
+  font-size:.74rem;color:#555;line-height:1.75;
   display:-webkit-box;-webkit-line-clamp:2;
   -webkit-box-orient:vertical;overflow:hidden;
   margin-bottom:10px;flex:1;
+  padding:7px 10px;
+  background:#fffbf5;
+  border-left:2px solid var(--or2);
+  border-radius:0 4px 4px 0;
+  position:relative;
 }
 .c-foot{
   display:flex;align-items:center;justify-content:space-between;
@@ -1261,7 +1266,7 @@ function buildCard(s, idx) {
         ${payTag}
       </div>
       ${chips ? `<div class="c-chips">${chips}</div>` : ''}
-      ${cardDesc ? `<p class="c-desc">${cardDesc}</p>` : ''}
+      ${cardDesc ? `<p class="c-desc"><span style="color:var(--or);font-weight:700;margin-right:3px;">✨</span>${cardDesc}</p>` : ''}
       <div class="c-foot">
         <div class="c-date">${dateHtml}</div>
         <button class="c-apply" onclick="event.stopPropagation();openModal('${s.name.replace(/'/g,"\\'")}','${(s.genre||'').replace(/'/g,"\\'")}','${payMin}${payMax}')">体入に応募する</button>
