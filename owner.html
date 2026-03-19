@@ -739,7 +739,9 @@ async function saveStore(){
   const {data,error}=owner?await sb.from('owners').update(payload).eq('user_id',user.id).select().single():await sb.from('owners').insert({...payload,user_id:user.id}).select().single();
   if(error){toast('❌','エラー: '+error.message);return;}
   owner=data;
-  await sb.from('stores').update({...payload,pr_text:desc,status:'active'}).eq('owner_id',owner?.id);
+  const storesPayload={name:payload.store_name,genre:payload.genre,address:payload.address,hourly_min:payload.hourly_min,hourly_max:payload.hourly_max,hours:payload.hours,station:payload.station,features:payload.features,pr_text:desc,status:'active'};
+  const {error:stErr}=await sb.from('stores').update(storesPayload).eq('owner_id',owner?.id);
+  if(stErr)console.error('stores update error:',stErr.message);
   document.getElementById('hdrName').textContent=payload.store_name;
   document.getElementById('sbUname').textContent=payload.store_name;
   toast('✅','店舗情報を保存しました');
