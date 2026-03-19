@@ -1003,9 +1003,10 @@ select.fi{appearance:none;cursor:pointer;}
       <div id="dtlChips" class="c-chips" style="margin-bottom:12px;flex-wrap:wrap;gap:5px;"></div>
 
       <!-- PR文 -->
-      <div style="font-size:.78rem;color:var(--md);line-height:1.85;background:#f9f9f9;border-radius:8px;padding:12px 14px;margin-bottom:14px;border-left:3px solid var(--or);">
-        <div style="font-size:.65rem;font-weight:700;color:var(--or);margin-bottom:5px;">📋 店舗PR</div>
-        <div id="dtlDesc"></div>
+      <div style="margin-bottom:14px;">
+        <div style="font-size:.65rem;font-weight:700;color:var(--or);margin-bottom:6px;letter-spacing:.5px;">📋 店舗PR</div>
+        <div id="dtlCatchBanner" style="display:none;font-size:.82rem;font-weight:700;color:var(--or);background:var(--or3);border-radius:8px;padding:10px 13px;margin-bottom:8px;border:1px solid rgba(255,107,0,.18);line-height:1.65;"></div>
+        <div id="dtlDesc" style="font-size:.78rem;color:var(--md);line-height:1.85;background:#f9f9f9;border-radius:8px;padding:12px 14px;border-left:3px solid var(--or);"></div>
       </div>
 
       <!-- 詳細情報グリッド -->
@@ -1313,28 +1314,58 @@ function openDetail(s) {
 
   // PR文
   const rawDesc = s.description || '';
-  // 【セクション】形式で分割して表示
-  const sections = rawDesc.split(/\n\n/).filter(Boolean);
-  if (sections.length > 1) {
-    document.getElementById('dtlDesc').innerHTML = sections.map(sec => {
-      const m = sec.match(/^【(.+?)】(.*)$/s);
-      if (m) return '<div style="margin-bottom:10px;"><div style="font-size:.65rem;font-weight:900;color:var(--or);margin-bottom:4px;">▍'+m[1]+'</div><div style="font-size:.75rem;color:#555;line-height:1.85;white-space:pre-wrap;">'+m[2].trim()+'</div></div>';
-      return '<div style="font-size:.75rem;color:#555;line-height:1.85;margin-bottom:8px;white-space:pre-wrap;">'+sec+'</div>';
-    }).join('');
+  const SECTION_ICONS = {
+    '雰囲気': '💃', '環境': '🏠', '給与': '💰', '給与・待遇': '💰', '待遇': '💰',
+    'こんな方に': '🌸', '応募資格': '🌸', '体験入店': '👠', '体入': '👠',
+    'アクセス': '📍', 'スタッフ': '👥', '特徴': '⭐', 'メッセージ': '💌',
+  };
+  const allBlocks = rawDesc.split(/\n\n/).filter(Boolean);
+  const catchBlocks = allBlocks.filter(b => !/^【.+?】/.test(b));
+  const sectionBlocks = allBlocks.filter(b => /^【.+?】/.test(b));
+
+  // キャッチコピーバナー
+  const catchBanner = document.getElementById('dtlCatchBanner');
+  if (catchBlocks.length) {
+    catchBanner.innerHTML = '✨ ' + catchBlocks.join(' ');
+    catchBanner.style.display = '';
   } else {
-    document.getElementById('dtlDesc').textContent = rawDesc || '詳細情報は店舗にお問い合わせください。';
+    catchBanner.style.display = 'none';
   }
+
+  // PRセクション
+  let prHtml = '';
+  if (sectionBlocks.length) {
+    prHtml = sectionBlocks.map((sec, i) => {
+      const m = sec.match(/^【(.+?)】(.*)$/s);
+      if (!m) return '<div style="font-size:.75rem;color:#555;line-height:1.85;margin-bottom:8px;white-space:pre-wrap;">' + sec + '</div>';
+      const icon = SECTION_ICONS[m[1]] || '📌';
+      const isLast = i === sectionBlocks.length - 1;
+      return '<div style="margin-bottom:' + (isLast ? '0' : '11px') + ';padding-bottom:' + (isLast ? '0' : '11px') + ';' + (isLast ? '' : 'border-bottom:1px dashed #e5e5e5;') + '">' +
+        '<div style="font-size:.62rem;font-weight:900;color:var(--or);margin-bottom:5px;letter-spacing:.3px;">' + icon + ' ' + m[1] + '</div>' +
+        '<div style="font-size:.75rem;color:#444;line-height:1.9;white-space:pre-wrap;">' + m[2].trim() + '</div>' +
+        '</div>';
+    }).join('');
+  } else if (!catchBlocks.length) {
+    prHtml = '<div style="color:var(--lt);font-size:.75rem;text-align:center;padding:4px 0;">詳細情報は店舗にお問い合わせください。</div>';
+  }
+  document.getElementById('dtlDesc').innerHTML = prHtml;
+  document.getElementById('dtlDesc').style.display = prHtml ? '' : 'none';
 
   // 詳細グリッド
   const grid = document.getElementById('dtlInfoGrid');
   const items = [
-    { l: '営業時間', v: s.hours || '—' },
+    { l: '営業時間', v: s.hours || '' },
     { l: '最寄り駅', v: s.station || '錦糸町駅' },
-    { l: '住所', v: s.address || '東京都墨田区錦糸町' },
     { l: '体験入店', v: features.includes('体験入店OK') ? '✅ OK' : '要問合せ' },
-    { l: '日払い', v: features.includes('日払いOK') ? '✅ OK' : '—' },
-    { l: '未経験', v: features.includes('未経験OK') || features.includes('未経験歓迎') ? '✅ 歓迎' : '—' },
-  ].filter(i => i.v && i.v !== '—');
+    { l: '日払い', v: features.includes('日払いOK') ? '✅ OK' : '' },
+    { l: '未経験', v: (features.includes('未経験OK') || features.includes('未経験歓迎')) ? '✅ 歓迎' : '' },
+    { l: 'ノルマ', v: features.includes('ノルマなし') ? '✅ なし' : '' },
+    { l: '掛け持ち', v: features.includes('掛け持ちOK') ? '✅ OK' : '' },
+    { l: '送迎', v: features.includes('送迎あり') ? '✅ あり' : '' },
+    { l: '交通費', v: features.includes('交通費支給') ? '✅ 支給' : '' },
+    { l: '入店祝い金', v: features.includes('入店祝い金') ? '✅ あり' : '' },
+    { l: 'ボーナス', v: s.pay_bonus || '' },
+  ].filter(i => i.v);
   grid.innerHTML = items.map(i => `
     <div style="background:#f9f9f9;border-radius:6px;padding:9px 11px;">
       <div style="font-size:.62rem;color:#9ca3af;margin-bottom:2px;">${i.l}</div>
