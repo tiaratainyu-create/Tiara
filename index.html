@@ -1218,6 +1218,12 @@ function buildCard(s, idx) {
 
   const payTag = s.pay_bonus ? `<span class="cp-tag">${s.pay_bonus}</span>` : '';
 
+  // カード用PR文（キャッチコピー優先、なければ最初のセクション内容）
+  const descBlocks = (s.description || '').split(/\n\n/).filter(Boolean);
+  const catchText = descBlocks.find(b => !/^【.+?】/.test(b)) || '';
+  const firstSection = descBlocks.find(b => /^【.+?】/.test(b));
+  const cardDesc = catchText || (firstSection ? firstSection.replace(/^【.+?】\s*/, '').trim() : '');
+
   // 掲載日
   let dateHtml = '';
   if (s.created_at) {
@@ -1255,7 +1261,7 @@ function buildCard(s, idx) {
         ${payTag}
       </div>
       ${chips ? `<div class="c-chips">${chips}</div>` : ''}
-      <p class="c-desc">${s.description || ''}</p>
+      ${cardDesc ? `<p class="c-desc">${cardDesc}</p>` : ''}
       <div class="c-foot">
         <div class="c-date">${dateHtml}</div>
         <button class="c-apply" onclick="event.stopPropagation();openModal('${s.name.replace(/'/g,"\\'")}','${(s.genre||'').replace(/'/g,"\\'")}','${payMin}${payMax}')">体入に応募する</button>
