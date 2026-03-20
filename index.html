@@ -1058,23 +1058,11 @@ select.fi{appearance:none;cursor:pointer;}
       <div class="sp" id="sp2">
         <div>
           <label class="fl" style="display:block;margin-bottom:8px">希望の体入日</label>
-          <div class="date-grid">
-            <div class="dopt" onclick="pickD(this)"><div class="do-w">MON</div><div class="do-d">10</div><div class="do-m">3月</div></div>
-            <div class="dopt" onclick="pickD(this)"><div class="do-w">TUE</div><div class="do-d">11</div><div class="do-m">3月</div></div>
-            <div class="dopt pk" onclick="pickD(this)"><div class="do-w">WED</div><div class="do-d">12</div><div class="do-m">3月</div></div>
-            <div class="dopt" onclick="pickD(this)"><div class="do-w">THU</div><div class="do-d">13</div><div class="do-m">3月</div></div>
-            <div class="dopt" onclick="pickD(this)"><div class="do-w">FRI</div><div class="do-d">14</div><div class="do-m">3月</div></div>
-            <div class="dopt" onclick="pickD(this)"><div class="do-w">SAT</div><div class="do-d">15</div><div class="do-m">3月</div></div>
-          </div>
+          <div class="date-grid" id="dateGrid"></div>
         </div>
         <div>
           <label class="fl" style="display:block;margin-bottom:8px">希望時間帯</label>
-          <div class="trow">
-            <button class="topt pk" onclick="pickT(this)">19:00〜</button>
-            <button class="topt" onclick="pickT(this)">20:00〜</button>
-            <button class="topt" onclick="pickT(this)">21:00〜</button>
-            <button class="topt" onclick="pickT(this)">22:00〜</button>
-          </div>
+          <div class="trow" id="timeGrid"></div>
         </div>
       </div>
       <div class="sp" id="sp3">
@@ -1523,13 +1511,41 @@ function previewImg(input) {
 }
 
 /* ── 3-step modal ── */
-let step = 1, aS = '', aT = '', aP = '', aD = '3月12日', aTime = '19:00〜';
+let step = 1, aS = '', aT = '', aP = '', aD = '', aTime = '';
+
+/* ── カレンダー動的生成 ── */
+function renderCalendar(storeData) {
+  const closedDays = storeData?.closed_days || [];
+  const acceptHours = (storeData?.accept_hours && storeData.accept_hours.length)
+    ? storeData.accept_hours
+    : ['19:00〜','20:00〜','21:00〜','22:00〜'];
+  const DOW = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const dates = [];
+  const d = new Date();
+  d.setDate(d.getDate() + 1); // 明日以降
+  while (dates.length < 7) {
+    if (!closedDays.includes(d.getDay())) dates.push(new Date(d));
+    d.setDate(d.getDate() + 1);
+  }
+  aD = MONTHS[dates[0].getMonth()] + dates[0].getDate() + '日';
+  aTime = acceptHours[0];
+  document.getElementById('dateGrid').innerHTML = dates.map((dt, i) =>
+    `<div class="dopt${i===0?' pk':''}" onclick="pickD(this)"><div class="do-w">${DOW[dt.getDay()]}</div><div class="do-d">${dt.getDate()}</div><div class="do-m">${MONTHS[dt.getMonth()]}</div></div>`
+  ).join('');
+  document.getElementById('timeGrid').innerHTML = acceptHours.map((h, i) =>
+    `<button class="topt${i===0?' pk':''}" onclick="pickT(this)">${h}</button>`
+  ).join('');
+}
 
 function openModal(s, t, p) {
   aS = s; aT = t; aP = p; step = 1;
   document.getElementById('mStore').textContent = s;
   document.getElementById('msuc').classList.remove('show');
   ['mHead','mBody','mFoot'].forEach(id => document.getElementById(id).style.display = '');
+  // 店舗データがあればclosed_days/accept_hoursを使用
+  const storeData = (currentDetailStore && currentDetailStore.name === s) ? currentDetailStore : null;
+  renderCalendar(storeData);
   upStep();
   document.getElementById('applyModal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1593,7 +1609,7 @@ function _baseSubmit() {
 function pickD(el) {
   document.querySelectorAll('.dopt').forEach(d => d.classList.remove('pk'));
   el.classList.add('pk');
-  aD = '3月' + el.querySelector('.do-d').textContent + '日';
+  aD = el.querySelector('.do-m').textContent + el.querySelector('.do-d').textContent + '日';
 }
 
 function pickT(el) {
