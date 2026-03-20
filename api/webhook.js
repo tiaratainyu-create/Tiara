@@ -1,13 +1,37 @@
 // api/webhook.js
 // Stripeからのイベントを受け取る（請求完了・失敗・保証判定など）
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { createClient } = require('@supabase/supabase-js');
 
-export const config = { api: { bodyParser: false } };
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
 
 async function buffer(readable) {
   const chunks = [];
   for await (const chunk of readable) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
   return Buffer.concat(chunks);
+}
+
+// 前月の申込件数をSupabaseから取得
+async function getPrevMonthApplications(storeName) {
+  const now = new Date();
+  const prevMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+  const prevMonthEnd   = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59).toISOString();
+
+  const { count, error } = await supabase
+    .from('applications')
+    .select('*', { count: 'exact', head: true })
+    .eq('store_name', storeName)
+    .gte('created_at', prevMonthStart)
+    .lte('created_at', prevMonthEnd);
+
+  if (error) {
+    console.error('getPrevMonthApplications error:', error.message);
+    return 1; // エラー時は保証発動しない（安全側）
+  }
+  return count || 0;
 }
 
 module.exports = async (req, res) => {
@@ -29,33 +53,60 @@ module.exports = async (req, res) => {
     // 請求書作成時：応募ゼロ保証チェック
     case 'invoice.created': {
       const invoice = event.data.object;
-      const customerId = invoice.customer;
       const subscriptionId = invoice.subscription;
+      if (!subscriptionId) break;
 
-      // サブスクリプションのメタデータから店舗情報取得
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
       const storeName = subscription.metadata?.storeName;
 
       if (storeName) {
-        // 前月の申込件数をチェック（本番ではDBと連携）
-        const prevMonthApplications = await getPrevMonthApplications(storeName);
-        if (prevMonthApplications === 0) {
-          // 保証条件クリア → クーポン自動適用
+        const prevCount = await getPrevMonthApplications(storeName);
+        if (prevCount === 0) {
           const now = new Date();
-          const targetMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-          const couponCode = `TIARA-FREE-${storeName.toUpperCase().replace(/\s/g,'').slice(0,8)}-${targetMonth.replace('-','')}`;
+          const targetMonth = `${now.getFullYear()}-${String(now.getMonth()).padStart(2,'0')}`; // 前月
+          const couponCode = `TIARA-FREE-${storeName.toUpperCase().replace(/\s/g,'').replace(/[^A-Z0-9]/g,'').slice(0,8)}-${targetMonth.replace('-','')}`;
+
           try {
-            await stripe.coupons.create({
-              id: couponCode,
-              percent_off: 100,
-              duration: 'once',
+            // クーポンが既存なら取得、なければ作成
+            let coupon;
+            try { coupon = await stripe.coupons.retrieve(couponCode); }
+            catch { coupon = await stripe.coupons.create({
+              id: couponCode, percent_off: 100, duration: 'once',
               name: `応募ゼロ保証 ${targetMonth}月分無料`,
               metadata: { storeName, targetMonth, reason: 'zero_applications' }
-            });
-            await stripe.subscriptions.update(subscriptionId, { coupon: couponCode });
+            }); }
+
+            await stripe.subscriptions.update(subscriptionId, { coupon: coupon.id });
             console.log(`✅ 保証適用: ${storeName} → ${couponCode}`);
+
+            // guarantee_historyテーブルに記録
+            const { data: ownerData } = await supabase
+              .from('owners').select('id').eq('store_name', storeName).single();
+            if (ownerData) {
+              await supabase.from('guarantee_history').upsert({
+                owner_id: ownerData.id,
+                target_month: targetMonth,
+                app_count: 0,
+                is_free: true,
+                coupon_code: couponCode,
+              }, { onConflict: 'owner_id,target_month' });
+            }
           } catch (e) {
             console.error('Coupon apply error:', e.message);
+          }
+        } else {
+          // 申込あり → 通常請求の履歴を記録
+          const now = new Date();
+          const targetMonth = `${now.getFullYear()}-${String(now.getMonth()).padStart(2,'0')}`;
+          const { data: ownerData } = await supabase
+            .from('owners').select('id').eq('store_name', storeName).single();
+          if (ownerData) {
+            await supabase.from('guarantee_history').upsert({
+              owner_id: ownerData.id,
+              target_month: targetMonth,
+              app_count: prevCount,
+              is_free: false,
+            }, { onConflict: 'owner_id,target_month' });
           }
         }
       }
@@ -65,8 +116,11 @@ module.exports = async (req, res) => {
     // 支払い成功
     case 'invoice.payment_succeeded': {
       const invoice = event.data.object;
-      console.log(`💳 支払い成功: ${invoice.customer_email} ¥${invoice.amount_paid/100}`);
-      // TODO: DB更新・オーナーへの領収書メール送信
+      console.log(`💳 支払い成功: ${invoice.customer_email} ¥${(invoice.amount_paid/100).toLocaleString()}`);
+      // owners テーブルのステータスを active に
+      if (invoice.customer_email) {
+        await supabase.from('owners').update({ status: 'active' }).eq('email', invoice.customer_email);
+      }
       break;
     }
 
@@ -74,15 +128,21 @@ module.exports = async (req, res) => {
     case 'invoice.payment_failed': {
       const invoice = event.data.object;
       console.log(`❌ 支払い失敗: ${invoice.customer_email}`);
-      // TODO: オーナーへの催促メール送信
+      if (invoice.customer_email) {
+        await supabase.from('owners').update({ status: 'suspended' }).eq('email', invoice.customer_email);
+      }
       break;
     }
 
     // サブスクリプション解約
     case 'customer.subscription.deleted': {
       const sub = event.data.object;
-      console.log(`📦 解約: ${sub.metadata?.storeName}`);
-      // TODO: 掲載停止処理
+      const storeName = sub.metadata?.storeName;
+      console.log(`📦 解約: ${storeName}`);
+      if (storeName) {
+        await supabase.from('owners').update({ status: 'suspended' }).eq('store_name', storeName);
+        await supabase.from('stores').update({ status: 'inactive' }).eq('name', storeName);
+      }
       break;
     }
 
@@ -92,10 +152,3 @@ module.exports = async (req, res) => {
 
   res.status(200).json({ received: true });
 };
-
-// ダミー関数（本番ではSupabase/DBと連携）
-async function getPrevMonthApplications(storeName) {
-  // TODO: DBから前月の申込件数を取得
-  // return await db.query('SELECT COUNT(*) FROM applications WHERE store_name = ? AND month = ?', [storeName, prevMonth]);
-  return 0; // デモ用
-}
