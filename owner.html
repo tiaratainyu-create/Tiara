@@ -616,8 +616,17 @@ async function loadOwner(){
   document.getElementById('sPayMin').value=owner.hourly_min||'';
   document.getElementById('sPayMax').value=owner.hourly_max||'';
   document.getElementById('sHours').value=owner.hours||'';
-  document.getElementById('sDesc').value=owner.description||'';
+  document.getElementById('sStation').value=owner.station||'';
   if(owner.genre)document.getElementById('sGenre').value=owner.genre;
+  // PR欄を復元（description から各フィールドに分割）
+  const _desc=owner.description||'';
+  const _blocks=_desc.split('\n\n').filter(Boolean);
+  document.getElementById('sCatch').value=_blocks.find(b=>!b.startsWith('【'))||'';
+  document.getElementById('sAtmosphere').value=(_blocks.find(b=>b.startsWith('【雰囲気】'))||'').replace('【雰囲気】','').trim();
+  document.getElementById('sSalary').value=(_blocks.find(b=>b.startsWith('【給与・待遇】'))||'').replace('【給与・待遇】','').trim();
+  document.getElementById('sTarget').value=(_blocks.find(b=>b.startsWith('【こんな方に】'))||'').replace('【こんな方に】','').trim();
+  document.getElementById('sTrial').value=(_blocks.find(b=>b.startsWith('【体験入店】'))||'').replace('【体験入店】','').trim();
+  updateMapLink();
   if(owner.features){document.querySelectorAll('#featCbs input').forEach(cb=>{cb.checked=owner.features.includes(cb.value);});}
   if(owner.closed_days){document.querySelectorAll('#closedDays input[data-dow]').forEach(cb=>{cb.checked=owner.closed_days.includes(parseInt(cb.dataset.dow));});}
   if(owner.accept_hours){document.querySelectorAll('#acceptHours input[data-h]').forEach(cb=>{cb.checked=owner.accept_hours.includes(cb.dataset.h);});}
@@ -830,6 +839,38 @@ let toastT;
 function toast(ico,msg){document.getElementById('toastIco').textContent=ico;document.getElementById('toastMsg').textContent=msg;const el=document.getElementById('toast');el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2800);}
 function setBtnLoad(id,on,txt){const b=document.getElementById(id);if(!b)return;b.disabled=on;b.style.opacity=on?'.6':'1';b.textContent=txt;}
 function ago(iso){if(!iso)return'—';const d=Date.now()-new Date(iso).getTime();const m=Math.floor(d/60000);if(m<60)return m+'分前';const h=Math.floor(m/60);if(h<24)return h+'時間前';return Math.floor(h/24)+'日前';}
+
+// マップリンク
+function updateMapLink(){
+  const addr=document.getElementById('sAddr').value.trim();
+  const btn=document.getElementById('mapPreviewBtn');
+  if(btn)btn.style.display=addr?'block':'none';
+}
+function openMap(){
+  const addr=document.getElementById('sAddr').value.trim();
+  if(!addr)return;
+  const ua=navigator.userAgent;
+  const url=/iPhone|iPad/.test(ua)?'maps://maps.apple.com/?q=':'https://maps.google.com/?q=';
+  window.open(url+encodeURIComponent(addr),'_blank');
+}
+
+// 写真プレビュー
+const photoFiles=[];
+function previewPhoto(input,idx){
+  if(!input.files||!input.files[0])return;
+  photoFiles[idx]=input.files[0];
+  const slot=document.querySelector(`.photo-slot[data-idx="${idx}"]`);
+  if(!slot)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    let img=slot.querySelector('img.preview');
+    if(!img){img=document.createElement('img');img.className='preview';slot.appendChild(img);}
+    img.src=e.target.result;
+    let rm=slot.querySelector('.remove-btn');
+    if(!rm){rm=document.createElement('button');rm.className='remove-btn';rm.type='button';rm.textContent='✕';rm.onclick=()=>{img.remove();rm.remove();input.value='';delete photoFiles[idx];};slot.appendChild(rm);}
+  };
+  reader.readAsDataURL(input.files[0]);
+}
 </script>
 </body>
 </html>
