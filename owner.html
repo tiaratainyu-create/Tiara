@@ -343,137 +343,16 @@ select.form-fi{appearance:none;cursor:pointer;}
               <div class="photo-slot" data-idx="4"><input type="file" accept="image/*" onchange="previewPhoto(this,4)" style="display:none;"><div class="photo-placeholder" onclick="this.previousElementSibling.click()"><span style="font-size:1.4rem;">＋</span><span style="font-size:.6rem;color:var(--lt);margin-top:3px;">写真5</span></div></div>
             </div>
 
-            <!-- 店舗PR（大手求人サイト風） -->
-            <div style="font-size:.75rem;font-weight:900;color:var(--dk);letter-spacing:.5px;padding:6px 0 4px;border-bottom:3px solid var(--or);margin-bottom:12px;margin-top:10px;display:flex;align-items:center;gap:8px;">
-              <span style="background:var(--or);color:#fff;font-size:.62rem;padding:2px 8px;border-radius:3px;font-weight:900;">求人情報</span>
-              店舗PR・詳細情報
-            </div>
-
-            <!-- PR充実度インジケーター -->
-            <div style="background:#fffbf5;border:1px solid rgba(255,107,0,.2);border-radius:8px;padding:10px 13px;margin-bottom:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                <span style="font-size:.7rem;font-weight:700;color:var(--or);">📊 PR充実度</span>
-                <span id="prScoreTxt" style="font-size:.72rem;font-weight:900;color:var(--or);">0%</span>
-              </div>
-              <div style="background:#f0f0f0;border-radius:4px;height:6px;overflow:hidden;">
-                <div id="prScoreBar" style="height:100%;border-radius:4px;background:linear-gradient(90deg,var(--or),#ff9100);width:0;transition:width .4s ease;"></div>
-              </div>
-              <div style="font-size:.64rem;color:#888;margin-top:5px;">全項目を入力すると求職者への訴求力が大幅アップ。<strong>具体的な数字・エピソード</strong>を入れると応募率が上がります！</div>
-            </div>
-
-            <!-- キャッチコピー -->
-            <div style="border:2px dashed rgba(255,107,0,.35);border-radius:8px;padding:11px 14px;margin-bottom:14px;background:#fffcf8;">
-              <div style="font-size:.68rem;font-weight:900;color:var(--or);margin-bottom:7px;display:flex;align-items:center;gap:5px;">
-                <span style="background:var(--or);color:#fff;padding:1px 7px;border-radius:2px;font-size:.6rem;">必須</span>
-                ✨ キャッチコピー
-                <span style="font-weight:400;color:var(--lt);font-size:.63rem;">— 一覧カードに大きく表示される一言PR</span>
-              </div>
-              <input class="form-fi" id="sCatch" type="text" maxlength="60" placeholder="例：未経験から月収50万も夢じゃない！アットホームなお店です" style="border-color:rgba(255,107,0,.35);font-size:.9rem;font-weight:700;">
-            </div>
-
-            <!-- 仕事内容・雰囲気 -->
-            <div style="border:1.5px solid #e5e5e5;border-radius:8px;overflow:hidden;margin-bottom:12px;">
-              <div style="background:#f8f8f8;border-bottom:1.5px solid #e5e5e5;padding:9px 13px;display:flex;align-items:center;gap:8px;">
-                <span style="font-size:1rem;">💃</span>
-                <div>
-                  <div style="font-size:.72rem;font-weight:900;color:#222;">仕事の雰囲気・特徴</div>
-                  <div style="font-size:.62rem;color:#999;margin-top:1px;">客層・スタッフ・店の空気感など — 求職者がイメージしやすい内容を</div>
-                </div>
-              </div>
-              <div style="padding:10px 12px;">
-                <textarea class="form-fi" id="sAtmosphere" rows="3" placeholder="例：常連客が多く、アットホームな雰囲気です。スタッフ同士も仲が良く、みんな仲良しです。客層は30〜50代のビジネスマンが中心です。" style="border:none;padding:0;background:transparent;resize:vertical;"></textarea>
-              </div>
-            </div>
-
-            <!-- 給与・待遇 -->
-            <div style="border:1.5px solid #fbbf24;border-radius:8px;overflow:hidden;margin-bottom:12px;">
-              <div style="background:#fffbeb;border-bottom:1.5px solid #fbbf24;padding:9px 13px;display:flex;align-items:center;gap:8px;">
-                <span style="font-size:1rem;">💰</span>
-                <div>
-                  <div style="font-size:.72rem;font-weight:900;color:#92400e;">給与・待遇の詳細</div>
-                  <div style="font-size:.62rem;color:#b45309;margin-top:1px;">指名バック・手当・交通費など — 数字を具体的に書くと応募率アップ！</div>
-                </div>
-              </div>
-              <div style="padding:10px 12px;background:#fffdf5;">
-                <textarea class="form-fi" id="sSalary" rows="3" placeholder="例：指名バック30%・同伴手当5,000円・入店祝い金あり・交通費全額支給・月収40万円以上も可能！" style="border:none;padding:0;background:transparent;resize:vertical;"></textarea>
-              </div>
-            </div>
-
-            <!-- シフト・勤務 -->
-            <div style="border:1.5px solid #bae6fd;border-radius:8px;overflow:hidden;margin-bottom:12px;">
-              <div style="background:#f0f9ff;border-bottom:1.5px solid #bae6fd;padding:9px 13px;display:flex;align-items:center;gap:8px;">
-                <span style="font-size:1rem;">📅</span>
-                <div>
-                  <div style="font-size:.72rem;font-weight:900;color:#0369a1;">シフト・勤務スタイル</div>
-                  <div style="font-size:.62rem;color:#0284c7;margin-top:1px;">週何日〜・時間帯・掛け持ち可否など</div>
-                </div>
-              </div>
-              <div style="padding:10px 12px;background:#f8fbff;">
-                <textarea class="form-fi" id="sShift" rows="2" placeholder="例：週1日〜OK・17時〜24時の間で自由にシフト設定。学生・主婦・副業の方も多数在籍！掛け持ちも全然OK。" style="border:none;padding:0;background:transparent;resize:vertical;"></textarea>
-              </div>
-            </div>
-
-            <!-- こんな方に -->
-            <div style="border:1.5px solid #e5e5e5;border-radius:8px;overflow:hidden;margin-bottom:12px;">
-              <div style="background:#f8f8f8;border-bottom:1.5px solid #e5e5e5;padding:9px 13px;display:flex;align-items:center;gap:8px;">
-                <span style="font-size:1rem;">🌸</span>
-                <div>
-                  <div style="font-size:.72rem;font-weight:900;color:#222;">こんな方に来てほしい</div>
-                  <div style="font-size:.62rem;color:#999;margin-top:1px;">応募資格・歓迎条件 — 間口を広くするほど応募が増えます</div>
-                </div>
-              </div>
-              <div style="padding:10px 12px;">
-                <textarea class="form-fi" id="sTarget" rows="2" placeholder="例：未経験大歓迎！明るく元気な方、週2日〜OK、副業・掛け持ちも歓迎します。年齢・経験不問！" style="border:none;padding:0;background:transparent;resize:vertical;"></textarea>
-              </div>
-            </div>
-
-            <!-- 体験入店 -->
-            <div style="border:1.5px solid #e5e5e5;border-radius:8px;overflow:hidden;margin-bottom:12px;">
-              <div style="background:#f8f8f8;border-bottom:1.5px solid #e5e5e5;padding:9px 13px;display:flex;align-items:center;gap:8px;">
-                <span style="font-size:1rem;">👠</span>
-                <div>
-                  <div style="font-size:.72rem;font-weight:900;color:#222;">体験入店について</div>
-                  <div style="font-size:.62rem;color:#999;margin-top:1px;">当日の流れ・服装・給与保証など</div>
-                </div>
-              </div>
-              <div style="padding:10px 12px;">
-                <textarea class="form-fi" id="sTrial" rows="2" placeholder="例：体験入店は私服でOK！まずは見学だけでも大歓迎。お気軽にご連絡ください。当日の給与保証あり！" style="border:none;padding:0;background:transparent;resize:vertical;"></textarea>
-              </div>
-            </div>
-
-            <!-- 福利厚生 -->
-            <div style="border:1.5px solid #e5e5e5;border-radius:8px;overflow:hidden;margin-bottom:12px;">
-              <div style="background:#f8f8f8;border-bottom:1.5px solid #e5e5e5;padding:9px 13px;display:flex;align-items:center;gap:8px;">
-                <span style="font-size:1rem;">🎁</span>
-                <div>
-                  <div style="font-size:.72rem;font-weight:900;color:#222;">福利厚生・サポート</div>
-                  <div style="font-size:.62rem;color:#999;margin-top:1px;">「・」区切りで入力するとタグ表示されます（寮・ドレス・手当など）</div>
-                </div>
-              </div>
-              <div style="padding:10px 12px;">
-                <textarea class="form-fi" id="sBenefits" rows="2" placeholder="例：寮完備（月3万〜）・ドレス無料貸出30着以上・ヘアメイクルーム完備・専属カウンセラー在籍・悩み相談いつでもOK。" style="border:none;padding:0;background:transparent;resize:vertical;"></textarea>
-              </div>
-            </div>
-
-            <!-- メッセージ -->
-            <div style="border:1.5px solid #ddd6fe;border-radius:8px;overflow:hidden;margin-bottom:14px;">
-              <div style="background:#faf5ff;border-bottom:1.5px solid #ddd6fe;padding:9px 13px;display:flex;align-items:center;gap:8px;">
-                <span style="font-size:1rem;">💌</span>
-                <div>
-                  <div style="font-size:.72rem;font-weight:900;color:#6d28d9;">オーナー・スタッフからのメッセージ</div>
-                  <div style="font-size:.62rem;color:#7c3aed;margin-top:1px;">求職者へ直接伝えたいこと — 人柄が伝わる文章が効果的！</div>
-                </div>
-              </div>
-              <div style="padding:10px 12px;background:#fdfbff;">
-                <textarea class="form-fi" id="sMessage" rows="3" placeholder="例：はじめまして！店長の田中です。うちのお店は「スタッフファースト」が信念。不安なことは何でも相談してください。一緒に楽しく働きましょう！" style="border:none;padding:0;background:transparent;resize:vertical;"></textarea>
-              </div>
-            </div>
+            <!-- 店舗PR（詳細区分） -->
+            <div style="font-size:.7rem;font-weight:900;color:var(--or);letter-spacing:1px;padding:4px 0 2px;border-bottom:2px solid var(--or3);margin-bottom:2px;margin-top:8px;">📝 店舗PR・詳細情報</div>
+            <div class="form-fg"><label class="form-lbl">キャッチコピー <span style="font-weight:400;color:var(--lt);font-size:.65rem;">（一覧に表示される一言PR）</span></label><input class="form-fi" id="sCatch" type="text" placeholder="例：未経験から月収50万も夢じゃない！アットホームなお店です"></div>
+            <div class="form-fg"><label class="form-lbl">お店の雰囲気・特徴</label><textarea class="form-fi" id="sAtmosphere" rows="3" placeholder="お店の雰囲気、客層、スタッフの人数など自由に記入&#10;例：常連客が多く、アットホームな雰囲気です。スタッフ同士も仲が良く、みんな仲良しです。"></textarea></div>
+            <div class="form-fg"><label class="form-lbl">給与・待遇の詳細</label><textarea class="form-fi" id="sSalary" rows="3" placeholder="時給以外の収入・ボーナスなど&#10;例：指名バック30%・同伴手当5,000円・入店祝い金あり・交通費全額支給"></textarea></div>
+            <div class="form-fg"><label class="form-lbl">応募資格・こんな方に来てほしい</label><textarea class="form-fi" id="sTarget" rows="2" placeholder="例：未経験大歓迎！明るく元気な方、週2日〜OK、副業・掛け持ちも歓迎します"></textarea></div>
+            <div class="form-fg"><label class="form-lbl">体験入店について</label><textarea class="form-fi" id="sTrial" rows="2" placeholder="例：体験入店は私服でOK！まずは見学だけでも大歓迎。お気軽にご連絡ください。"></textarea></div>
 
             <!-- 特典・条件 -->
-            <div style="font-size:.72rem;font-weight:900;color:var(--dk);letter-spacing:.5px;padding:5px 0 4px;border-bottom:2px solid var(--bd);margin-bottom:10px;margin-top:2px;display:flex;align-items:center;gap:7px;">
-              <span style="background:#22c55e;color:#fff;font-size:.6rem;padding:2px 7px;border-radius:3px;font-weight:900;">CHECK</span>
-              特典・条件
-            </div>
+            <div style="font-size:.7rem;font-weight:900;color:var(--or);letter-spacing:1px;padding:4px 0 2px;border-bottom:2px solid var(--or3);margin-bottom:2px;margin-top:8px;">✅ 特典・条件</div>
             <div class="form-fg">
               <div class="cb-grid" id="featCbs">
                 <label class="cbi"><input type="checkbox" value="体験入店OK"> 体験入店OK</label>
@@ -577,13 +456,6 @@ select.form-fi{appearance:none;cursor:pointer;}
                 📌 対象：全プラン（ライト・スタンダード・プレミアム）
               </div>
             </div>
-            <!-- 手動申請ボタン（Webhook自動判定の補完） -->
-            <div style="background:#fffbf5;border:1px solid rgba(255,107,0,.2);border-radius:8px;padding:12px 14px;margin-bottom:16px;">
-              <div style="font-size:.75rem;font-weight:700;color:var(--or);margin-bottom:6px;">📋 手動で保証を申請する</div>
-              <div style="font-size:.68rem;color:#666;line-height:1.7;margin-bottom:10px;">自動判定がうまくいかない場合は、ここから手動で申請できます。先月の申込が0件の場合のみ申請可能です。</div>
-              <button onclick="applyGuaranteeManual()" style="background:var(--or);color:#fff;border:none;padding:9px 20px;border-radius:6px;font-size:.75rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">🛡 保証を申請する</button>
-            </div>
-
             <div style="font-size:.8rem;font-weight:900;color:var(--dk);margin-bottom:10px;">月別実績</div>
             <div id="guarHistory"><div style="text-align:center;padding:20px;color:var(--lt);font-size:.78rem;">読み込み中...</div></div>
           </div>
@@ -725,22 +597,8 @@ async function loadOwner(){
   document.getElementById('sPayMin').value=owner.hourly_min||'';
   document.getElementById('sPayMax').value=owner.hourly_max||'';
   document.getElementById('sHours').value=owner.hours||'';
-  document.getElementById('sStation').value=owner.station||'';
+  document.getElementById('sDesc').value=owner.description||'';
   if(owner.genre)document.getElementById('sGenre').value=owner.genre;
-  // PR欄を復元（description から各フィールドに分割）
-  const _desc=owner.description||'';
-  const _blocks=_desc.split('\n\n').filter(Boolean);
-  const _getBlock=(prefix)=>(_blocks.find(b=>b.startsWith(prefix))||'').replace(prefix,'').trim();
-  document.getElementById('sCatch').value=_blocks.find(b=>!b.startsWith('【'))||'';
-  document.getElementById('sAtmosphere').value=_getBlock('【雰囲気】');
-  document.getElementById('sSalary').value=_getBlock('【給与・待遇】');
-  document.getElementById('sShift').value=_getBlock('【シフト・勤務】');
-  document.getElementById('sTarget').value=_getBlock('【こんな方に】');
-  document.getElementById('sTrial').value=_getBlock('【体験入店】');
-  document.getElementById('sBenefits').value=_getBlock('【福利厚生】');
-  document.getElementById('sMessage').value=_getBlock('【メッセージ】');
-  updateMapLink();
-  setTimeout(calcPrScore, 50); // DOM更新後に計算
   if(owner.features){document.querySelectorAll('#featCbs input').forEach(cb=>{cb.checked=owner.features.includes(cb.value);});}
   if(owner.closed_days){document.querySelectorAll('#closedDays input[data-dow]').forEach(cb=>{cb.checked=owner.closed_days.includes(parseInt(cb.dataset.dow));});}
   if(owner.accept_hours){document.querySelectorAll('#acceptHours input[data-h]').forEach(cb=>{cb.checked=owner.accept_hours.includes(cb.dataset.h);});}
@@ -855,19 +713,14 @@ async function saveStore(){
     document.getElementById('sCatch')?.value.trim(),
     document.getElementById('sAtmosphere')?.value.trim() ? '【雰囲気】' + document.getElementById('sAtmosphere').value.trim() : '',
     document.getElementById('sSalary')?.value.trim() ? '【給与・待遇】' + document.getElementById('sSalary').value.trim() : '',
-    document.getElementById('sShift')?.value.trim() ? '【シフト・勤務】' + document.getElementById('sShift').value.trim() : '',
     document.getElementById('sTarget')?.value.trim() ? '【こんな方に】' + document.getElementById('sTarget').value.trim() : '',
     document.getElementById('sTrial')?.value.trim() ? '【体験入店】' + document.getElementById('sTrial').value.trim() : '',
-    document.getElementById('sBenefits')?.value.trim() ? '【福利厚生】' + document.getElementById('sBenefits').value.trim() : '',
-    document.getElementById('sMessage')?.value.trim() ? '【メッセージ】' + document.getElementById('sMessage').value.trim() : '',
   ].filter(Boolean).join('\n\n');
   const payload={store_name:document.getElementById('sName').value.trim(),genre:document.getElementById('sGenre').value,address:document.getElementById('sAddr').value.trim(),hourly_min:parseInt(document.getElementById('sPayMin').value)||null,hourly_max:parseInt(document.getElementById('sPayMax').value)||null,hours:document.getElementById('sHours').value.trim(),station:document.getElementById('sStation')?.value.trim()||'',description:desc,features:feats};
   const {data,error}=owner?await sb.from('owners').update(payload).eq('user_id',user.id).select().single():await sb.from('owners').insert({...payload,user_id:user.id}).select().single();
   if(error){toast('❌','エラー: '+error.message);return;}
   owner=data;
-  const storesPayload={owner_id:owner.id,name:payload.store_name,genre:payload.genre,address:payload.address,hourly_min:payload.hourly_min,hourly_max:payload.hourly_max,hours:payload.hours,station:payload.station,features:payload.features,pr_text:desc,status:'active',owner_email:owner?.email||user?.email||''};
-  const {error:stErr}=await sb.from('stores').upsert(storesPayload,{onConflict:'owner_id'});
-  if(stErr){console.error('stores upsert error:',stErr.message);toast('⚠','店舗情報の公開更新に失敗しました: '+stErr.message);return;}
+  await sb.from('stores').update({...payload,status:'active'}).eq('owner_id',owner?.id);
   document.getElementById('hdrName').textContent=payload.store_name;
   document.getElementById('sbUname').textContent=payload.store_name;
   toast('✅','店舗情報を保存しました');
@@ -886,39 +739,6 @@ async function saveNotify(){
   const email=document.getElementById('ntEmail').value.trim();
   await sb.from('owners').update({email}).eq('user_id',user.id);
   toast('✅','通知設定を保存しました');
-}
-
-// 手動保証申請
-async function applyGuaranteeManual(){
-  if(!owner){toast('❌','店舗情報を先に保存してください');return;}
-  // 先月の申込件数を確認
-  const now=new Date();
-  const prevStart=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
-  const prevEnd=new Date(now.getFullYear(),now.getMonth(),0,23,59,59).toISOString();
-  const {count}=await sb.from('applications').select('*',{count:'exact',head:true})
-    .eq('store_name',owner.store_name).gte('created_at',prevStart).lte('created_at',prevEnd);
-  if(count>0){toast('❌',`先月の申込が${count}件あるため保証対象外です`);return;}
-
-  const targetMonth=`${now.getFullYear()}-${String(now.getMonth()).padStart(2,'0')}`;
-  // Stripeサブスクリプションが必要
-  if(!owner.stripe_subscription_id){toast('❌','有効なサブスクリプションがありません');return;}
-
-  const btn=event.target;btn.disabled=true;btn.textContent='処理中...';
-  try{
-    const res=await fetch('/api/apply-guarantee',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({subscriptionId:owner.stripe_subscription_id,storeName:owner.store_name,targetMonth})
-    });
-    const data=await res.json();
-    if(!res.ok)throw new Error(data.error||'エラー');
-    // guarantee_historyに記録
-    await sb.from('guarantee_history').upsert({
-      owner_id:owner.id,target_month:targetMonth,app_count:0,is_free:true,coupon_code:data.couponCode
-    },{onConflict:'owner_id,target_month'});
-    toast('🎁','保証申請が完了しました！翌月の請求が無料になります');
-    loadGuarantee();
-  }catch(e){toast('❌',e.message);}
-  finally{btn.disabled=false;btn.textContent='🛡 保証を申請する';}
 }
 
 // GUARANTEE HISTORY
@@ -949,7 +769,7 @@ async function doPayment(){
     if(error)throw new Error(error.message);
     const {data:{session}}=await sb.auth.getSession();
     const token=session?.access_token;
-    const res=await fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentMethodId:paymentMethod.id,planId:selPlanId,storeName:owner?.store_name,ownerEmail:owner?.email||user?.email||'',ownerName:owner?.store_name||''})});
+    const res=await fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentMethodId:paymentMethod.id,planId:selPlanId,storeName:owner?.store_name})});
     const data=await res.json();
     if(!res.ok)throw new Error(data.error||'決済エラー');
     if(data.clientSecret){const {error:ce}=await stripe.confirmCardPayment(data.clientSecret);if(ce)throw new Error(ce.message);}
@@ -989,62 +809,6 @@ let toastT;
 function toast(ico,msg){document.getElementById('toastIco').textContent=ico;document.getElementById('toastMsg').textContent=msg;const el=document.getElementById('toast');el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2800);}
 function setBtnLoad(id,on,txt){const b=document.getElementById(id);if(!b)return;b.disabled=on;b.style.opacity=on?'.6':'1';b.textContent=txt;}
 function ago(iso){if(!iso)return'—';const d=Date.now()-new Date(iso).getTime();const m=Math.floor(d/60000);if(m<60)return m+'分前';const h=Math.floor(m/60);if(h<24)return h+'時間前';return Math.floor(h/24)+'日前';}
-
-// PR充実度スコア
-function calcPrScore(){
-  const fields=['sCatch','sAtmosphere','sSalary','sShift','sTarget','sTrial','sBenefits','sMessage',
-                'sName','sAddr','sPayMin','sPayMax','sHours','sStation'];
-  const filled=fields.filter(id=>{const el=document.getElementById(id);return el&&el.value.trim().length>0;}).length;
-  const pct=Math.round(filled/fields.length*100);
-  const bar=document.getElementById('prScoreBar');
-  const txt=document.getElementById('prScoreTxt');
-  if(bar)bar.style.width=pct+'%';
-  if(txt){
-    txt.textContent=pct+'%';
-    txt.style.color=pct>=80?'#22c55e':pct>=50?'var(--or)':'var(--red)';
-    if(bar)bar.style.background=pct>=80?'linear-gradient(90deg,#22c55e,#16a34a)':pct>=50?'linear-gradient(90deg,var(--or),#ff9100)':'linear-gradient(90deg,#f59e0b,var(--or))';
-  }
-}
-// 入力のたびにスコア更新
-document.addEventListener('DOMContentLoaded',()=>{
-  ['sCatch','sAtmosphere','sSalary','sShift','sTarget','sTrial','sBenefits','sMessage',
-   'sName','sAddr','sPayMin','sPayMax','sHours','sStation'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.addEventListener('input',calcPrScore);
-  });
-});
-
-// マップリンク
-function updateMapLink(){
-  const addr=document.getElementById('sAddr').value.trim();
-  const btn=document.getElementById('mapPreviewBtn');
-  if(btn)btn.style.display=addr?'block':'none';
-}
-function openMap(){
-  const addr=document.getElementById('sAddr').value.trim();
-  if(!addr)return;
-  const ua=navigator.userAgent;
-  const url=/iPhone|iPad/.test(ua)?'maps://maps.apple.com/?q=':'https://maps.google.com/?q=';
-  window.open(url+encodeURIComponent(addr),'_blank');
-}
-
-// 写真プレビュー
-const photoFiles=[];
-function previewPhoto(input,idx){
-  if(!input.files||!input.files[0])return;
-  photoFiles[idx]=input.files[0];
-  const slot=document.querySelector(`.photo-slot[data-idx="${idx}"]`);
-  if(!slot)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    let img=slot.querySelector('img.preview');
-    if(!img){img=document.createElement('img');img.className='preview';slot.appendChild(img);}
-    img.src=e.target.result;
-    let rm=slot.querySelector('.remove-btn');
-    if(!rm){rm=document.createElement('button');rm.className='remove-btn';rm.type='button';rm.textContent='✕';rm.onclick=()=>{img.remove();rm.remove();input.value='';delete photoFiles[idx];};slot.appendChild(rm);}
-  };
-  reader.readAsDataURL(input.files[0]);
-}
 </script>
 </body>
 </html>

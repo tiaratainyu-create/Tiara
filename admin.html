@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tiara — 管理者ダッシュボード</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
@@ -1249,17 +1248,20 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
       <!-- ═ DASHBOARD ═ -->
       <div class="adm-page on" id="adm-dashboard">
         <div class="adm-kpi-grid">
-          <div class="adm-kpi kc-or"><div class="adm-kpi-lbl">掲載店舗数</div><div class="adm-kpi-num" id="kpiStores">—</div><div class="adm-kpi-sub" id="kpiStoresSub">読込中...</div><div class="adm-kpi-ico">🏪</div></div>
-          <div class="adm-kpi kc-gr"><div class="adm-kpi-lbl">体入申込（今月）</div><div class="adm-kpi-num" id="kpiApps">—</div><div class="adm-kpi-sub" id="kpiAppsSub">読込中...</div><div class="adm-kpi-ico">📝</div></div>
+          <div class="adm-kpi kc-or"><div class="adm-kpi-lbl">掲載店舗数</div><div class="adm-kpi-num">47</div><div class="adm-kpi-sub"><span class="up">▲3</span>&nbsp;今月新規</div><div class="adm-kpi-ico">🏪</div></div>
+          <div class="adm-kpi kc-gr"><div class="adm-kpi-lbl">体入申込（今月）</div><div class="adm-kpi-num">284</div><div class="adm-kpi-sub"><span class="up">▲18%</span>&nbsp;先月比</div><div class="adm-kpi-ico">📝</div></div>
           <div class="adm-kpi kc-bl"><div class="adm-kpi-lbl">月間売上</div><div class="adm-kpi-num">¥1.84M</div><div class="adm-kpi-sub"><span class="up">▲12%</span>&nbsp;先月比</div><div class="adm-kpi-ico">💴</div></div>
-          <div class="adm-kpi kc-pu"><div class="adm-kpi-lbl">審査待ち</div><div class="adm-kpi-num" id="kpiPending" style="color:#f59e0b">—</div><div class="adm-kpi-sub" style="color:#9ca3af">要対応あり</div><div class="adm-kpi-ico">⏳</div></div>
+          <div class="adm-kpi kc-pu"><div class="adm-kpi-lbl">審査待ち</div><div class="adm-kpi-num" style="color:#f59e0b">5</div><div class="adm-kpi-sub" style="color:#9ca3af">要対応あり</div><div class="adm-kpi-ico">⏳</div></div>
         </div>
         <div class="adm-dash-grid">
           <div>
             <div class="adm-sbox">
               <div class="adm-shead"><div class="adm-stitle">最新 体入申込</div><button class="adm-saction" onclick="admNav('applies',document.querySelectorAll('.adm-sb-item')[1])">すべて見る →</button></div>
-              <div class="adm-apps" id="dashRecentApps">
-                <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</div>
+              <div class="adm-apps">
+                <div class="adm-app"><div class="adm-ava">さ</div><div class="adm-app-info"><div class="adm-app-name">さくら（21歳）<span class="abadge ab-new" style="margin-left:5px">未経験</span></div><div class="adm-app-store">Club Magnolia — キャバクラ｜3月12日 19:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">10分前</div></div>
+                <div class="adm-app"><div class="adm-ava">れ</div><div class="adm-app-info"><div class="adm-app-name">れいな（24歳）<span class="abadge ab-on" style="margin-left:5px">経験あり</span></div><div class="adm-app-store">Lounge ESTRELLA — ラウンジ｜3月13日 20:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">42分前</div></div>
+                <div class="adm-app"><div class="adm-ava">み</div><div class="adm-app-info"><div class="adm-app-name">みな（19歳）<span class="abadge ab-new" style="margin-left:5px">未経験</span></div><div class="adm-app-store">NIGHT VENUS — クラブ｜3月14日 21:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">1時間前</div></div>
+                <div class="adm-app"><div class="adm-ava">ゆ</div><div class="adm-app-info"><div class="adm-app-name">ゆか（26歳）<span class="abadge ab-on" style="margin-left:5px">経験あり</span></div><div class="adm-app-store">スナック 桜並木｜3月15日 20:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">3時間前</div></div>
               </div>
             </div>
             <div class="adm-sbox" style="margin-top:18px">
@@ -1307,8 +1309,12 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
             <select class="adm-fsel"><option>すべての期間</option><option>今日</option><option>今週</option><option>今月</option></select>
             <button class="adm-fbtn">絞り込む</button>
           </div>
-          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申込者</th><th>店舗</th><th>希望日時</th><th>経験</th><th>連絡先</th><th>状態</th><th>申込日</th><th>操作</th></tr></thead><tbody id="appliesTbody">
-            <tr><td colspan="8" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</td></tr>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申込者</th><th>店舗</th><th>希望日時</th><th>経験</th><th>連絡先</th><th>状態</th><th>申込日</th><th>操作</th></tr></thead><tbody>
+            <tr><td><div class="td-main">さくら（21歳）</div></td><td><div class="td-main">Club Magnolia</div><div class="td-sub">キャバクラ</div></td><td>3月12日（水）19:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @sakura123</td><td><span class="abadge ab-rev">未対応</span></td><td>10分前</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-tact danger" onclick="admToast('🗑','キャンセルしました')">キャンセル</button></div></td></tr>
+            <tr><td><div class="td-main">れいな（24歳）</div></td><td><div class="td-main">Lounge ESTRELLA</div><div class="td-sub">ラウンジ</div></td><td>3月13日（木）20:00〜</td><td><span class="abadge ab-on">経験あり</span></td><td>090-XXXX-1234</td><td><span class="abadge ab-rev">未対応</span></td><td>42分前</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-tact danger" onclick="admToast('🗑','キャンセルしました')">キャンセル</button></div></td></tr>
+            <tr><td><div class="td-main">みな（19歳）</div></td><td><div class="td-main">NIGHT VENUS</div><div class="td-sub">クラブ</div></td><td>3月14日（金）21:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @mina_night</td><td><span class="abadge ab-on">対応済</span></td><td>1時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+            <tr><td><div class="td-main">ゆか（26歳）</div></td><td><div class="td-main">スナック 桜並木</div><div class="td-sub">スナック</div></td><td>3月15日（土）20:00〜</td><td><span class="abadge ab-on">3年以上</span></td><td>090-XXXX-5678</td><td><span class="abadge ab-on">対応済</span></td><td>3時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+            <tr><td><div class="td-main">あい（22歳）</div></td><td><div class="td-main">Girls Bar SAKURA</div><div class="td-sub">ガールズバー</div></td><td>3月16日（日）18:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @ai_bar</td><td><span class="abadge ab-off">キャンセル</span></td><td>昨日</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
           </tbody></table></div>
         </div>
       </div>
@@ -1322,8 +1328,12 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
             <select class="adm-fsel"><option>すべてのプラン</option><option>プレミアム</option><option>スタンダード</option><option>ライト</option></select>
             <select class="adm-fsel"><option>すべての業種</option><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option></select>
           </div>
-          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>店舗名</th><th>業種</th><th>プラン</th><th>状態</th><th>時給</th><th>掲載開始</th><th>操作</th></tr></thead><tbody id="storesTbody">
-            <tr><td colspan="7" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</td></tr>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>店舗名</th><th>業種</th><th>プラン</th><th>状態</th><th>体入件数</th><th>掲載開始</th><th>次回更新</th><th>操作</th></tr></thead><tbody>
+            <tr><td><div class="td-main">Club Magnolia</div><div class="td-sub">田中 花子 · 03-0000-0001</div></td><td>キャバクラ</td><td><span class="plan-tag pt-pr">Premium</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>32件</strong></td><td>2025/01/01</td><td>2025/04/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">Lounge ESTRELLA</div><div class="td-sub">鈴木 一郎 · 03-0000-0002</div></td><td>ラウンジ</td><td><span class="plan-tag pt-st">Standard</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>18件</strong></td><td>2025/02/01</td><td>2025/04/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">スナック 桜並木</div><div class="td-sub">山田 花子 · 03-0000-0003</div></td><td>スナック</td><td><span class="plan-tag pt-lt">Light</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>7件</strong></td><td>2025/01/15</td><td>2025/04/15</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
+            <tr><td><div class="td-main">NIGHT VENUS</div><div class="td-sub">佐藤 太郎 · 03-0000-0004</div></td><td>クラブ</td><td><span class="plan-tag pt-st">Standard</span></td><td><span class="abadge ab-rev">審査中</span></td><td>—</td><td>—</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td><div class="td-main">Girls Bar SAKURA</div><div class="td-sub">伊藤 美咲 · 03-0000-0005</div></td><td>Gバー</td><td><span class="plan-tag pt-lt">Light</span></td><td><span class="abadge ab-off">停止中</span></td><td><strong>0件</strong></td><td>2025/02/01</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('▶','掲載を再開しました')">再開</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
           </tbody></table></div>
         </div>
       </div>
@@ -1332,8 +1342,11 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
       <div class="adm-page" id="adm-pending">
         <div class="adm-sbox">
           <div class="adm-shead"><div class="adm-stitle">掲載申請 審査一覧</div><span style="font-size:.73rem;color:#854d0e;font-weight:700;background:#fef9c3;padding:4px 10px;border-radius:5px;">5件 審査待ち</span></div>
-          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申請日</th><th>店舗名</th><th>業種</th><th>プラン</th><th>メール</th><th>操作</th></tr></thead><tbody id="pendingTbody">
-            <tr><td colspan="6" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</td></tr>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申請日</th><th>店舗名</th><th>業種</th><th>プラン</th><th>担当者</th><th>連絡先</th><th>操作</th></tr></thead><tbody>
+            <tr><td>3月7日 22:10</td><td><div class="td-main">NIGHT VENUS</div></td><td>クラブ</td><td><span class="plan-tag pt-st">Standard</span></td><td>佐藤 太郎</td><td>03-0000-0004</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td>3月7日 18:44</td><td><div class="td-main">Lounge Bijou</div></td><td>ラウンジ</td><td><span class="plan-tag pt-pr">Premium</span></td><td>中村 里奈</td><td>03-0000-0006</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td>3月6日 14:30</td><td><div class="td-main">Club Fleur</div></td><td>キャバクラ</td><td><span class="plan-tag pt-st">Standard</span></td><td>小林 健一</td><td>03-0000-0007</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+            <tr><td>3月5日 21:00</td><td><div class="td-main">スナック 月見</div></td><td>スナック</td><td><span class="plan-tag pt-lt">Light</span></td><td>田中 優子</td><td>03-0000-0009</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
           </tbody></table></div>
         </div>
       </div>
@@ -1468,6 +1481,7 @@ function tryAdminLogin() {
     document.getElementById('adminLoginBg').style.display = 'none';
     document.getElementById('adminShell').classList.add('open');
     document.body.style.overflow = 'hidden';
+    setTimeout(loadRealData, 300);
     const n = new Date();
     document.getElementById('admDate').textContent =
       `${n.getFullYear()}/${String(n.getMonth()+1).padStart(2,'0')}/${String(n.getDate()).padStart(2,'0')} ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
@@ -1475,7 +1489,6 @@ function tryAdminLogin() {
       document.querySelectorAll('.adm-bf[data-w]').forEach(el => el.style.width = el.dataset.w);
       document.querySelectorAll('.adm-rfill[data-w]').forEach(el => el.style.width = el.dataset.w);
     }, 300);
-    if (typeof loadAdminData === 'function') loadAdminData();
   } else {
     document.getElementById('alb-err').classList.add('show');
   }
@@ -1668,212 +1681,130 @@ function admToast(icon, msg) {
 }
 </script>
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-/* ══ SUPABASE ADMIN INTEGRATION ══ */
+/* ══ Supabase リアルデータ連携 ══ */
 const SB_URL  = 'https://ljvovzmjqesspzikglna.supabase.co';
 const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
 const sbAdmin = supabase.createClient(SB_URL, SB_ANON);
 
-/* ── 相対時刻 ── */
-function relTime(iso) {
+// 管理者ログイン後にリアルデータを読み込む
+async function loadRealData() {
+  // 掲載店舗数
+  const { count: storeCount } = await sbAdmin.from('stores').select('*', { count: 'exact', head: true }).eq('status', 'active');
+  // 体入申込数（今月）
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const { count: appCount } = await sbAdmin.from('applications').select('*', { count: 'exact', head: true }).gte('created_at', monthStart);
+  // 未対応申込
+  const { count: pendingCount } = await sbAdmin.from('applications').select('*', { count: 'exact', head: true }).or('status.is.null,status.eq.pending');
+  // オーナー数
+  const { count: ownerCount } = await sbAdmin.from('owners').select('*', { count: 'exact', head: true });
+
+  // KPIを更新
+  const kpiNums = document.querySelectorAll('.adm-kpi-num');
+  if (kpiNums[0]) kpiNums[0].textContent = storeCount || 0;
+  if (kpiNums[1]) kpiNums[1].textContent = appCount || 0;
+  if (kpiNums[3]) kpiNums[3].textContent = pendingCount || 0;
+
+  // 最新申込一覧
+  const { data: apps } = await sbAdmin.from('applications').select('*').order('created_at', { ascending: false }).limit(10);
+  if (apps && apps.length) {
+    const appList = document.querySelector('.adm-apps');
+    if (appList) {
+      appList.innerHTML = apps.map(a => `
+        <div class="adm-app">
+          <div class="adm-ava">${(a.applicant_name||'?').charAt(0)}</div>
+          <div class="adm-app-info">
+            <div class="adm-app-name">${a.applicant_name||'—'}（${a.age||'—'}）<span class="abadge ab-new" style="margin-left:5px">${a.experience||'—'}</span></div>
+            <div class="adm-app-store">${a.store_name||'—'} ｜ ${a.preferred_date||''} ${a.preferred_time||''} ｜ ${a.phone||a.email||'—'}</div>
+            <div class="adm-app-acts">
+              <button class="adm-aa adm-aa-ok" onclick="updateAppStatus('${a.id}','done',this)">対応済</button>
+              <button class="adm-aa adm-aa-ng" onclick="updateAppStatus('${a.id}','cancelled',this)">キャンセル</button>
+            </div>
+          </div>
+          <div class="adm-app-time">${timeAgoAdmin(a.created_at)}</div>
+        </div>`).join('');
+    }
+  }
+
+  // 掲載店舗一覧
+  const { data: stores } = await sbAdmin.from('stores').select('*').order('created_at', { ascending: false });
+  if (stores) {
+    const tbody = document.querySelector('#adm-stores .adm-tbl tbody');
+    if (tbody) {
+      tbody.innerHTML = stores.map(s => `
+        <tr>
+          <td><div class="td-main">${s.name||'—'}</div><div class="td-sub">${s.genre||''}</div></td>
+          <td>${s.genre||'—'}</td>
+          <td><span class="plan-tag pt-st">Standard</span></td>
+          <td><span class="abadge ${s.status==='active'?'ab-on':'ab-rev'}">${s.status==='active'?'掲載中':'審査中'}</span></td>
+          <td>—</td>
+          <td>${s.created_at?.slice(0,10)||'—'}</td>
+          <td>—</td>
+          <td><div class="adm-tacts"><button class="adm-tact">編集</button><button class="adm-tact danger" onclick="admToast('⏸','停止しました')">停止</button></div></td>
+        </tr>`).join('');
+    }
+  }
+
+  // オーナー申請（pending）
+  const { data: pendingOwners } = await sbAdmin.from('owners').select('*').eq('status','pending').order('created_at', { ascending: false });
+  if (pendingOwners) {
+    const pendingTbody = document.querySelector('#adm-pending .adm-tbl tbody');
+    if (pendingTbody) {
+      if (!pendingOwners.length) {
+        pendingTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#aaa;">審査待ちはありません</td></tr>';
+      } else {
+        pendingTbody.innerHTML = pendingOwners.map(o => `
+          <tr>
+            <td>${o.created_at?.slice(0,10)||'—'}</td>
+            <td><div class="td-main">${o.store_name||'—'}</div></td>
+            <td>${o.genre||'—'}</td>
+            <td><span class="plan-tag pt-st">${o.plan||'standard'}</span></td>
+            <td>${o.email||'—'}</td>
+            <td>${o.phone||'—'}</td>
+            <td><div class="adm-tacts">
+              <button class="adm-tact ok" onclick="approveOwner('${o.id}',this)">承認</button>
+              <button class="adm-tact danger" onclick="rejectOwner('${o.id}',this)">却下</button>
+            </div></td>
+          </tr>`).join('');
+      }
+    }
+    // バッジ更新
+    const badge = document.querySelector('.adm-si-bdg.bdg-yel');
+    if (badge) badge.textContent = pendingOwners.length;
+  }
+}
+
+async function updateAppStatus(id, status, btn) {
+  await sbAdmin.from('applications').update({ status }).eq('id', id);
+  btn.closest('.adm-app').style.opacity = '.4';
+  admToast('✅', status === 'done' ? '対応済みにしました' : 'キャンセルしました');
+}
+
+async function approveOwner(id, btn) {
+  await sbAdmin.from('owners').update({ status: 'active' }).eq('id', id);
+  btn.closest('tr').style.opacity = '.4';
+  admToast('✅', '承認しました');
+}
+
+async function rejectOwner(id, btn) {
+  await sbAdmin.from('owners').delete().eq('id', id);
+  btn.closest('tr').style.opacity = '.4';
+  admToast('❌', '却下しました');
+}
+
+function timeAgoAdmin(iso) {
   if (!iso) return '—';
-  const diff = Date.now() - new Date(iso);
-  const m = Math.floor(diff / 60000);
-  if (m < 1) return 'たった今';
+  const d = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(d / 60000);
   if (m < 60) return m + '分前';
   const h = Math.floor(m / 60);
   if (h < 24) return h + '時間前';
-  const d = Math.floor(h / 24);
-  if (d === 1) return '昨日';
-  return d + '日前';
+  return Math.floor(h / 24) + '日前';
 }
-
-function fmtDate(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
-}
-
-/* ── DB データ読み込み ── */
-async function loadAdminData() {
-  const now = new Date();
-  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-  // 並列取得
-  const [appsRes, ownersRes] = await Promise.all([
-    sbAdmin.from('applications').select('*').order('created_at', { ascending: false }).limit(100),
-    sbAdmin.from('owners').select('*').order('created_at', { ascending: false })
-  ]);
-
-  const apps   = appsRes.data  || [];
-  const owners = ownersRes.data || [];
-
-  // ── KPI ──
-  const thisMonthApps = apps.filter(a => a.created_at >= thisMonthStart);
-  const pending = owners.filter(o => o.status === 'pending');
-  const active  = owners.filter(o => o.status === 'active');
-
-  document.getElementById('kpiStores').textContent = active.length;
-  document.getElementById('kpiStoresSub').innerHTML = `<span class="up">▲${pending.length}</span>&nbsp;審査待き`;
-  document.getElementById('kpiApps').textContent = thisMonthApps.length;
-  document.getElementById('kpiAppsSub').innerHTML = `今月合計`;
-  document.getElementById('kpiPending').textContent = pending.length;
-
-  // ── ダッシュボード: 最新申込 ──
-  const recent = apps.slice(0, 5);
-  const dashEl = document.getElementById('dashRecentApps');
-  if (!recent.length) {
-    dashEl.innerHTML = '<div style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">申込データがありません</div>';
-  } else {
-    dashEl.innerHTML = recent.map(a => {
-      const ini = (a.applicant_name || '?').charAt(0);
-      const expBadge = a.experience && a.experience !== '未経験'
-        ? `<span class="abadge ab-on" style="margin-left:5px">${a.experience}</span>`
-        : `<span class="abadge ab-new" style="margin-left:5px">未経験</span>`;
-      const status = a.status === 'done'
-        ? `<span class="abadge ab-on">対応済</span>`
-        : a.status === 'cancelled'
-        ? `<span class="abadge ab-off">キャンセル</span>`
-        : `<span class="abadge ab-rev">未対応</span>`;
-      const contact = a.contact || a.phone || a.email || '—';
-      return `<div class="adm-app">
-        <div class="adm-ava">${ini}</div>
-        <div class="adm-app-info">
-          <div class="adm-app-name">${a.applicant_name||'—'}${a.age?'（'+a.age+'歳）':''}${expBadge}</div>
-          <div class="adm-app-store">${a.store_name||'—'}｜${a.preferred_date||''} ${a.preferred_time||''}</div>
-          <div class="adm-app-acts">
-            <button class="adm-aa adm-aa-ok" onclick="markAppDone('${a.id}',this)">対応済</button>
-            <button class="adm-aa adm-aa-ng" onclick="cancelApp('${a.id}',this)">キャンセル</button>
-          </div>
-        </div>
-        <div class="adm-app-time">${relTime(a.created_at)}</div>
-      </div>`;
-    }).join('');
-  }
-
-  // ── 申込一覧テーブル ──
-  const tbody = document.getElementById('appliesTbody');
-  if (!apps.length) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">申込データがありません</td></tr>';
-  } else {
-    tbody.innerHTML = apps.map(a => {
-      const expBadge = a.experience && a.experience !== '未経験'
-        ? `<span class="abadge ab-on">${a.experience}</span>`
-        : `<span class="abadge ab-new">未経験</span>`;
-      const stBadge = a.status === 'done'
-        ? `<span class="abadge ab-on">対応済</span>`
-        : a.status === 'cancelled'
-        ? `<span class="abadge ab-off">キャンセル</span>`
-        : `<span class="abadge ab-rev">未対応</span>`;
-      const contact = a.contact || a.phone || a.email || '—';
-      const acts = (!a.status || a.status === 'pending')
-        ? `<button class="adm-tact ok" onclick="markAppDone('${a.id}',this)">対応済</button><button class="adm-tact danger" onclick="cancelApp('${a.id}',this)">キャンセル</button>`
-        : `<button class="adm-tact danger" onclick="deleteApp('${a.id}',this)">削除</button>`;
-      return `<tr>
-        <td><div class="td-main">${a.applicant_name||'—'}${a.age?'（'+a.age+'歳）':''}</div></td>
-        <td><div class="td-main">${a.store_name||'—'}</div></td>
-        <td>${a.preferred_date||''} ${a.preferred_time||''}</td>
-        <td>${expBadge}</td>
-        <td style="font-size:.72rem;color:#555;">${contact}</td>
-        <td>${stBadge}</td>
-        <td style="font-size:.72rem;color:#9ca3af;">${relTime(a.created_at)}</td>
-        <td><div class="adm-tacts">${acts}</div></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // ── 店舗一覧テーブル ──
-  const PLAN_TAG = { premium: '<span class="plan-tag pt-pr">Premium</span>', standard: '<span class="plan-tag pt-st">Standard</span>', light: '<span class="plan-tag pt-lt">Light</span>' };
-  const STATUS_BADGE = { active: '<span class="abadge ab-on">掲載中</span>', pending: '<span class="abadge ab-rev">審査中</span>', suspended: '<span class="abadge ab-off">停止中</span>' };
-  const sTbody = document.getElementById('storesTbody');
-  if (!owners.length) {
-    sTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">店舗データがありません</td></tr>';
-  } else {
-    sTbody.innerHTML = owners.map(o => {
-      const pay = o.hourly_min ? `¥${Number(o.hourly_min).toLocaleString()}〜¥${Number(o.hourly_max||o.hourly_min).toLocaleString()}` : '—';
-      const planTag = PLAN_TAG[o.plan] || `<span class="plan-tag pt-lt">${o.plan||'—'}</span>`;
-      const stBadge = STATUS_BADGE[o.status] || `<span class="abadge">${o.status||'—'}</span>`;
-      const acts = o.status === 'active'
-        ? `<button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="suspendOwner('${o.id}',this)">停止</button>`
-        : o.status === 'pending'
-        ? `<button class="adm-tact ok" onclick="approveOwner('${o.id}',this)">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button>`
-        : `<button class="adm-tact ok" onclick="activateOwner('${o.id}',this)">再開</button>`;
-      return `<tr>
-        <td><div class="td-main">${o.store_name||'—'}</div><div class="td-sub">${o.email||''}</div></td>
-        <td>${o.genre||'—'}</td>
-        <td>${planTag}</td>
-        <td>${stBadge}</td>
-        <td style="font-size:.78rem;">${pay}</td>
-        <td style="font-size:.72rem;color:#9ca3af;">${fmtDate(o.created_at)}</td>
-        <td><div class="adm-tacts">${acts}</div></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // ── 審査待ちテーブル ──
-  const pTbody = document.getElementById('pendingTbody');
-  if (!pending.length) {
-    pTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">審査待ちの申請はありません</td></tr>';
-  } else {
-    pTbody.innerHTML = pending.map(o => {
-      const planTag = PLAN_TAG[o.plan] || `<span class="plan-tag pt-lt">${o.plan||'—'}</span>`;
-      return `<tr>
-        <td>${fmtDate(o.created_at)}</td>
-        <td><div class="td-main">${o.store_name||'—'}</div></td>
-        <td>${o.genre||'—'}</td>
-        <td>${planTag}</td>
-        <td style="font-size:.72rem;">${o.email||'—'}</td>
-        <td><div class="adm-tacts">
-          <button class="adm-tact ok" onclick="approveOwner('${o.id}',this)">承認</button>
-          <button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button>
-        </div></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // 審査待ちバッジを更新
-  const pendingBadgeEl = document.querySelector('[data-admpage="pending"] .adm-si-bdg');
-  if (pendingBadgeEl) pendingBadgeEl.textContent = pending.length;
-}
-
-/* ── DB 操作 ── */
-async function markAppDone(id, btn) {
-  await sbAdmin.from('applications').update({ status: 'done' }).eq('id', id);
-  admToast('✅', '対応済みにしました');
-  loadAdminData();
-}
-async function cancelApp(id, btn) {
-  await sbAdmin.from('applications').update({ status: 'cancelled' }).eq('id', id);
-  admToast('🗑', 'キャンセルしました');
-  loadAdminData();
-}
-async function deleteApp(id, btn) {
-  await sbAdmin.from('applications').delete().eq('id', id);
-  admToast('🗑', '削除しました');
-  loadAdminData();
-}
-async function approveOwner(id, btn) {
-  await sbAdmin.from('owners').update({ status: 'active' }).eq('id', id);
-  admToast('✅', '承認しました');
-  loadAdminData();
-}
-async function suspendOwner(id, btn) {
-  await sbAdmin.from('owners').update({ status: 'suspended' }).eq('id', id);
-  admToast('⏸', '掲載を停止しました');
-  loadAdminData();
-}
-async function activateOwner(id, btn) {
-  await sbAdmin.from('owners').update({ status: 'active' }).eq('id', id);
-  admToast('▶', '掲載を再開しました');
-  loadAdminData();
-}
-
-/* ── admNav拡張: ページ遷移時にDBリロード ── */
-const _admNavOrig = admNav;
-window.admNav = function(id, btn) {
-  _admNavOrig(id, btn);
-  if (['dashboard','applies','stores','pending'].includes(id)) loadAdminData();
-};
 </script>
 
 </body>

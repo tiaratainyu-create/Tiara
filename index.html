@@ -348,15 +348,10 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
   padding:3px 8px;border-radius:3px;
 }
 .c-desc{
-  font-size:.74rem;color:#555;line-height:1.75;
+  font-size:.74rem;color:var(--md);line-height:1.7;
   display:-webkit-box;-webkit-line-clamp:2;
   -webkit-box-orient:vertical;overflow:hidden;
   margin-bottom:10px;flex:1;
-  padding:7px 10px;
-  background:#fffbf5;
-  border-left:2px solid var(--or2);
-  border-radius:0 4px 4px 0;
-  position:relative;
 }
 .c-foot{
   display:flex;align-items:center;justify-content:space-between;
@@ -366,16 +361,6 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
 .ndot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;
   animation:blink 1.6s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.genre-scroll::-webkit-scrollbar{display:none;}
-.genre-tab{
-  white-space:nowrap;border:1.5px solid var(--bd);background:var(--wh);
-  color:var(--md);font-size:.75rem;font-weight:700;
-  padding:6px 14px;border-radius:20px;cursor:pointer;
-  font-family:'Noto Sans JP',sans-serif;transition:all .13s;flex-shrink:0;
-}
-.genre-tab.on{background:var(--or);border-color:var(--or);color:#fff;}
-.genre-tab:hover:not(.on){border-color:var(--or);color:var(--or);}
-
 .c-apply{
   background:var(--or);color:var(--wh);border:none;
   padding:9px 18px;border-radius:6px;
@@ -518,60 +503,6 @@ select.fi{appearance:none;cursor:pointer;}
    BOTTOM NAV (スマホのみ)
 ══════════════════════════════ */
 .bnav{display:none;}
-
-/* ══════════════════════════════
-   詳細モーダル PRセクション（大手求人サイト風）
-══════════════════════════════ */
-.pr-sec{border-left:3px solid var(--or);margin-bottom:0;}
-.pr-sec-head{
-  background:var(--or3);padding:9px 18px;
-  font-size:.72rem;font-weight:900;color:var(--or);letter-spacing:.3px;
-  display:flex;align-items:center;gap:6px;
-}
-.pr-sec-body{
-  padding:13px 18px;font-size:.8rem;color:#333;
-  line-height:2;white-space:pre-wrap;
-  border-bottom:1px solid #f2f2f2;
-}
-.pr-sec.pr-salary .pr-sec-head{background:#fff8e8;color:#b45309;border-left-color:#f59e0b;}
-.pr-sec.pr-salary .pr-sec-body{background:#fffdf5;}
-.pr-sec.pr-shift .pr-sec-head{background:#f0f9ff;color:#0369a1;border-left-color:#0ea5e9;}
-.pr-sec.pr-shift .pr-sec-body{background:#f8fbff;}
-.pr-sec.pr-msg .pr-sec-head{background:#faf5ff;color:#7c3aed;border-left-color:#8b5cf6;}
-.pr-sec.pr-msg .pr-sec-body{
-  background:#faf5ff;font-style:italic;color:#4c1d95;
-  position:relative;padding-left:34px;
-}
-.pr-sec.pr-msg .pr-sec-body::before{
-  content:'"';position:absolute;left:14px;top:6px;
-  font-size:2rem;color:#c4b5fd;line-height:1;font-family:Georgia,serif;
-}
-.pr-sec.pr-benefits .pr-sec-body{
-  display:flex;flex-wrap:wrap;gap:7px;padding:12px 18px;
-}
-.pr-benefit-tag{
-  font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:20px;
-  background:#fff;border:1.5px solid var(--bd);color:#444;
-}
-.pr-catch-banner{
-  margin:14px 18px 0;padding:13px 16px;
-  background:var(--or);color:#fff;border-radius:8px;
-  font-size:.9rem;font-weight:900;line-height:1.6;
-  text-align:center;letter-spacing:.3px;
-}
-.dtl-header{padding:16px 18px 14px;border-bottom:1px solid #f0f0f0;}
-.dtl-pay-box{
-  background:var(--or3);border:1.5px solid rgba(255,107,0,.2);
-  border-radius:8px;padding:11px 14px;margin-bottom:10px;
-  display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
-}
-.dtl-footer{
-  padding:12px 18px 20px;display:flex;gap:10px;
-  border-top:1px solid #f0f0f0;
-  position:sticky;bottom:0;background:#fff;
-  border-radius:0 0 14px 14px;
-}
-.dtl-info-label{font-size:.63rem;font-weight:900;color:#777;letter-spacing:.5px;margin-bottom:8px;padding:14px 18px 0;}
 
 /* ══════════════════════════════
    MODAL (3-step bottom sheet)
@@ -767,8 +698,8 @@ select.fi{appearance:none;cursor:pointer;}
     <button class="hdr-menu">☰</button>
     <a class="logo" href="#">Tiara<small>錦糸町 夜のお仕事</small></a>
     <div class="hdr-search">
-      <input type="text" id="hdrKeyword" placeholder="キーワード、店名、業種で検索..." oninput="debounceSearch()">
-      <button onclick="doHeaderSearch()">🔍</button>
+      <input type="text" placeholder="キーワード、店名、業種で検索...">
+      <button>🔍</button>
     </div>
     <nav class="hdr-nav">
       <button class="hnav-tab on" onclick="showPage('seeker',this)">求人を探す</button>
@@ -794,7 +725,7 @@ select.fi{appearance:none;cursor:pointer;}
       <p class="hero-sub">体験入店OK · 日払いOK · 未経験歓迎 · 即日対応</p>
       <div class="hero-stats">
         <div class="hs"><div class="hs-n" id="heroStoreCnt2">—</div><div class="hs-l">掲載店舗</div></div>
-        <div class="hs"><div class="hs-n" id="heroAvgPay">¥4,500</div><div class="hs-l">平均時給</div></div>
+        <div class="hs"><div class="hs-n">¥4,500</div><div class="hs-l">平均時給</div></div>
         <div class="hs"><div class="hs-n">即日</div><div class="hs-l">体入対応</div></div>
         <div class="hs"><div class="hs-n">24h</div><div class="hs-l">問合わせ</div></div>
       </div>
@@ -894,18 +825,6 @@ select.fi{appearance:none;cursor:pointer;}
 
     <!-- ── CONTENT ── -->
     <div class="content-area">
-
-      <!-- ジャンルクイックタブ -->
-      <div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;" class="genre-scroll">
-        <button class="genre-tab on" onclick="setGenreTab(this,'')">すべて</button>
-        <button class="genre-tab" onclick="setGenreTab(this,'キャバクラ')">🌸 キャバクラ</button>
-        <button class="genre-tab" onclick="setGenreTab(this,'ラウンジ')">✦ ラウンジ</button>
-        <button class="genre-tab" onclick="setGenreTab(this,'クラブ')">🌙 クラブ</button>
-        <button class="genre-tab" onclick="setGenreTab(this,'スナック')">🌿 スナック</button>
-        <button class="genre-tab" onclick="setGenreTab(this,'ガールズバー')">🌺 Gバー</button>
-        <button class="genre-tab" onclick="setGenreTab(this,'バー')">🍷 バー</button>
-      </div>
-
       <div class="result-bar">
         <div class="result-cnt"><strong id="resultCnt">読込中...</strong> <span id="resultCntLabel"></span></div>
         <div class="sort-row">
@@ -1057,42 +976,53 @@ select.fi{appearance:none;cursor:pointer;}
 
 <!-- ══ 店舗詳細モーダル ══ -->
 <div class="modal-bg" id="detailModal">
-  <div class="modal" style="max-width:580px;">
-    <button class="m-close" onclick="closeDetail()" style="position:absolute;top:12px;right:12px;z-index:10;">✕</button>
+  <div class="modal" style="max-width:600px;border-radius:14px;overflow:hidden;">
+    <button class="m-close" onclick="closeDetail()" style="position:absolute;top:10px;right:10px;z-index:20;background:rgba(0,0,0,.45);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;">✕</button>
 
-    <!-- 画像エリア -->
-    <div id="dtlImg" style="height:220px;overflow:hidden;background:#eee;position:relative;flex-shrink:0;border-radius:14px 14px 0 0;"></div>
-    <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;"></div>
+    <!-- 写真スライダー -->
+    <div id="dtlImgWrap" style="position:relative;background:#1a1a2e;height:220px;overflow:hidden;flex-shrink:0;">
+      <div id="dtlImgTrack" style="display:flex;height:100%;transition:transform .3s ease;"></div>
+      <!-- ナビ -->
+      <button id="dtlImgPrev" onclick="dtlImgNav(-1)" style="display:none;position:absolute;left:8px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.9rem;z-index:5;">‹</button>
+      <button id="dtlImgNext" onclick="dtlImgNav(1)" style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.9rem;z-index:5;">›</button>
+      <!-- ドット -->
+      <div id="dtlImgDots" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;"></div>
+      <!-- バッジ -->
+      <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:10;"></div>
+    </div>
 
-    <!-- ヘッダー情報 -->
-    <div class="dtl-header">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;">
-        <div id="dtlName" style="font-size:1.18rem;font-weight:900;color:var(--dk);line-height:1.35;"></div>
-        <div id="dtlGenreTag" style="font-size:.65rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:3px;"></div>
+    <!-- スクロールエリア -->
+    <div style="overflow-y:auto;max-height:calc(88vh - 220px - 68px);">
+
+      <!-- ヘッダー情報 -->
+      <div style="padding:16px 18px 12px;border-bottom:1px solid var(--bd);">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;">
+          <div id="dtlName" style="font-size:1.15rem;font-weight:900;color:var(--dk);line-height:1.3;"></div>
+          <div id="dtlGenreTag" style="font-size:.63rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;"></div>
+        </div>
+        <!-- 住所（マップリンク） -->
+        <div id="dtlLoc" style="font-size:.74rem;margin-bottom:10px;"></div>
+        <!-- 時給 -->
+        <div id="dtlPay" class="c-pay" style="margin-bottom:10px;"></div>
+        <!-- 特徴チップ -->
+        <div id="dtlChips" class="c-chips" style="flex-wrap:wrap;gap:5px;"></div>
       </div>
-      <div id="dtlLoc" style="font-size:.72rem;color:var(--md);display:flex;align-items:center;gap:3px;margin-bottom:12px;"></div>
-      <!-- 給与ハイライトボックス -->
-      <div id="dtlPay" class="dtl-pay-box"></div>
-      <!-- 特徴チップ -->
-      <div id="dtlChips" class="c-chips" style="flex-wrap:wrap;gap:5px;margin-bottom:0;"></div>
+
+      <!-- 詳細情報グリッド -->
+      <div style="padding:14px 18px;border-bottom:1px solid var(--bd);">
+        <div style="font-size:.7rem;font-weight:900;color:var(--dk);margin-bottom:10px;display:flex;align-items:center;gap:5px;"><span style="width:3px;height:12px;background:var(--or);border-radius:2px;display:inline-block;"></span>基本情報</div>
+        <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+      </div>
+
+      <!-- PR文（大手求人サイト風セクション） -->
+      <div id="dtlPrSections" style="padding:14px 18px;border-bottom:1px solid var(--bd);"></div>
+
     </div>
 
-    <!-- キャッチコピー -->
-    <div id="dtlCatchBanner" style="display:none;"></div>
-
-    <!-- PRセクション（大手求人サイト風） -->
-    <div id="dtlDesc"></div>
-
-    <!-- 基本情報グリッド -->
-    <div id="dtlInfoWrap" style="display:none;">
-      <div class="dtl-info-label">📋 基本情報</div>
-      <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 18px 16px;"></div>
-    </div>
-
-    <!-- フッター（sticky） -->
-    <div class="dtl-footer">
-      <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:13px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
-      <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:13px;border-radius:8px;font-size:.92rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 14px rgba(255,107,0,.35);">体入に応募する →</button>
+    <!-- フッター（固定） -->
+    <div style="padding:12px 18px;display:flex;gap:10px;border-top:1px solid var(--bd);background:#fff;flex-shrink:0;">
+      <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:12px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
+      <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:12px;border-radius:8px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 12px rgba(255,107,0,.3);">体入に応募する →</button>
     </div>
   </div>
 </div>
@@ -1129,11 +1059,23 @@ select.fi{appearance:none;cursor:pointer;}
       <div class="sp" id="sp2">
         <div>
           <label class="fl" style="display:block;margin-bottom:8px">希望の体入日</label>
-          <div class="date-grid" id="dateGrid"></div>
+          <div class="date-grid">
+            <div class="dopt" onclick="pickD(this)"><div class="do-w">MON</div><div class="do-d">10</div><div class="do-m">3月</div></div>
+            <div class="dopt" onclick="pickD(this)"><div class="do-w">TUE</div><div class="do-d">11</div><div class="do-m">3月</div></div>
+            <div class="dopt pk" onclick="pickD(this)"><div class="do-w">WED</div><div class="do-d">12</div><div class="do-m">3月</div></div>
+            <div class="dopt" onclick="pickD(this)"><div class="do-w">THU</div><div class="do-d">13</div><div class="do-m">3月</div></div>
+            <div class="dopt" onclick="pickD(this)"><div class="do-w">FRI</div><div class="do-d">14</div><div class="do-m">3月</div></div>
+            <div class="dopt" onclick="pickD(this)"><div class="do-w">SAT</div><div class="do-d">15</div><div class="do-m">3月</div></div>
+          </div>
         </div>
         <div>
           <label class="fl" style="display:block;margin-bottom:8px">希望時間帯</label>
-          <div class="trow" id="timeGrid"></div>
+          <div class="trow">
+            <button class="topt pk" onclick="pickT(this)">19:00〜</button>
+            <button class="topt" onclick="pickT(this)">20:00〜</button>
+            <button class="topt" onclick="pickT(this)">21:00〜</button>
+            <button class="topt" onclick="pickT(this)">22:00〜</button>
+          </div>
         </div>
       </div>
       <div class="sp" id="sp3">
@@ -1179,30 +1121,7 @@ const STORE_ICONS = {
 let allStores = [];
 let currentSort = 'recommend';
 let currentPage = 1;
-let currentKeyword = '';
-let currentGenreTab = '';
 const PER_PAGE = 9;
-
-// デバウンス検索
-let _searchTimer;
-function debounceSearch() {
-  clearTimeout(_searchTimer);
-  _searchTimer = setTimeout(doHeaderSearch, 280);
-}
-function doHeaderSearch() {
-  currentKeyword = (document.getElementById('hdrKeyword')?.value || '').trim();
-  currentPage = 1;
-  renderStores();
-}
-
-// ジャンルタブ
-function setGenreTab(btn, genre) {
-  document.querySelectorAll('.genre-tab').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  currentGenreTab = genre;
-  currentPage = 1;
-  renderStores();
-}
 
 async function fetchStores() {
   const grid = document.getElementById('storeGrid');
@@ -1212,19 +1131,12 @@ async function fetchStores() {
     const data = await res.json();
     allStores = Array.isArray(data) ? data : (data.stores || []);
 
-    // ヒーロー件数・平均時給を実データで更新
+    // ヒーロー件数更新
     const cnt = allStores.length;
     const h1 = document.getElementById('heroStoreCnt');
     const h2 = document.getElementById('heroStoreCnt2');
     if (h1) h1.textContent = cnt;
     if (h2) h2.textContent = cnt;
-    // 平均時給
-    const pays = allStores.filter(s => s.hourly_min).map(s => s.hourly_min);
-    if (pays.length) {
-      const avg = Math.round(pays.reduce((a,b)=>a+b,0)/pays.length/100)*100;
-      const avgEl = document.getElementById('heroAvgPay');
-      if (avgEl) avgEl.textContent = '¥' + avg.toLocaleString();
-    }
 
     renderStores();
   } catch (err) {
@@ -1285,31 +1197,7 @@ function goPage(p) {
 
 function getSortedStores() {
   let s = [...allStores];
-
-  // キーワードフィルター
-  if (currentKeyword) {
-    const kw = currentKeyword.toLowerCase();
-    s = s.filter(x =>
-      (x.name || '').toLowerCase().includes(kw) ||
-      (x.genre || '').toLowerCase().includes(kw) ||
-      (x.pr_text || x.description || '').toLowerCase().includes(kw) ||
-      (x.features || []).some(f => f.toLowerCase().includes(kw))
-    );
-  }
-
-  // ジャンルタブフィルター
-  if (currentGenreTab) {
-    s = s.filter(x => x.genre === currentGenreTab);
-  }
-
-  // ソート（premiumを先頭に）
-  if (currentSort === 'recommend') {
-    s.sort((a, b) => {
-      const pa = a.plan === 'premium' ? 2 : a.plan === 'standard' ? 1 : 0;
-      const pb = b.plan === 'premium' ? 2 : b.plan === 'standard' ? 1 : 0;
-      return pb - pa || (b.hourly_max || 0) - (a.hourly_max || 0);
-    });
-  } else if (currentSort === 'pay') {
+  if (currentSort === 'pay') {
     s.sort((a, b) => (b.hourly_max || 0) - (a.hourly_max || 0));
   } else if (currentSort === 'new') {
     s.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
@@ -1335,12 +1223,6 @@ function buildCard(s, idx) {
   const chips = features.slice(0, 4).map(f => `<span class="chip">${f}</span>`).join('');
 
   const payTag = s.pay_bonus ? `<span class="cp-tag">${s.pay_bonus}</span>` : '';
-
-  // カード用PR文（キャッチコピー優先、なければ最初のセクション内容）
-  const descBlocks = (s.pr_text || s.description || '').split(/\n\n/).filter(Boolean);
-  const catchText = descBlocks.find(b => !/^【.+?】/.test(b)) || '';
-  const firstSection = descBlocks.find(b => /^【.+?】/.test(b));
-  const cardDesc = catchText || (firstSection ? firstSection.replace(/^【.+?】\s*/, '').trim() : '');
 
   // 掲載日
   let dateHtml = '';
@@ -1379,7 +1261,7 @@ function buildCard(s, idx) {
         ${payTag}
       </div>
       ${chips ? `<div class="c-chips">${chips}</div>` : ''}
-      ${cardDesc ? `<p class="c-desc"><span style="color:var(--or);font-weight:700;margin-right:3px;">✨</span>${cardDesc}</p>` : ''}
+      <p class="c-desc">${s.description || ''}</p>
       <div class="c-foot">
         <div class="c-date">${dateHtml}</div>
         <button class="c-apply" onclick="event.stopPropagation();openModal('${s.name.replace(/'/g,"\\'")}','${(s.genre||'').replace(/'/g,"\\'")}','${payMin}${payMax}')">体入に応募する</button>
@@ -1393,22 +1275,56 @@ function buildCard(s, idx) {
 let currentDetailStore = null;
 
 function openDetail(s) {
-  if (typeof s === 'string') { try { s = JSON.parse(s); } catch(e) { return; } }
+  if (typeof s === 'string') { try { s = JSON.parse(s.replace(/&quot;/g,'"')); } catch(e) { return; } }
   currentDetailStore = s;
   const icon = STORE_ICONS[s.genre] || '🏪';
   const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
   const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
 
-  // 画像
-  const imgEl = document.getElementById('dtlImg');
-  imgEl.innerHTML = s.image_url
-    ? `<img src="${s.image_url}" style="width:100%;height:100%;object-fit:cover;">`
-    : `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);">
-        <div style="font-size:2.5rem;">${icon}</div>
-        <div style="font-size:.7rem;color:#aaa;font-weight:700;letter-spacing:1px;">${s.name}</div>
-      </div>`;
+  /* ── 写真スライダー ── */
+  const photos = [];
+  if (s.image_url) photos.push(s.image_url);
+  if (s.image_urls && Array.isArray(s.image_urls)) photos.push(...s.image_urls);
 
-  // バッジ
+  const track = document.getElementById('dtlImgTrack');
+  const dots  = document.getElementById('dtlImgDots');
+  const prev  = document.getElementById('dtlImgPrev');
+  const next  = document.getElementById('dtlImgNext');
+  let imgIdx  = 0;
+
+  if (photos.length > 0) {
+    track.innerHTML = photos.map(url =>
+      `<div style="min-width:100%;height:220px;flex-shrink:0;overflow:hidden;">
+        <img src="${url}" style="width:100%;height:100%;object-fit:cover;">
+      </div>`
+    ).join('');
+    dots.innerHTML = photos.length > 1 ? photos.map((_, i) =>
+      `<div style="width:${i===0?'18px':'8px'};height:8px;border-radius:4px;background:${i===0?'#fff':'rgba(255,255,255,.4)'};transition:all .3s;cursor:pointer;" onclick="dtlImgGo(${i})"></div>`
+    ).join('') : '';
+    if (photos.length > 1) { prev.style.display='flex'; next.style.display='flex'; }
+    else { prev.style.display='none'; next.style.display='none'; }
+  } else {
+    track.innerHTML = `<div style="min-width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a1a2e,#2d1f3d);">
+      <div style="font-size:3rem;">${icon}</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:1px;">${s.name}</div>
+    </div>`;
+    dots.innerHTML = ''; prev.style.display='none'; next.style.display='none';
+  }
+
+  window.dtlImgGo = function(idx) {
+    imgIdx = idx;
+    track.style.transform = `translateX(-${idx * 100}%)`;
+    dots.querySelectorAll('div').forEach((d, i) => {
+      d.style.width = i === idx ? '18px' : '8px';
+      d.style.background = i === idx ? '#fff' : 'rgba(255,255,255,.4)';
+    });
+  };
+  window.dtlImgNav = function(dir) {
+    const total = photos.length || 1;
+    dtlImgGo((imgIdx + dir + total) % total);
+  };
+
+  /* ── バッジ ── */
   let badges = '';
   if (s.plan === 'premium') badges += '<span class="cbdg b-pick">★ PICK UP</span>';
   if (s.hourly_max >= 10000) badges += '<span class="cbdg b-hi">高時給</span>';
@@ -1416,121 +1332,101 @@ function openDetail(s) {
   if (s.is_new)    badges += '<span class="cbdg b-new">✨ NEW</span>';
   document.getElementById('dtlBadges').innerHTML = badges;
 
-  document.getElementById('dtlName').textContent    = s.name;
-  const addr = s.address || '東京都墨田区錦糸町';
-  const ua = navigator.userAgent;
-  const mapUrl = /iPhone|iPad/.test(ua)
-    ? 'maps://maps.apple.com/?q=' + encodeURIComponent(addr)
-    : 'https://maps.google.com/?q=' + encodeURIComponent(addr);
-  document.getElementById('dtlLoc').innerHTML = '<a href="' + mapUrl + '" target="_blank" style="color:var(--or);text-decoration:none;display:flex;align-items:center;gap:3px;">📍 ' + addr + ' <span style=\'font-size:.6rem;background:var(--or3);border:1px solid rgba(255,107,0,.2);padding:1px 6px;border-radius:3px;\'>地図を開く</span></a>';
+  /* ── 基本情報 ── */
+  document.getElementById('dtlName').textContent     = s.name;
   document.getElementById('dtlGenreTag').textContent = s.genre || '';
 
-  // 時給
+  /* ── 住所（マップリンク） ── */
+  const addr = s.address || '東京都墨田区錦糸町';
+  const ua   = navigator.userAgent;
+  const mapUrl = /iPhone|iPad/.test(ua)
+    ? 'maps://maps.apple.com/?q=' + encodeURIComponent(addr)
+    : 'https://maps.google.com/?q='  + encodeURIComponent(addr);
+  const station = s.station ? ` · ${s.station}` : '';
+  document.getElementById('dtlLoc').innerHTML =
+    `<a href="${mapUrl}" target="_blank" style="color:var(--or);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-size:.74rem;">
+      📍 ${addr}${station}
+      <span style="font-size:.6rem;background:var(--or3);border:1px solid rgba(255,107,0,.2);padding:1px 7px;border-radius:3px;white-space:nowrap;">地図を開く 🗺</span>
+    </a>`;
+
+  /* ── 時給 ── */
   document.getElementById('dtlPay').innerHTML = `
     <span class="cp-lbl">時給</span>
     <span class="cp-main">${payMin}</span>
     ${payMax ? `<span class="cp-max">${payMax}</span>` : ''}
     ${s.pay_bonus ? `<span class="cp-tag">${s.pay_bonus}</span>` : ''}`;
 
-  // チップ
+  /* ── 特徴チップ ── */
   const features = s.features || [];
   document.getElementById('dtlChips').innerHTML = features.map(f => `<span class="chip">${f}</span>`).join('');
 
-  // PR文（大手求人サイト風レンダリング）
-  const rawDesc = s.pr_text || s.description || '';
-  const SEC_META = {
-    '雰囲気': { icon: '💃', label: '仕事の雰囲気・特徴', cls: '' },
-    '雰囲気・特徴': { icon: '💃', label: '仕事の雰囲気・特徴', cls: '' },
-    '環境': { icon: '🏠', label: '職場環境', cls: '' },
-    '給与': { icon: '💰', label: '給与・待遇詳細', cls: 'pr-salary' },
-    '給与・待遇': { icon: '💰', label: '給与・待遇詳細', cls: 'pr-salary' },
-    '待遇': { icon: '💰', label: '給与・待遇詳細', cls: 'pr-salary' },
-    'シフト・勤務': { icon: '📅', label: '勤務時間・シフト', cls: 'pr-shift' },
-    'シフト': { icon: '📅', label: '勤務時間・シフト', cls: 'pr-shift' },
-    '勤務': { icon: '📅', label: '勤務時間・シフト', cls: 'pr-shift' },
-    'こんな方に来てほしい': { icon: '🌸', label: 'こんな方に来てほしい', cls: '' },
-    'こんな方に': { icon: '🌸', label: 'こんな方に来てほしい', cls: '' },
-    '応募資格': { icon: '🌸', label: '応募資格・対象', cls: '' },
-    '体験入店について': { icon: '👠', label: '体験入店について', cls: '' },
-    '体験入店': { icon: '👠', label: '体験入店について', cls: '' },
-    '体入': { icon: '👠', label: '体験入店について', cls: '' },
-    '福利厚生・サポート': { icon: '🎁', label: '福利厚生・サポート', cls: 'pr-benefits' },
-    '福利厚生': { icon: '🎁', label: '福利厚生・サポート', cls: 'pr-benefits' },
-    'サポート': { icon: '🎁', label: 'サポート体制', cls: 'pr-benefits' },
-    'オーナー・スタッフからのメッセージ': { icon: '💌', label: 'スタッフからのメッセージ', cls: 'pr-msg' },
-    'メッセージ': { icon: '💌', label: 'スタッフからのメッセージ', cls: 'pr-msg' },
-    'アクセス': { icon: '📍', label: 'アクセス・立地', cls: '' },
-    'スタッフ': { icon: '👥', label: 'スタッフ紹介', cls: '' },
-    '特徴': { icon: '⭐', label: '店舗の特徴', cls: '' },
-  };
-
-  const allBlocks = rawDesc.split(/\n\n/).filter(Boolean);
-  const catchBlocks = allBlocks.filter(b => !/^【.+?】/.test(b));
-  const sectionBlocks = allBlocks.filter(b => /^【.+?】/.test(b));
-
-  // キャッチコピーバナー
-  const catchBanner = document.getElementById('dtlCatchBanner');
-  if (catchBlocks.length) {
-    catchBanner.className = 'pr-catch-banner';
-    catchBanner.innerHTML = '✨ ' + catchBlocks.join(' ');
-    catchBanner.style.display = '';
-  } else {
-    catchBanner.style.display = 'none';
-  }
-
-  // PRセクション（大手求人サイト風）
-  let prHtml = '';
-  if (sectionBlocks.length) {
-    prHtml = sectionBlocks.map(sec => {
-      const m = sec.match(/^【(.+?)】(.*)$/s);
-      if (!m) return '<div class="pr-sec"><div class="pr-sec-body" style="font-style:normal;">' + sec + '</div></div>';
-      const key = Object.keys(SEC_META).find(k => m[1].includes(k)) || '';
-      const meta = SEC_META[key] || { icon: '📌', label: m[1], cls: '' };
-      const text = m[2].trim();
-      if (meta.cls === 'pr-benefits') {
-        // 福利厚生はタグ表示（・または改行区切り）
-        const tags = text.split(/[・\n]/).map(t => t.trim()).filter(Boolean);
-        const tagsHtml = tags.map(t => `<span class="pr-benefit-tag">${t}</span>`).join('');
-        return `<div class="pr-sec pr-benefits"><div class="pr-sec-head">${meta.icon} ${meta.label}</div><div class="pr-sec-body">${tagsHtml}</div></div>`;
-      }
-      return `<div class="pr-sec ${meta.cls}"><div class="pr-sec-head">${meta.icon} ${meta.label}</div><div class="pr-sec-body">${text}</div></div>`;
-    }).join('');
-  } else if (!catchBlocks.length) {
-    prHtml = '<div style="color:var(--lt);font-size:.78rem;text-align:center;padding:20px;">詳細情報は店舗にお問い合わせください。</div>';
-  }
-  document.getElementById('dtlDesc').innerHTML = prHtml;
-
-  // 詳細グリッド
+  /* ── 詳細情報グリッド ── */
   const grid = document.getElementById('dtlInfoGrid');
   const items = [
-    { l: '営業時間', v: s.hours || '' },
-    { l: '最寄り駅', v: s.station || '錦糸町駅' },
-    { l: '体験入店', v: features.includes('体験入店OK') ? '✅ OK' : '要問合せ' },
-    { l: '日払い', v: features.includes('日払いOK') ? '✅ OK' : '' },
-    { l: '未経験', v: (features.includes('未経験OK') || features.includes('未経験歓迎')) ? '✅ 歓迎' : '' },
-    { l: 'ノルマ', v: features.includes('ノルマなし') ? '✅ なし' : '' },
-    { l: '掛け持ち', v: features.includes('掛け持ちOK') ? '✅ OK' : '' },
-    { l: '送迎', v: features.includes('送迎あり') ? '✅ あり' : '' },
-    { l: '交通費', v: features.includes('交通費支給') ? '✅ 支給' : '' },
-    { l: '入店祝い金', v: features.includes('入店祝い金') ? '✅ あり' : '' },
-    { l: 'ボーナス', v: s.pay_bonus || '' },
+    { l: '営業時間', v: s.hours },
+    { l: '最寄り駅', v: s.station },
+    { l: '体験入店', v: features.includes('体験入店OK') ? '✅ OK' : null },
+    { l: '日払い',   v: features.includes('日払いOK')  ? '✅ OK' : null },
+    { l: '未経験',   v: features.includes('未経験歓迎') ? '✅ 歓迎' : null },
+    { l: '送迎',     v: features.includes('送迎あり')  ? '✅ あり' : null },
+    { l: '寮',       v: features.includes('寮完備')    ? '✅ 完備' : null },
+    { l: 'ノルマ',   v: features.includes('ノルマなし') ? '✅ なし' : null },
   ].filter(i => i.v);
-  grid.innerHTML = items.map(i => `
-    <div style="background:#f7f7f7;border-radius:6px;padding:9px 12px;border-left:2px solid var(--bd);">
-      <div style="font-size:.6rem;color:#9ca3af;font-weight:700;margin-bottom:3px;">${i.l}</div>
-      <div style="font-size:.82rem;font-weight:700;color:#1a1a2e;">${i.v}</div>
-    </div>`).join('');
-  document.getElementById('dtlInfoWrap').style.display = items.length ? '' : 'none';
+  grid.innerHTML = items.map(i =>
+    `<div style="background:#f9f9f9;border-radius:6px;padding:8px 10px;">
+      <div style="font-size:.6rem;color:#9ca3af;margin-bottom:2px;">${i.l}</div>
+      <div style="font-size:.78rem;font-weight:700;color:#1a1a2e;">${i.v}</div>
+    </div>`
+  ).join('');
 
-  // お気に入りボタン状態
+  /* ── PR文（大手求人サイト風セクション区分け） ── */
+  const rawDesc = s.description || '';
+  const prSec = document.getElementById('dtlPrSections');
+  const sectionDefs = [
+    { key: '雰囲気',    icon: '🏠', label: 'お店の雰囲気・特徴' },
+    { key: '給与',      icon: '💰', label: '給与・待遇' },
+    { key: '待遇',      icon: '💰', label: '給与・待遇' },
+    { key: 'こんな方',  icon: '👩', label: 'こんな方に来てほしい' },
+    { key: '体験入店',  icon: '🌸', label: '体験入店について' },
+  ];
+
+  if (rawDesc.includes('【')) {
+    // 【セクション】形式で分割
+    const parts = rawDesc.split(/(?=【)/);
+    prSec.innerHTML = parts.filter(Boolean).map(part => {
+      const m = part.match(/^【(.+?)】([\s\S]*)$/);
+      if (!m) return `<div style="font-size:.78rem;color:#555;line-height:1.85;white-space:pre-wrap;padding-bottom:12px;">${part}</div>`;
+      const def = sectionDefs.find(d => m[1].includes(d.key)) || { icon: '📋', label: m[1] };
+      return `<div style="margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-bottom:6px;border-bottom:1.5px solid var(--or3);">
+          <span style="font-size:1rem;">${def.icon}</span>
+          <span style="font-size:.75rem;font-weight:900;color:var(--dk);">${m[1]}</span>
+        </div>
+        <div style="font-size:.78rem;color:#555;line-height:1.85;white-space:pre-wrap;">${m[2].trim()}</div>
+      </div>`;
+    }).join('');
+  } else if (rawDesc) {
+    // プレーンテキスト
+    prSec.innerHTML = `<div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;padding-bottom:6px;border-bottom:1.5px solid var(--or3);">
+        <span style="font-size:1rem;">📋</span>
+        <span style="font-size:.75rem;font-weight:900;color:var(--dk);">店舗PR</span>
+      </div>
+      <div style="font-size:.78rem;color:#555;line-height:1.85;white-space:pre-wrap;">${rawDesc}</div>
+    </div>`;
+  } else {
+    prSec.innerHTML = `<div style="text-align:center;padding:20px;color:var(--lt);font-size:.8rem;">詳細情報は店舗にお問い合わせください</div>`;
+  }
+
+  /* ── お気に入りボタン ── */
   const favs = currentUser ? favsCache : getLocalFavs();
   const isFav = favs.some(f => (f.store_name || f.name) === s.name);
   const favBtn = document.getElementById('dtlFavBtn');
   favBtn.textContent = isFav ? '♥ お気に入り済み' : '♡ お気に入り';
-  favBtn.style.color = isFav ? 'var(--red)' : 'var(--md)';
+  favBtn.style.color       = isFav ? 'var(--red)' : 'var(--md)';
   favBtn.style.borderColor = isFav ? 'var(--red)' : 'var(--bd)';
 
-  // 応募ボタン
+  /* ── 応募ボタン ── */
   document.getElementById('dtlApplyBtn').onclick = () => {
     closeDetail();
     openModal(s.name, s.genre || '', payMin + payMax);
@@ -1539,6 +1435,7 @@ function openDetail(s) {
   document.getElementById('detailModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
 
 function closeDetail() {
   document.getElementById('detailModal').classList.remove('open');
@@ -1662,41 +1559,13 @@ function previewImg(input) {
 }
 
 /* ── 3-step modal ── */
-let step = 1, aS = '', aT = '', aP = '', aD = '', aTime = '';
-
-/* ── カレンダー動的生成 ── */
-function renderCalendar(storeData) {
-  const closedDays = storeData?.closed_days || [];
-  const acceptHours = (storeData?.accept_hours && storeData.accept_hours.length)
-    ? storeData.accept_hours
-    : ['19:00〜','20:00〜','21:00〜','22:00〜'];
-  const DOW = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  const MONTHS = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  const dates = [];
-  const d = new Date();
-  d.setDate(d.getDate() + 1); // 明日以降
-  while (dates.length < 7) {
-    if (!closedDays.includes(d.getDay())) dates.push(new Date(d));
-    d.setDate(d.getDate() + 1);
-  }
-  aD = MONTHS[dates[0].getMonth()] + dates[0].getDate() + '日';
-  aTime = acceptHours[0];
-  document.getElementById('dateGrid').innerHTML = dates.map((dt, i) =>
-    `<div class="dopt${i===0?' pk':''}" onclick="pickD(this)"><div class="do-w">${DOW[dt.getDay()]}</div><div class="do-d">${dt.getDate()}</div><div class="do-m">${MONTHS[dt.getMonth()]}</div></div>`
-  ).join('');
-  document.getElementById('timeGrid').innerHTML = acceptHours.map((h, i) =>
-    `<button class="topt${i===0?' pk':''}" onclick="pickT(this)">${h}</button>`
-  ).join('');
-}
+let step = 1, aS = '', aT = '', aP = '', aD = '3月12日', aTime = '19:00〜';
 
 function openModal(s, t, p) {
   aS = s; aT = t; aP = p; step = 1;
   document.getElementById('mStore').textContent = s;
   document.getElementById('msuc').classList.remove('show');
   ['mHead','mBody','mFoot'].forEach(id => document.getElementById(id).style.display = '');
-  // 店舗データがあればclosed_days/accept_hoursを使用
-  const storeData = (currentDetailStore && currentDetailStore.name === s) ? currentDetailStore : null;
-  renderCalendar(storeData);
   upStep();
   document.getElementById('applyModal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1760,7 +1629,7 @@ function _baseSubmit() {
 function pickD(el) {
   document.querySelectorAll('.dopt').forEach(d => d.classList.remove('pk'));
   el.classList.add('pk');
-  aD = el.querySelector('.do-m').textContent + el.querySelector('.do-d').textContent + '日';
+  aD = '3月' + el.querySelector('.do-d').textContent + '日';
 }
 
 function pickT(el) {
@@ -2144,46 +2013,33 @@ function showPage(id, btn, isMobile) {
    申込完了時に履歴を保存
 ───────────────────────────── */
 function submit() {
-  const store   = document.getElementById('mStore')?.textContent || '';
-  const name    = document.getElementById('fName')?.value.trim() || '';
-  const age     = document.getElementById('fAge')?.value || '';
-  const exp     = document.getElementById('fExp')?.value || '';
-  const email   = document.getElementById('fEmail')?.value.trim() || '';
-  const phone   = document.getElementById('fPhone')?.value.trim() || '';
-  const contact = document.getElementById('fContact')?.value.trim() || '';
-  const date    = aD || '';
-  const time    = aTime || '';
-  const ownerEmail = currentDetailStore?.owner_email || currentDetailStore?.email || '';
-
-  // まず完了画面を出す（ユーザーを待たせない）
-  addApp({ store, name, age, email, phone, contact, date, time, at: new Date().toISOString() });
   _baseSubmit();
-
-  const dbRow = {
-    store_name: store, applicant_name: name, age, experience: exp,
-    email, phone,
-    contact:        contact || null,
-    preferred_date: date    || null,
-    preferred_time: time    || null,
-    user_id:        currentUser ? currentUser.id : null,
-    status:         'pending',
+  // 申込情報を取得
+  const store   = document.getElementById('mStore')?.textContent || '';
+  const name    = document.getElementById('fName')?.value || '';
+  const age     = document.getElementById('fAge')?.value || '';
+  const email   = document.getElementById('fEmail')?.value || '';
+  const phone   = document.getElementById('fPhone')?.value || '';
+  const contact = document.getElementById('fContact')?.value || '';
+  const date    = document.getElementById('ccDate')?.textContent || '';
+  const time    = aTime || '';
+  const appData = { store, name, age, email, phone, contact, date, time, at: new Date().toISOString() };
+  // localStorageに保存（ログイン不問）
+  addApp(appData);
+  // Supabase applicationsテーブルにも保存
+  const payload = {
+    store_name: store,
+    applicant_name: name,
+    age: age,
+    email: email,
+    phone: phone,
+    contact: contact,
+    preferred_date: date,
+    preferred_time: time,
+    user_id: currentUser ? currentUser.id : null
   };
-
-  // バックグラウンドで保存（失敗してもユーザーには見せない）
-  sb.from('applications').insert([dbRow]).then(({ error }) => {
-    const notifyPayload = { ...dbRow, owner_email: ownerEmail, _email_only: !error };
-    fetch('/api/applications', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(notifyPayload),
-    }).catch(() => {});
-  }).catch(() => {
-    // Supabase も API も全滅でも UI はブロックしない
-    fetch('/api/applications', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...dbRow, owner_email: ownerEmail }),
-    }).catch(() => {});
+  sb.from('applications').insert(payload).then(({ error }) => {
+    if (error) console.warn('applications insert error:', error.message);
   });
 }
 
