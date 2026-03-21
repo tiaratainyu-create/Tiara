@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
     }
 
     // オーナーへメール通知（owner_emailが指定されている場合）
-    if (data.owner_email) {
+    if (data.owner_email || process.env.ADMIN_EMAIL) {
       try {
         const emailRes = await fetch(
           `${process.env.SUPABASE_URL}/functions/v1/send-email`,
@@ -60,6 +60,7 @@ module.exports = async (req, res) => {
                 preferred_date: data.preferred_date,
                 preferred_time: data.preferred_time,
                 owner_email:    data.owner_email,
+                admin_email:    process.env.ADMIN_EMAIL || '',
               },
             }),
           }
