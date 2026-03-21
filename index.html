@@ -2157,31 +2157,53 @@ async function submit() {
   const contact = document.getElementById('fContact')?.value.trim() || '';
   const date    = aD || '';
   const time    = aTime || '';
-
   const ownerEmail = currentDetailStore?.owner_email || currentDetailStore?.email || '';
-  const payload = {
+
+  const dbRow = {
     store_name:     store,
     applicant_name: name,
-    age, experience: exp, email, phone, contact,
-    preferred_date: date,
-    preferred_time: time,
-    owner_email:    ownerEmail,
+    age,
+    experience:     exp,
+    email,
+    phone,
+    contact:        contact || null,
+    preferred_date: date   || null,
+    preferred_time: time   || null,
     user_id:        currentUser ? currentUser.id : null,
+    status:         'pending',
   };
 
   try {
-    const r = await fetch('/api/applications', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    if (!r.ok) {
-      const e = await r.json().catch(() => ({}));
-      throw new Error(e.error || '送信に失敗しました。もう一度お試しください。');
+    // Supabase クライアントで直接保存（API サーバーに依存しない）
+    const { error: sbErr } = await sb.from('applications').insert([dbRow]);
+    if (sbErr) {
+      // RLS ポリシーエラーの場合は API 経由でリトライ
+      if (sbErr.code === '42501' || sbErr.message.includes('policy') || sbErr.message.includes('permission')) {
+        const r = await fetch('/api/applications', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ ...dbRow, owner_email: ownerEmail }),
+        });
+        if (!r.ok) {
+          const e2 = await r.json().catch(() => ({}));
+          throw new Error(e2.error || `サーバーエラー (${r.status})`);
+        }
+      } else {
+        throw new Error(sbErr.message);
+      }
     }
-    // 成功: localStorage に保存してから完了画面へ
+
+    // 完了画面 + localStorage
     addApp({ store, name, age, email, phone, contact, date, time, at: new Date().toISOString() });
     _baseSubmit();
+
+    // メール通知だけ API に投げる（失敗しても完了扱い）
+    fetch('/api/applications', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ ...dbRow, owner_email: ownerEmail, _email_only: true }),
+    }).catch(() => {});
+
   } catch (e) {
     btn.disabled = false;
     btn.textContent = '体入に申し込む →';
@@ -2189,12 +2211,12 @@ async function submit() {
     if (!errEl) {
       errEl = document.createElement('div');
       errEl.id = 'submitErrMsg';
-      errEl.style.cssText = 'color:#e53935;font-size:.75rem;text-align:center;margin-top:8px;padding:8px;background:#fff5f5;border-radius:6px;';
+      errEl.style.cssText = 'color:#e53935;font-size:.78rem;text-align:center;margin-top:8px;padding:9px 12px;background:#fff5f5;border:1px solid #fca5a5;border-radius:6px;';
       btn.parentNode.insertBefore(errEl, btn);
     }
-    errEl.textContent = '⚠ ' + e.message;
+    errEl.textContent = '⚠ 送信エラー: ' + e.message;
     errEl.style.display = 'block';
-    setTimeout(() => { if (errEl) errEl.style.display = 'none'; }, 5000);
+    setTimeout(() => { if (errEl) errEl.style.display = 'none'; }, 7000);
   }
 }
 
