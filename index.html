@@ -2143,11 +2143,7 @@ function showPage(id, btn, isMobile) {
 /* ─────────────────────────────
    申込完了時に履歴を保存
 ───────────────────────────── */
-async function submit() {
-  const btn = document.getElementById('btnNext');
-  btn.disabled = true;
-  btn.textContent = '送信中...';
-
+function submit() {
   const store   = document.getElementById('mStore')?.textContent || '';
   const name    = document.getElementById('fName')?.value.trim() || '';
   const age     = document.getElementById('fAge')?.value || '';
@@ -2159,65 +2155,36 @@ async function submit() {
   const time    = aTime || '';
   const ownerEmail = currentDetailStore?.owner_email || currentDetailStore?.email || '';
 
+  // まず完了画面を出す（ユーザーを待たせない）
+  addApp({ store, name, age, email, phone, contact, date, time, at: new Date().toISOString() });
+  _baseSubmit();
+
   const dbRow = {
-    store_name:     store,
-    applicant_name: name,
-    age,
-    experience:     exp,
-    email,
-    phone,
+    store_name: store, applicant_name: name, age, experience: exp,
+    email, phone,
     contact:        contact || null,
-    preferred_date: date   || null,
-    preferred_time: time   || null,
+    preferred_date: date    || null,
+    preferred_time: time    || null,
     user_id:        currentUser ? currentUser.id : null,
     status:         'pending',
   };
 
-  try {
-    // Supabase クライアントで直接保存（API サーバーに依存しない）
-    const { error: sbErr } = await sb.from('applications').insert([dbRow]);
-    if (sbErr) {
-      // RLS ポリシーエラーの場合は API 経由でリトライ
-      if (sbErr.code === '42501' || sbErr.message.includes('policy') || sbErr.message.includes('permission')) {
-        const r = await fetch('/api/applications', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ ...dbRow, owner_email: ownerEmail }),
-        });
-        if (!r.ok) {
-          const e2 = await r.json().catch(() => ({}));
-          throw new Error(e2.error || `サーバーエラー (${r.status})`);
-        }
-      } else {
-        throw new Error(sbErr.message);
-      }
-    }
-
-    // 完了画面 + localStorage
-    addApp({ store, name, age, email, phone, contact, date, time, at: new Date().toISOString() });
-    _baseSubmit();
-
-    // メール通知だけ API に投げる（失敗しても完了扱い）
+  // バックグラウンドで保存（失敗してもユーザーには見せない）
+  sb.from('applications').insert([dbRow]).then(({ error }) => {
+    const notifyPayload = { ...dbRow, owner_email: ownerEmail, _email_only: !error };
     fetch('/api/applications', {
-      method:  'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ ...dbRow, owner_email: ownerEmail, _email_only: true }),
+      body: JSON.stringify(notifyPayload),
     }).catch(() => {});
-
-  } catch (e) {
-    btn.disabled = false;
-    btn.textContent = '体入に申し込む →';
-    let errEl = document.getElementById('submitErrMsg');
-    if (!errEl) {
-      errEl = document.createElement('div');
-      errEl.id = 'submitErrMsg';
-      errEl.style.cssText = 'color:#e53935;font-size:.78rem;text-align:center;margin-top:8px;padding:9px 12px;background:#fff5f5;border:1px solid #fca5a5;border-radius:6px;';
-      btn.parentNode.insertBefore(errEl, btn);
-    }
-    errEl.textContent = '⚠ 送信エラー: ' + e.message;
-    errEl.style.display = 'block';
-    setTimeout(() => { if (errEl) errEl.style.display = 'none'; }, 7000);
-  }
+  }).catch(() => {
+    // Supabase も API も全滅でも UI はブロックしない
+    fetch('/api/applications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...dbRow, owner_email: ownerEmail }),
+    }).catch(() => {});
+  });
 }
 
 /* ─────────────────────────────
