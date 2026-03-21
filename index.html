@@ -520,6 +520,60 @@ select.fi{appearance:none;cursor:pointer;}
 .bnav{display:none;}
 
 /* ══════════════════════════════
+   詳細モーダル PRセクション（大手求人サイト風）
+══════════════════════════════ */
+.pr-sec{border-left:3px solid var(--or);margin-bottom:0;}
+.pr-sec-head{
+  background:var(--or3);padding:9px 18px;
+  font-size:.72rem;font-weight:900;color:var(--or);letter-spacing:.3px;
+  display:flex;align-items:center;gap:6px;
+}
+.pr-sec-body{
+  padding:13px 18px;font-size:.8rem;color:#333;
+  line-height:2;white-space:pre-wrap;
+  border-bottom:1px solid #f2f2f2;
+}
+.pr-sec.pr-salary .pr-sec-head{background:#fff8e8;color:#b45309;border-left-color:#f59e0b;}
+.pr-sec.pr-salary .pr-sec-body{background:#fffdf5;}
+.pr-sec.pr-shift .pr-sec-head{background:#f0f9ff;color:#0369a1;border-left-color:#0ea5e9;}
+.pr-sec.pr-shift .pr-sec-body{background:#f8fbff;}
+.pr-sec.pr-msg .pr-sec-head{background:#faf5ff;color:#7c3aed;border-left-color:#8b5cf6;}
+.pr-sec.pr-msg .pr-sec-body{
+  background:#faf5ff;font-style:italic;color:#4c1d95;
+  position:relative;padding-left:34px;
+}
+.pr-sec.pr-msg .pr-sec-body::before{
+  content:'"';position:absolute;left:14px;top:6px;
+  font-size:2rem;color:#c4b5fd;line-height:1;font-family:Georgia,serif;
+}
+.pr-sec.pr-benefits .pr-sec-body{
+  display:flex;flex-wrap:wrap;gap:7px;padding:12px 18px;
+}
+.pr-benefit-tag{
+  font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:20px;
+  background:#fff;border:1.5px solid var(--bd);color:#444;
+}
+.pr-catch-banner{
+  margin:14px 18px 0;padding:13px 16px;
+  background:var(--or);color:#fff;border-radius:8px;
+  font-size:.9rem;font-weight:900;line-height:1.6;
+  text-align:center;letter-spacing:.3px;
+}
+.dtl-header{padding:16px 18px 14px;border-bottom:1px solid #f0f0f0;}
+.dtl-pay-box{
+  background:var(--or3);border:1.5px solid rgba(255,107,0,.2);
+  border-radius:8px;padding:11px 14px;margin-bottom:10px;
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
+}
+.dtl-footer{
+  padding:12px 18px 20px;display:flex;gap:10px;
+  border-top:1px solid #f0f0f0;
+  position:sticky;bottom:0;background:#fff;
+  border-radius:0 0 14px 14px;
+}
+.dtl-info-label{font-size:.63rem;font-weight:900;color:#777;letter-spacing:.5px;margin-bottom:8px;padding:14px 18px 0;}
+
+/* ══════════════════════════════
    MODAL (3-step bottom sheet)
 ══════════════════════════════ */
 .modal-bg{
@@ -1003,47 +1057,42 @@ select.fi{appearance:none;cursor:pointer;}
 
 <!-- ══ 店舗詳細モーダル ══ -->
 <div class="modal-bg" id="detailModal">
-  <div class="modal" style="max-width:560px;">
+  <div class="modal" style="max-width:580px;">
     <button class="m-close" onclick="closeDetail()" style="position:absolute;top:12px;right:12px;z-index:10;">✕</button>
 
     <!-- 画像エリア -->
-    <div id="dtlImg" style="height:200px;overflow:hidden;background:#eee;position:relative;flex-shrink:0;">
-    </div>
-
-    <!-- バッジ -->
+    <div id="dtlImg" style="height:220px;overflow:hidden;background:#eee;position:relative;flex-shrink:0;border-radius:14px 14px 0 0;"></div>
     <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;"></div>
 
-    <!-- 本文 -->
-    <div style="padding:18px 18px 0;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:4px;">
-        <div>
-          <div id="dtlName" style="font-size:1.15rem;font-weight:900;color:var(--dk);line-height:1.3;"></div>
-          <div id="dtlLoc" style="font-size:.72rem;color:var(--md);margin-top:3px;display:flex;align-items:center;gap:3px;"></div>
-        </div>
-        <div id="dtlGenreTag" style="font-size:.65rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:2px;"></div>
+    <!-- ヘッダー情報 -->
+    <div class="dtl-header">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;">
+        <div id="dtlName" style="font-size:1.18rem;font-weight:900;color:var(--dk);line-height:1.35;"></div>
+        <div id="dtlGenreTag" style="font-size:.65rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:3px;"></div>
       </div>
-
-      <!-- 時給 -->
-      <div id="dtlPay" class="c-pay" style="margin:12px 0;"></div>
-
+      <div id="dtlLoc" style="font-size:.72rem;color:var(--md);display:flex;align-items:center;gap:3px;margin-bottom:12px;"></div>
+      <!-- 給与ハイライトボックス -->
+      <div id="dtlPay" class="dtl-pay-box"></div>
       <!-- 特徴チップ -->
-      <div id="dtlChips" class="c-chips" style="margin-bottom:12px;flex-wrap:wrap;gap:5px;"></div>
-
-      <!-- PR文 -->
-      <div style="margin-bottom:14px;">
-        <div style="font-size:.65rem;font-weight:700;color:var(--or);margin-bottom:6px;letter-spacing:.5px;">📋 店舗PR</div>
-        <div id="dtlCatchBanner" style="display:none;font-size:.82rem;font-weight:700;color:var(--or);background:var(--or3);border-radius:8px;padding:10px 13px;margin-bottom:8px;border:1px solid rgba(255,107,0,.18);line-height:1.65;"></div>
-        <div id="dtlDesc" style="font-size:.78rem;color:var(--md);line-height:1.85;background:#f9f9f9;border-radius:8px;padding:12px 14px;border-left:3px solid var(--or);"></div>
-      </div>
-
-      <!-- 詳細情報グリッド -->
-      <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;"></div>
+      <div id="dtlChips" class="c-chips" style="flex-wrap:wrap;gap:5px;margin-bottom:0;"></div>
     </div>
 
-    <!-- フッター -->
-    <div style="padding:0 18px 20px;display:flex;gap:10px;">
-      <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:12px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
-      <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:12px;border-radius:8px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 12px rgba(255,107,0,.3);">体入に応募する →</button>
+    <!-- キャッチコピー -->
+    <div id="dtlCatchBanner" style="display:none;"></div>
+
+    <!-- PRセクション（大手求人サイト風） -->
+    <div id="dtlDesc"></div>
+
+    <!-- 基本情報グリッド -->
+    <div id="dtlInfoWrap" style="display:none;">
+      <div class="dtl-info-label">📋 基本情報</div>
+      <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 18px 16px;"></div>
+    </div>
+
+    <!-- フッター（sticky） -->
+    <div class="dtl-footer">
+      <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:13px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
+      <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:13px;border-radius:8px;font-size:.92rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 14px rgba(255,107,0,.35);">体入に応募する →</button>
     </div>
   </div>
 </div>
@@ -1387,15 +1436,34 @@ function openDetail(s) {
   const features = s.features || [];
   document.getElementById('dtlChips').innerHTML = features.map(f => `<span class="chip">${f}</span>`).join('');
 
-  // PR文
+  // PR文（大手求人サイト風レンダリング）
   const rawDesc = s.pr_text || s.description || '';
-  const SECTION_ICONS = {
-    '雰囲気': '💃', '環境': '🏠', '給与': '💰', '給与・待遇': '💰', '待遇': '💰',
-    'シフト・勤務': '📅', 'シフト': '📅', '勤務': '📅',
-    'こんな方に': '🌸', '応募資格': '🌸', '体験入店': '👠', '体入': '👠',
-    '福利厚生': '🎁', 'サポート': '🎁',
-    'メッセージ': '💌', 'アクセス': '📍', 'スタッフ': '👥', '特徴': '⭐',
+  const SEC_META = {
+    '雰囲気': { icon: '💃', label: '仕事の雰囲気・特徴', cls: '' },
+    '雰囲気・特徴': { icon: '💃', label: '仕事の雰囲気・特徴', cls: '' },
+    '環境': { icon: '🏠', label: '職場環境', cls: '' },
+    '給与': { icon: '💰', label: '給与・待遇詳細', cls: 'pr-salary' },
+    '給与・待遇': { icon: '💰', label: '給与・待遇詳細', cls: 'pr-salary' },
+    '待遇': { icon: '💰', label: '給与・待遇詳細', cls: 'pr-salary' },
+    'シフト・勤務': { icon: '📅', label: '勤務時間・シフト', cls: 'pr-shift' },
+    'シフト': { icon: '📅', label: '勤務時間・シフト', cls: 'pr-shift' },
+    '勤務': { icon: '📅', label: '勤務時間・シフト', cls: 'pr-shift' },
+    'こんな方に来てほしい': { icon: '🌸', label: 'こんな方に来てほしい', cls: '' },
+    'こんな方に': { icon: '🌸', label: 'こんな方に来てほしい', cls: '' },
+    '応募資格': { icon: '🌸', label: '応募資格・対象', cls: '' },
+    '体験入店について': { icon: '👠', label: '体験入店について', cls: '' },
+    '体験入店': { icon: '👠', label: '体験入店について', cls: '' },
+    '体入': { icon: '👠', label: '体験入店について', cls: '' },
+    '福利厚生・サポート': { icon: '🎁', label: '福利厚生・サポート', cls: 'pr-benefits' },
+    '福利厚生': { icon: '🎁', label: '福利厚生・サポート', cls: 'pr-benefits' },
+    'サポート': { icon: '🎁', label: 'サポート体制', cls: 'pr-benefits' },
+    'オーナー・スタッフからのメッセージ': { icon: '💌', label: 'スタッフからのメッセージ', cls: 'pr-msg' },
+    'メッセージ': { icon: '💌', label: 'スタッフからのメッセージ', cls: 'pr-msg' },
+    'アクセス': { icon: '📍', label: 'アクセス・立地', cls: '' },
+    'スタッフ': { icon: '👥', label: 'スタッフ紹介', cls: '' },
+    '特徴': { icon: '⭐', label: '店舗の特徴', cls: '' },
   };
+
   const allBlocks = rawDesc.split(/\n\n/).filter(Boolean);
   const catchBlocks = allBlocks.filter(b => !/^【.+?】/.test(b));
   const sectionBlocks = allBlocks.filter(b => /^【.+?】/.test(b));
@@ -1403,30 +1471,34 @@ function openDetail(s) {
   // キャッチコピーバナー
   const catchBanner = document.getElementById('dtlCatchBanner');
   if (catchBlocks.length) {
+    catchBanner.className = 'pr-catch-banner';
     catchBanner.innerHTML = '✨ ' + catchBlocks.join(' ');
     catchBanner.style.display = '';
   } else {
     catchBanner.style.display = 'none';
   }
 
-  // PRセクション
+  // PRセクション（大手求人サイト風）
   let prHtml = '';
   if (sectionBlocks.length) {
-    prHtml = sectionBlocks.map((sec, i) => {
+    prHtml = sectionBlocks.map(sec => {
       const m = sec.match(/^【(.+?)】(.*)$/s);
-      if (!m) return '<div style="font-size:.75rem;color:#555;line-height:1.85;margin-bottom:8px;white-space:pre-wrap;">' + sec + '</div>';
-      const icon = SECTION_ICONS[m[1]] || '📌';
-      const isLast = i === sectionBlocks.length - 1;
-      return '<div style="margin-bottom:' + (isLast ? '0' : '11px') + ';padding-bottom:' + (isLast ? '0' : '11px') + ';' + (isLast ? '' : 'border-bottom:1px dashed #e5e5e5;') + '">' +
-        '<div style="font-size:.62rem;font-weight:900;color:var(--or);margin-bottom:5px;letter-spacing:.3px;">' + icon + ' ' + m[1] + '</div>' +
-        '<div style="font-size:.75rem;color:#444;line-height:1.9;white-space:pre-wrap;">' + m[2].trim() + '</div>' +
-        '</div>';
+      if (!m) return '<div class="pr-sec"><div class="pr-sec-body" style="font-style:normal;">' + sec + '</div></div>';
+      const key = Object.keys(SEC_META).find(k => m[1].includes(k)) || '';
+      const meta = SEC_META[key] || { icon: '📌', label: m[1], cls: '' };
+      const text = m[2].trim();
+      if (meta.cls === 'pr-benefits') {
+        // 福利厚生はタグ表示（・または改行区切り）
+        const tags = text.split(/[・\n]/).map(t => t.trim()).filter(Boolean);
+        const tagsHtml = tags.map(t => `<span class="pr-benefit-tag">${t}</span>`).join('');
+        return `<div class="pr-sec pr-benefits"><div class="pr-sec-head">${meta.icon} ${meta.label}</div><div class="pr-sec-body">${tagsHtml}</div></div>`;
+      }
+      return `<div class="pr-sec ${meta.cls}"><div class="pr-sec-head">${meta.icon} ${meta.label}</div><div class="pr-sec-body">${text}</div></div>`;
     }).join('');
   } else if (!catchBlocks.length) {
-    prHtml = '<div style="color:var(--lt);font-size:.75rem;text-align:center;padding:4px 0;">詳細情報は店舗にお問い合わせください。</div>';
+    prHtml = '<div style="color:var(--lt);font-size:.78rem;text-align:center;padding:20px;">詳細情報は店舗にお問い合わせください。</div>';
   }
   document.getElementById('dtlDesc').innerHTML = prHtml;
-  document.getElementById('dtlDesc').style.display = prHtml ? '' : 'none';
 
   // 詳細グリッド
   const grid = document.getElementById('dtlInfoGrid');
@@ -1444,10 +1516,11 @@ function openDetail(s) {
     { l: 'ボーナス', v: s.pay_bonus || '' },
   ].filter(i => i.v);
   grid.innerHTML = items.map(i => `
-    <div style="background:#f9f9f9;border-radius:6px;padding:9px 11px;">
-      <div style="font-size:.62rem;color:#9ca3af;margin-bottom:2px;">${i.l}</div>
-      <div style="font-size:.8rem;font-weight:700;color:#1a1a2e;">${i.v}</div>
+    <div style="background:#f7f7f7;border-radius:6px;padding:9px 12px;border-left:2px solid var(--bd);">
+      <div style="font-size:.6rem;color:#9ca3af;font-weight:700;margin-bottom:3px;">${i.l}</div>
+      <div style="font-size:.82rem;font-weight:700;color:#1a1a2e;">${i.v}</div>
     </div>`).join('');
+  document.getElementById('dtlInfoWrap').style.display = items.length ? '' : 'none';
 
   // お気に入りボタン状態
   const favs = currentUser ? favsCache : getLocalFavs();
