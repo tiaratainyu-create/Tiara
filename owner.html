@@ -865,9 +865,9 @@ async function saveStore(){
   const {data,error}=owner?await sb.from('owners').update(payload).eq('user_id',user.id).select().single():await sb.from('owners').insert({...payload,user_id:user.id}).select().single();
   if(error){toast('❌','エラー: '+error.message);return;}
   owner=data;
-  const storesPayload={name:payload.store_name,genre:payload.genre,address:payload.address,hourly_min:payload.hourly_min,hourly_max:payload.hourly_max,hours:payload.hours,station:payload.station,features:payload.features,pr_text:desc,status:'active',owner_email:owner?.email||''};
-  const {error:stErr}=await sb.from('stores').update(storesPayload).eq('owner_id',owner?.id);
-  if(stErr)console.error('stores update error:',stErr.message);
+  const storesPayload={owner_id:owner.id,name:payload.store_name,genre:payload.genre,address:payload.address,hourly_min:payload.hourly_min,hourly_max:payload.hourly_max,hours:payload.hours,station:payload.station,features:payload.features,pr_text:desc,status:'active',owner_email:owner?.email||user?.email||''};
+  const {error:stErr}=await sb.from('stores').upsert(storesPayload,{onConflict:'owner_id'});
+  if(stErr){console.error('stores upsert error:',stErr.message);toast('⚠','店舗情報の公開更新に失敗しました: '+stErr.message);return;}
   document.getElementById('hdrName').textContent=payload.store_name;
   document.getElementById('sbUname').textContent=payload.store_name;
   toast('✅','店舗情報を保存しました');
@@ -949,7 +949,7 @@ async function doPayment(){
     if(error)throw new Error(error.message);
     const {data:{session}}=await sb.auth.getSession();
     const token=session?.access_token;
-    const res=await fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentMethodId:paymentMethod.id,planId:selPlanId,storeName:owner?.store_name})});
+    const res=await fetch('/api/create-subscription',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentMethodId:paymentMethod.id,planId:selPlanId,storeName:owner?.store_name,ownerEmail:owner?.email||user?.email||'',ownerName:owner?.store_name||''})});
     const data=await res.json();
     if(!res.ok)throw new Error(data.error||'決済エラー');
     if(data.clientSecret){const {error:ce}=await stripe.confirmCardPayment(data.clientSecret);if(ce)throw new Error(ce.message);}

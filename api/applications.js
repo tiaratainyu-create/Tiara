@@ -16,7 +16,12 @@ module.exports = async (req, res) => {
   try {
     const data = req.body;
 
-    // DBへ保存（カラム名はapplicationsテーブルの実際の定義に合わせる）
+    // バリデーション
+    if (!data.store_name || !data.applicant_name || !data.email || !data.phone) {
+      return res.status(400).json({ error: '必須項目（店舗名・氏名・メール・電話）が不足しています' });
+    }
+
+    // DBへ保存
     const { error: dbError } = await supabase.from('applications').insert([{
       store_name:     data.store_name,
       applicant_name: data.applicant_name,
@@ -24,16 +29,16 @@ module.exports = async (req, res) => {
       experience:     data.experience,
       email:          data.email,
       phone:          data.phone,
-      contact:        data.contact,
-      preferred_date: data.preferred_date,
-      preferred_time: data.preferred_time,
+      contact:        data.contact || null,
+      preferred_date: data.preferred_date || null,
+      preferred_time: data.preferred_time || null,
       user_id:        data.user_id || null,
       status:         'pending',
     }]);
 
     if (dbError) {
       console.error('DB insert error:', dbError);
-      // DBエラーでも処理継続（メール送信を試みる）
+      return res.status(500).json({ error: '申込の保存に失敗しました: ' + dbError.message });
     }
 
     // オーナーへメール通知（owner_emailが指定されている場合）
