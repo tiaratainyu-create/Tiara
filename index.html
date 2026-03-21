@@ -757,6 +757,65 @@ select.fi{appearance:none;cursor:pointer;}
   .main-wrap{padding:0 8px;}
   .owner-wrap{padding:0 8px;}
 }
+
+/* ══════════════════════════════
+   MOBILE DRAWER（ハンバーガーメニュー）
+══════════════════════════════ */
+.mob-drawer{
+  display:none;
+  background:var(--wh);
+  border-bottom:2px solid var(--bd);
+  padding:14px 16px;
+  flex-direction:column;
+  gap:10px;
+  box-shadow:0 4px 14px rgba(0,0,0,.1);
+  position:relative;z-index:250;
+}
+.mob-drawer.open{display:flex;}
+.mob-drawer-search{
+  display:flex;align-items:center;
+  border:2px solid var(--bd);border-radius:8px;overflow:hidden;
+}
+.mob-drawer-search input{
+  flex:1;padding:10px 14px;border:none;outline:none;
+  font-size:.88rem;font-family:'Noto Sans JP',sans-serif;color:var(--dk);
+  background:transparent;
+}
+.mob-drawer-search input:focus{outline:none;}
+.mob-drawer-search button{
+  padding:10px 14px;background:var(--or);border:none;cursor:pointer;font-size:.9rem;
+}
+.mob-drawer-nav{display:flex;gap:8px;flex-wrap:wrap;}
+.mob-drawer-nav .hnav-tab{display:flex!important;font-size:.82rem;}
+.mob-drawer-auth{display:flex;gap:8px;}
+.mob-drawer-auth .hbtn{flex:1;text-align:center;padding:10px;}
+
+/* ══════════════════════════════
+   MOBILE FILTER TOGGLE
+══════════════════════════════ */
+.mob-filter-toggle{
+  display:none;
+  width:100%;
+  background:var(--wh);
+  border:1.5px solid var(--bd);
+  border-radius:8px;
+  padding:11px 14px;
+  font-size:.83rem;font-weight:700;color:var(--dk);
+  cursor:pointer;font-family:'Noto Sans JP',sans-serif;
+  align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.mob-filter-toggle span{font-size:.75rem;color:var(--md);}
+
+@media(max-width:768px){
+  .mob-filter-toggle{display:flex;}
+  .sidebar{display:none;}
+  .sidebar.mob-open{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:14px;
+  }
+}
 </style>
 </head>
 <body>
@@ -764,7 +823,7 @@ select.fi{appearance:none;cursor:pointer;}
 <!-- ══ HEADER ══ -->
 <header class="hdr">
   <div class="hdr-inner">
-    <button class="hdr-menu">☰</button>
+    <button class="hdr-menu" onclick="toggleMobDrawer()">☰</button>
     <a class="logo" href="#">Tiara<small>錦糸町 夜のお仕事</small></a>
     <div class="hdr-search">
       <input type="text" id="hdrKeyword" placeholder="キーワード、店名、業種で検索..." oninput="debounceSearch()">
@@ -780,6 +839,22 @@ select.fi{appearance:none;cursor:pointer;}
     </div>
   </div>
 </header>
+
+<!-- ══ MOBILE DRAWER ══ -->
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-drawer-search">
+    <input type="text" id="mobKeyword" placeholder="キーワード、店名で検索..." oninput="document.getElementById('hdrKeyword').value=this.value;debounceSearch();">
+    <button onclick="document.getElementById('hdrKeyword').value=document.getElementById('mobKeyword').value;doHeaderSearch();toggleMobDrawer();">🔍</button>
+  </div>
+  <div class="mob-drawer-nav">
+    <button class="hnav-tab on" onclick="showPage('seeker',this);toggleMobDrawer();">求人を探す</button>
+    <button class="hnav-tab" onclick="showPage('favs',this);toggleMobDrawer();">♡ お気に入り</button>
+  </div>
+  <div class="mob-drawer-auth" id="mobDrawerAuth">
+    <button class="hbtn out" onclick="toggleMobDrawer();openAuthModal('register');">会員登録</button>
+    <button class="hbtn fill" onclick="toggleMobDrawer();openAuthModal('login');">ログイン</button>
+  </div>
+</div>
 
 <!-- ══════════════════════════════
      PAGE: SEEKER
@@ -828,7 +903,11 @@ select.fi{appearance:none;cursor:pointer;}
   <div class="main-wrap">
 
     <!-- ── SIDEBAR ── -->
-    <aside class="sidebar">
+    <button class="mob-filter-toggle" id="mobFilterToggle" onclick="toggleMobSidebar()">
+      <span>🔧 絞り込み条件</span>
+      <span id="mobFilterArr">▼ 開く</span>
+    </button>
+    <aside class="sidebar" id="mainSidebar">
 
       <!-- こだわり条件 -->
       <div class="sbox">
@@ -2211,6 +2290,23 @@ function setLoading(btnId, on) {
   btn.disabled = on;
   btn.style.opacity = on ? '.6' : '1';
   btn.textContent = on ? '処理中...' : (btnId.includes('Reg') ? '無料で登録する →' : 'ログイン →');
+}
+
+/* ── モバイルドロワー ── */
+function toggleMobDrawer() {
+  const drawer = document.getElementById('mobDrawer');
+  drawer.classList.toggle('open');
+  // ログイン済みの場合は認証ボタンを非表示
+  const authRow = document.getElementById('mobDrawerAuth');
+  if (authRow && currentUser) authRow.style.display = 'none';
+}
+
+/* ── モバイルサイドバー トグル ── */
+function toggleMobSidebar() {
+  const sb = document.getElementById('mainSidebar');
+  const arr = document.getElementById('mobFilterArr');
+  sb.classList.toggle('mob-open');
+  if (arr) arr.textContent = sb.classList.contains('mob-open') ? '▲ 閉じる' : '▼ 開く';
 }
 </script>
 
