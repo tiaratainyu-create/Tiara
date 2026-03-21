@@ -330,11 +330,15 @@ textarea.fi{resize:vertical;min-height:72px;}
   
 }
 @media(max-width:768px){
-  .hero{padding-top:80px;}
+  /* stickyナビなのでpadding-top不要 — hero-innerの48pxで十分 */
+  .hero{padding-top:0;}
+  .hero-inner{padding-top:28px;}
   .hero h1{font-size:2rem;}
   .feat-grid{grid-template-columns:1fr;}
   .flow-grid{grid-template-columns:1fr 1fr;}
-  
+  /* ヒーロー統計: 2×2レイアウト */
+  .hero-stats{flex-wrap:wrap;}
+  .hstat{min-width:calc(50% - 0.5px);}
   .sec-title{font-size:1.7rem;}
   .plans-wrap{gap:12px;}
   .row2{grid-template-columns:1fr;}

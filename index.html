@@ -672,6 +672,11 @@ select.fi{appearance:none;cursor:pointer;}
 .suc-close{background:var(--or);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:.85rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:4px;}
 
 /* ══════════════════════════════
+   SEARCH BOX OUTER WRAPPER
+══════════════════════════════ */
+.sb-outer{max-width:1280px;margin:0 auto;padding:0 20px;}
+
+/* ══════════════════════════════
    RESPONSIVE: TABLET (≤ 1024px)
 ══════════════════════════════ */
 @media(max-width:1024px){
@@ -699,8 +704,9 @@ select.fi{appearance:none;cursor:pointer;}
   .hero h1{font-size:1.35rem;}
   .hero-stats .hs{min-width:auto;flex:1;padding:8px 10px;}
 
-  /* Search box */
-  .search-box{margin:0 10px;margin-top:-16px;}
+  /* Search box outer wrapper: align with main-wrap */
+  .sb-outer{padding:0 10px;}
+  .search-box{margin:0;margin-top:-16px;}
   .sb-rows{flex-direction:column;}
   .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:11px 14px;}
   .sb-row:last-of-type{border-bottom:none;}
@@ -736,12 +742,13 @@ select.fi{appearance:none;cursor:pointer;}
   .owner-hero h2{font-size:1.3rem;}
   .o-grid{grid-template-columns:1fr;}
 
-  /* Bottom nav */
+  /* Bottom nav: safe-area対応 */
   .bnav{
     display:flex;
     position:fixed;bottom:0;left:0;right:0;
     background:var(--wh);border-top:1px solid var(--bd);
     z-index:300;box-shadow:0 -2px 10px rgba(0,0,0,.08);
+    padding-bottom:env(safe-area-inset-bottom);
   }
   .bnav-item{
     flex:1;display:flex;flex-direction:column;align-items:center;
@@ -767,7 +774,10 @@ select.fi{appearance:none;cursor:pointer;}
   .hero h1{font-size:1.15rem;}
   .hdr-inner{padding:0 12px;}
   .main-wrap{padding:0 8px;}
+  .sb-outer{padding:0 8px;}
   .owner-wrap{padding:0 8px;}
+  /* ヒーロー統計: 2×2レイアウト */
+  .hero-stats .hs{flex:0 0 calc(50% - 5px);}
 }
 
 /* ══════════════════════════════
@@ -889,7 +899,7 @@ select.fi{appearance:none;cursor:pointer;}
   </div>
 
   <!-- SEARCH BOX -->
-  <div style="max-width:1280px;margin:0 auto;padding:0 20px;">
+  <div class="sb-outer">
     <div class="search-box">
       <div class="sb-rows">
         <div class="sb-row">
