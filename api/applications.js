@@ -9,6 +9,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 // メール送信（Resend → Edge Function の順で試みる）
 async function sendEmail(toEmail, data) {
+  if (!Array.isArray(toEmail)) toEmail = [toEmail];
   const subject = `【体入申込】${data.store_name} ／ ${data.applicant_name}さん`;
 
   const text = [
@@ -54,7 +55,7 @@ async function sendEmail(toEmail, data) {
     try {
       const result = await resend.emails.send({
         from:    process.env.EMAIL_FROM || 'Tiara <onboarding@resend.dev>',
-        to:      [toEmail],
+        to:      toEmail,
         subject,
         text,
         html,
@@ -133,9 +134,12 @@ module.exports = async (req, res) => {
     }
 
     // メール通知
-    const toEmail = data.owner_email || process.env.ADMIN_EMAIL;
-    if (toEmail) {
-      await sendEmail(toEmail, data);
+    const recipients = [...new Set([
+      process.env.ADMIN_EMAIL,
+      data.owner_email,
+    ].filter(Boolean))];
+    if (recipients.length > 0) {
+      await sendEmail(recipients, data);
     } else {
       console.warn('[email] 送信先メールアドレスが未設定です。owner_email と ADMIN_EMAIL を確認してください。');
     }
