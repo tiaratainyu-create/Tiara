@@ -1962,9 +1962,10 @@ function admToast(icon, msg) {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ══ Supabase リアルデータ連携 ══ */
-const SB_URL  = 'https://ljvovzmjqesspzikglna.supabase.co';
-const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
-const sbAdmin = supabase.createClient(SB_URL, SB_ANON);
+const SB_URL     = 'https://ljvovzmjqesspzikglna.supabase.co';
+const SB_ANON    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
+const SB_SERVICE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzE0MzMwOSwiZXhwIjoyMDg4NzE5MzA5fQ.FgypqNC55qJg587Gji0Grid9Ppbiib_Pp_1KDL32bos';
+const sbAdmin    = supabase.createClient(SB_URL, SB_SERVICE);
 
 // 管理者ログイン後にリアルデータを読み込む
 async function loadRealData() {
