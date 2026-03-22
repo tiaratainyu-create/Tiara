@@ -1351,10 +1351,28 @@ function setGenreTab(btn, genre) {
 async function fetchStores() {
   const grid = document.getElementById('storeGrid');
   try {
-    const res = await fetch('/api/stores');
-    if (!res.ok) throw new Error('API error ' + res.status);
-    const data = await res.json();
-    allStores = Array.isArray(data) ? data : (data.stores || []);
+    let stores = null;
+
+    // まずAPIを試み、失敗したらSupabase直接クエリにフォールバック
+    try {
+      const res = await fetch('/api/stores');
+      if (res.ok) {
+        const data = await res.json();
+        stores = Array.isArray(data) ? data : (data.stores || []);
+      }
+    } catch (_) {}
+
+    if (!stores) {
+      const { data, error } = await sb.from('stores')
+        .select('*')
+        .eq('status', 'active')
+        .order('plan', { ascending: false })
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      stores = data || [];
+    }
+
+    allStores = stores;
 
     // ヒーロー件数・平均時給を実データで更新
     const cnt = allStores.length;
