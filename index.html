@@ -256,7 +256,7 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
 /* ── JOB GRID ── */
 .jgrid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));
   gap:16px;
 }
 
@@ -578,7 +578,7 @@ select.fi{appearance:none;cursor:pointer;}
   display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
 }
 .dtl-footer{
-  padding:12px 18px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;
+  display:flex;gap:10px;
   border-top:1px solid #f0f0f0;
   position:sticky;bottom:0;background:#fff;
 }
@@ -587,7 +587,7 @@ select.fi{appearance:none;cursor:pointer;}
 .detail-page-bg{position:fixed;inset:0;z-index:500;pointer-events:none;}
 .detail-page-bg.open{pointer-events:all;}
 .detail-page{
-  position:absolute;inset:0;background:#f5f7fa;
+  position:absolute;inset:0;background:#fff;
   overflow-y:auto;-webkit-overflow-scrolling:touch;
   transform:translateX(100%);
   transition:transform .3s cubic-bezier(.4,0,.2,1);
@@ -596,7 +596,7 @@ select.fi{appearance:none;cursor:pointer;}
 .detail-nav{
   position:sticky;top:0;z-index:10;
   background:#fff;border-bottom:1px solid #f0f0f0;
-  padding:0 16px;height:52px;
+  padding:0 40px;height:52px;
   display:flex;align-items:center;gap:10px;
 }
 .detail-nav-back{
@@ -605,7 +605,14 @@ select.fi{appearance:none;cursor:pointer;}
   cursor:pointer;display:flex;align-items:center;gap:5px;
   font-family:'Noto Sans JP',sans-serif;padding:8px 0;flex:1;
 }
-.detail-inner{max-width:680px;margin:0 auto;background:#fff;}
+.detail-inner{width:100%;background:#fff;padding:0 40px;}
+.dtl-footer{padding:12px 40px calc(12px + env(safe-area-inset-bottom));}
+@media(max-width:768px){
+  .detail-nav{padding:0 14px;}
+  .detail-inner{padding:0;}
+  .dtl-footer{padding:12px 14px calc(12px + env(safe-area-inset-bottom));}
+  #dtlInfoGrid{grid-template-columns:1fr!important;}
+}
 
 /* ══════════════════════════════
    MODAL (3-step bottom sheet)
@@ -1223,7 +1230,7 @@ select.fi{appearance:none;cursor:pointer;}
     </div>
 
     <!-- フッター（sticky） -->
-    <div class="dtl-footer" style="max-width:680px;margin:0 auto;">
+    <div class="dtl-footer">
       <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:13px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
       <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:13px;border-radius:8px;font-size:.92rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 14px rgba(255,107,0,.35);">体入に応募する →</button>
     </div>
