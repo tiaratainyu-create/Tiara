@@ -843,16 +843,16 @@ select.fi{appearance:none;cursor:pointer;}
   .logo{flex:1;text-align:center;font-size:1.3rem;}
 
   /* ── Hero ── */
-  .hero{padding:14px 14px 20px;overflow:hidden;}
+  .hero{padding:12px 14px 16px;overflow:hidden;}
   .hero-inner{flex-direction:column;gap:0;}
-  .hero-tag{font-size:.68rem;padding:3px 10px;margin-bottom:8px;}
-  .hero h1{font-size:1.15rem;line-height:1.4;margin-bottom:5px;}
-  .hero-sub{font-size:.72rem;margin-bottom:12px;line-height:1.6;}
-  /* stats: 2×2グリッドで固定（4並びはモバイルで崩れるため） */
-  .hero-stats{gap:7px;flex-wrap:wrap;}
-  .hero-stats .hs{flex:0 0 calc(50% - 4px);min-width:0;padding:7px 10px;box-sizing:border-box;}
-  .hs-n{font-size:.95rem;}
-  .hs-l{font-size:.55rem;}
+  .hero-tag{font-size:.65rem;padding:3px 9px;margin-bottom:7px;}
+  .hero h1{font-size:1.1rem;line-height:1.35;margin-bottom:4px;}
+  .hero-sub{font-size:.7rem;margin-bottom:10px;line-height:1.5;}
+  /* stats: 横1行に並べてコンパクトに */
+  .hero-stats{gap:5px;flex-wrap:nowrap;}
+  .hero-stats .hs{flex:1;min-width:0;padding:5px 4px;box-sizing:border-box;}
+  .hs-n{font-size:.88rem;}
+  .hs-l{font-size:.5rem;margin-top:2px;}
   /* trust */
   .trust-section,.voice-section{padding:0 14px;}
   .trust-grid{grid-template-columns:repeat(2,1fr);}
@@ -864,9 +864,9 @@ select.fi{appearance:none;cursor:pointer;}
   .sb-outer{padding:0 10px;}
   .search-box{margin:0;margin-top:-14px;}
   .sb-rows{flex-direction:column;}
-  .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:11px 16px 11px 14px;}
+  .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:10px 20px 10px 14px;}
   .sb-row:last-of-type{border-bottom:none;}
-  .sb-badge{margin-right:2px;}
+  .sb-badge{flex-shrink:0;}
 
   /* ── Main layout: 1 column ── */
   .main-wrap{
