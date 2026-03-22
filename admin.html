@@ -1861,7 +1861,7 @@ async function alSubmit() {
   try {
     const feats = [];
     document.querySelectorAll('#al-feats input:checked').forEach(cb => feats.push(cb.value));
-    /* owners テーブルに存在する列のみ（description=PR文, contact_name/admin_memoは非対応列）*/
+    /* owners テーブルの実列: contact_nameは存在しないため除外 */
     const prText = document.getElementById('al-pr').value.trim();
     const payload = {
       store_name: document.getElementById('al-name').value.trim(),
@@ -1876,6 +1876,7 @@ async function alSubmit() {
       email: document.getElementById('al-email').value.trim(),
       phone: document.getElementById('al-phone').value.trim(),
       status: document.getElementById('al-status').value,
+      admin_memo: document.getElementById('al-memo')?.value.trim() || '',
     };
     const { data: ownerData, error } = await sbAdmin.from('owners').insert(payload).select().single();
     if (error) throw new Error(error.message);
