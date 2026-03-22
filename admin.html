@@ -1088,6 +1088,12 @@ select.adm-sfi{appearance:none;cursor:pointer;}
 .adm-modal-close{background:none;border:none;font-size:1rem;color:#777;cursor:pointer;padding:3px;}
 .dow-label:has(input:checked){border-color:var(--or)!important;background:#fff3e8;color:var(--or);}
 .dow-label:hover{border-color:var(--or)!important;}
+.adm-feat-cb:has(input:checked){border-color:var(--or)!important;background:#fff3e8;color:var(--or);font-weight:700;}
+.adm-feat-cb:hover{border-color:var(--or)!important;}
+.adm-al-plan{border:1.5px solid #e5e8ef;background:#fff;}
+.adm-al-plan.on{border:2px solid var(--or)!important;background:#fff3e8;}
+.adm-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.adm-conf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .adm-modal-body{padding:18px;}
 .adm-modal-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
 .adm-modal-fg:last-child{margin-bottom:0;}
@@ -1151,9 +1157,16 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
   }
   .adm-sidebar.open{transform:translateX(0);}
   .adm-sb-toggle{display:block;}
+  /* ヘッダーのズレ対策: 狭い画面で非表示 */
   .adm-date{display:none;}
+  .adm-title{display:none;}
+  .adm-logo-badge{display:none;}
   .adm-kpi-grid{grid-template-columns:1fr 1fr;}
   .adm-content{padding:12px;}
+  .adm-row2{grid-template-columns:1fr;}
+  .adm-conf-grid{grid-template-columns:1fr;}
+  .adm-modal-bg{padding:0;align-items:flex-end;}
+  .adm-modal{border-radius:16px 16px 0 0;max-height:92vh;}
 }
 @media(max-width:420px){
   .adm-kpi-grid{grid-template-columns:1fr 1fr;gap:8px;}
@@ -1221,6 +1234,7 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
         <button class="adm-sb-item on" onclick="admNav('dashboard',this)"><span class="adm-si-ico">📊</span>ダッシュボード</button>
         <button class="adm-sb-item" onclick="admNav('applies',this)"><span class="adm-si-ico">📝</span>体入申込管理<span class="adm-si-bdg bdg-red">8</span></button>
         <button class="adm-sb-item" onclick="admNav('stores',this)"><span class="adm-si-ico">🏪</span>掲載店舗管理</button>
+        <button class="adm-sb-item" onclick="admNav('apply-listing',this)"><span class="adm-si-ico">✚</span>掲載申請</button>
         <button class="adm-sb-item" onclick="admNav('pending',this)"><span class="adm-si-ico">⏳</span>掲載審査<span class="adm-si-bdg bdg-yel">5</span></button>
       </div>
       <div class="adm-sb-sec">
@@ -1335,6 +1349,157 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
             <tr><td><div class="td-main">NIGHT VENUS</div><div class="td-sub">佐藤 太郎 · 03-0000-0004</div></td><td>クラブ</td><td><span class="plan-tag pt-st">Standard</span></td><td><span class="abadge ab-rev">審査中</span></td><td>—</td><td>—</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
             <tr><td><div class="td-main">Girls Bar SAKURA</div><div class="td-sub">伊藤 美咲 · 03-0000-0005</div></td><td>Gバー</td><td><span class="plan-tag pt-lt">Light</span></td><td><span class="abadge ab-off">停止中</span></td><td><strong>0件</strong></td><td>2025/02/01</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('▶','掲載を再開しました')">再開</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
           </tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═ 掲載申請 ═ -->
+      <div class="adm-page" id="adm-apply-listing">
+        <div class="adm-sbox" style="max-width:700px;">
+          <div class="adm-shead"><div class="adm-stitle">新規店舗 掲載申請</div><span style="font-size:.72rem;color:#6b7280;">管理者として直接登録できます</span></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:0;">
+
+            <!-- STEP表示 -->
+            <div style="display:flex;gap:6px;margin-bottom:22px;" id="alFormProg">
+              <div style="flex:1;height:4px;border-radius:2px;background:var(--or);" id="alp1"></div>
+              <div style="flex:1;height:4px;border-radius:2px;background:#e5e8ef;" id="alp2"></div>
+              <div style="flex:1;height:4px;border-radius:2px;background:#e5e8ef;" id="alp3"></div>
+            </div>
+
+            <!-- ── STEP 1: 店舗情報 ── -->
+            <div id="al-s1">
+              <div style="font-size:.68rem;font-weight:700;color:#9ca3af;letter-spacing:1px;margin-bottom:16px;">STEP 1 · 店舗情報</div>
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl" style="font-size:.72rem;font-weight:700;">店舗名 <span style="color:var(--red)">*</span></label>
+                <input class="adm-modal-inp" id="al-name" type="text" placeholder="例：Club Magnolia">
+              </div>
+              <div class="adm-row2">
+                <div class="adm-modal-fg">
+                  <label class="adm-modal-lbl">業種 <span style="color:var(--red)">*</span></label>
+                  <select class="adm-modal-inp" id="al-genre">
+                    <option value="">選択してください</option>
+                    <option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option>
+                    <option>スナック</option><option>ガールズバー</option><option>バー</option>
+                  </select>
+                </div>
+                <div class="adm-modal-fg">
+                  <label class="adm-modal-lbl">最寄り駅</label>
+                  <input class="adm-modal-inp" id="al-station" type="text" value="錦糸町駅">
+                </div>
+              </div>
+              <div class="adm-row2">
+                <div class="adm-modal-fg">
+                  <label class="adm-modal-lbl">最低時給（円） <span style="color:var(--red)">*</span></label>
+                  <input class="adm-modal-inp" id="al-min" type="number" placeholder="4000" min="1000">
+                </div>
+                <div class="adm-modal-fg">
+                  <label class="adm-modal-lbl">最高時給（円） <span style="color:var(--red)">*</span></label>
+                  <input class="adm-modal-inp" id="al-max" type="number" placeholder="10000" min="1000">
+                </div>
+              </div>
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl">営業時間</label>
+                <input class="adm-modal-inp" id="al-hours" type="text" placeholder="例：20:00〜04:00">
+              </div>
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl">PR文・紹介文</label>
+                <textarea class="adm-modal-inp" id="al-pr" placeholder="求職者に向けたPRコメントを入力..." rows="3"></textarea>
+              </div>
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl" style="display:block;margin-bottom:8px;">特典・条件</label>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;" id="al-feats">
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="体験入店OK" style="accent-color:var(--or);"> 体験入店OK</label>
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="日払いOK" style="accent-color:var(--or);"> 日払いOK</label>
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="未経験歓迎" style="accent-color:var(--or);"> 未経験歓迎</label>
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="週1〜OK" style="accent-color:var(--or);"> 週1〜OK</label>
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="送迎あり" style="accent-color:var(--or);"> 送迎あり</label>
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="寮完備" style="accent-color:var(--or);"> 寮完備</label>
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="ノルマなし" style="accent-color:var(--or);"> ノルマなし</label>
+                  <label style="display:flex;align-items:center;gap:5px;padding:5px 11px;border:1.5px solid #e5e8ef;border-radius:20px;cursor:pointer;font-size:.73rem;transition:all .12s;" class="adm-feat-cb"><input type="checkbox" value="掛け持ちOK" style="accent-color:var(--or);"> 掛け持ちOK</label>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+                <button class="adm-save-btn" onclick="alNext(1)">次へ →</button>
+              </div>
+            </div>
+
+            <!-- ── STEP 2: プラン・担当者 ── -->
+            <div id="al-s2" style="display:none;">
+              <div style="font-size:.68rem;font-weight:700;color:#9ca3af;letter-spacing:1px;margin-bottom:16px;">STEP 2 · プランと担当者情報</div>
+              <!-- プラン選択 -->
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl" style="display:block;margin-bottom:8px;">プラン <span style="color:var(--red)">*</span></label>
+                <div style="display:flex;flex-direction:column;gap:8px;" id="al-plan-list">
+                  <div class="adm-al-plan" id="alp-light" onclick="alSelPlan('light')" style="border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;">
+                    <span style="font-size:1.2rem;">🌱</span>
+                    <div style="flex:1;"><div style="font-size:.85rem;font-weight:900;color:#1a1a2e;">ライト</div><div style="font-size:.62rem;color:#9ca3af;margin-top:1px;">求人1件 · 写真3枚 · 体入管理</div></div>
+                    <div style="text-align:right;"><div style="font-size:1.1rem;font-weight:900;color:var(--or);">¥24,000</div><div style="font-size:.58rem;color:#aaa;">/月</div></div>
+                  </div>
+                  <div class="adm-al-plan on" id="alp-standard" onclick="alSelPlan('standard')" style="border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;position:relative;">
+                    <span style="position:absolute;top:-9px;right:12px;background:var(--or);color:#fff;font-size:.58rem;font-weight:900;padding:2px 10px;border-radius:3px;">⭐ おすすめ</span>
+                    <span style="font-size:1.2rem;">⭐</span>
+                    <div style="flex:1;"><div style="font-size:.85rem;font-weight:900;color:#1a1a2e;">スタンダード</div><div style="font-size:.62rem;color:#9ca3af;margin-top:1px;">求人1件 · 検索上位 · PICKUPバッジ · 保証つき</div></div>
+                    <div style="text-align:right;"><div style="font-size:1.1rem;font-weight:900;color:var(--or);">¥30,000</div><div style="font-size:.58rem;color:#aaa;">/月</div></div>
+                  </div>
+                  <div class="adm-al-plan" id="alp-premium" onclick="alSelPlan('premium')" style="border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;">
+                    <span style="font-size:1.2rem;">👑</span>
+                    <div style="flex:1;"><div style="font-size:.85rem;font-weight:900;color:#1a1a2e;">プレミアム</div><div style="font-size:.62rem;color:#9ca3af;margin-top:1px;">掲載無制限 · トップ · SNS · 特集記事</div></div>
+                    <div style="text-align:right;"><div style="font-size:.85rem;font-weight:900;color:#8b5cf6;">¥50,000</div><div style="font-size:.58rem;color:#aaa;">/月</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl">担当者名 <span style="color:var(--red)">*</span></label>
+                <input class="adm-modal-inp" id="al-contact" type="text" placeholder="田中 花子">
+              </div>
+              <div class="adm-row2">
+                <div class="adm-modal-fg">
+                  <label class="adm-modal-lbl">メールアドレス <span style="color:var(--red)">*</span></label>
+                  <input class="adm-modal-inp" id="al-email" type="email" placeholder="owner@example.com">
+                </div>
+                <div class="adm-modal-fg">
+                  <label class="adm-modal-lbl">電話番号 <span style="color:var(--red)">*</span></label>
+                  <input class="adm-modal-inp" id="al-phone" type="tel" placeholder="03-XXXX-XXXX">
+                </div>
+              </div>
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl">掲載ステータス</label>
+                <select class="adm-modal-inp" id="al-status">
+                  <option value="pending">審査中（後で承認）</option>
+                  <option value="active">即時掲載中</option>
+                </select>
+              </div>
+              <div class="adm-modal-fg">
+                <label class="adm-modal-lbl">管理メモ</label>
+                <textarea class="adm-modal-inp" id="al-memo" placeholder="内部メモ（求職者には表示されません）" rows="2"></textarea>
+              </div>
+              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
+                <button style="padding:10px 18px;border-radius:8px;background:#fff;color:#777;border:1.5px solid #e5e8ef;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;" onclick="alBack(2)">← 戻る</button>
+                <button class="adm-save-btn" onclick="alNext(2)">確認へ →</button>
+              </div>
+            </div>
+
+            <!-- ── STEP 3: 確認 ── -->
+            <div id="al-s3" style="display:none;">
+              <div style="font-size:.68rem;font-weight:700;color:#9ca3af;letter-spacing:1px;margin-bottom:16px;">STEP 3 · 確認して登録</div>
+              <div style="background:#f9f9f9;border:1px solid #e5e8ef;border-radius:8px;padding:16px;margin-bottom:16px;" id="al-conf-box"></div>
+              <div style="background:#fff3e8;border:1.5px solid rgba(255,107,0,.25);border-radius:8px;padding:12px 14px;font-size:.74rem;color:#555;margin-bottom:16px;">
+                ⚠️ 登録後、Supabaseの <strong>owners</strong> テーブルに直接書き込みます。Stripe決済は別途オーナーが管理画面から行います。
+              </div>
+              <div style="display:flex;gap:8px;justify-content:flex-end;">
+                <button style="padding:10px 18px;border-radius:8px;background:#fff;color:#777;border:1.5px solid #e5e8ef;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;" onclick="alBack(3)">← 戻る</button>
+                <button class="adm-save-btn" id="al-submit-btn" onclick="alSubmit()">✅ 登録する</button>
+              </div>
+            </div>
+
+            <!-- ── 完了 ── -->
+            <div id="al-done" style="display:none;text-align:center;padding:32px 20px;">
+              <div style="width:64px;height:64px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 14px;box-shadow:0 6px 20px rgba(255,107,0,.3);">✓</div>
+              <div style="font-size:1.15rem;font-weight:900;color:#1a1a2e;margin-bottom:8px;" id="al-done-title">登録完了</div>
+              <div style="font-size:.78rem;color:#6b7280;line-height:1.85;" id="al-done-sub"></div>
+              <button class="adm-save-btn" style="margin-top:20px;" onclick="alReset()">続けて登録する</button>
+            </div>
+
+          </div>
         </div>
       </div>
 
@@ -1503,13 +1668,13 @@ function exitAdmin() {
 /* ══ ADMIN NAV ══ */
 const admTitles = {
   dashboard:'ダッシュボード', applies:'体入申込管理',
-  stores:'掲載店舗管理', pending:'掲載審査',
+  stores:'掲載店舗管理', 'apply-listing':'掲載申請', pending:'掲載審査',
   revenue:'売上管理', plans:'プラン管理',
   users:'会員管理', notify:'通知設定', settings:'システム設定'
 };
 const admSubs = {
   dashboard:'概要', applies:'申込一覧',
-  stores:'店舗一覧', pending:'審査待ち 5件',
+  stores:'店舗一覧', 'apply-listing':'新規店舗を登録', pending:'審査待ち 5件',
   revenue:'売上明細', plans:'プラン一覧',
   users:'会員一覧', notify:'メール通知', settings:'サイト設定'
 };
@@ -1648,6 +1813,131 @@ function closeAdmModal() {
 document.getElementById('admModalBg').addEventListener('click', function(e) {
   if (e.target === this) closeAdmModal();
 });
+
+/* ══ 掲載申請フォーム ══ */
+let alPlan = 'standard', alStep = 1;
+
+function alUpdateProg() {
+  [1,2,3].forEach(n => {
+    document.getElementById('alp'+n).style.background = n <= alStep ? 'var(--or)' : '#e5e8ef';
+    const s = document.getElementById('al-s'+n);
+    if (s) s.style.display = n === alStep ? 'block' : 'none';
+  });
+  document.getElementById('al-done').style.display = 'none';
+}
+
+function alSelPlan(p) {
+  alPlan = p;
+  document.querySelectorAll('.adm-al-plan').forEach(el => el.classList.remove('on'));
+  document.getElementById('alp-'+p).classList.add('on');
+}
+
+function alNext(step) {
+  if (step === 1) {
+    if (!document.getElementById('al-name').value.trim()) { admToast('⚠️','店舗名を入力してください'); return; }
+    if (!document.getElementById('al-genre').value) { admToast('⚠️','業種を選択してください'); return; }
+    if (!document.getElementById('al-min').value || !document.getElementById('al-max').value) { admToast('⚠️','時給（最低・最高）を入力してください'); return; }
+  }
+  if (step === 2) {
+    if (!document.getElementById('al-contact').value.trim()) { admToast('⚠️','担当者名を入力してください'); return; }
+    if (!document.getElementById('al-email').value.trim()) { admToast('⚠️','メールアドレスを入力してください'); return; }
+    if (!document.getElementById('al-phone').value.trim()) { admToast('⚠️','電話番号を入力してください'); return; }
+    // 確認画面の内容を生成
+    const feats = [];
+    document.querySelectorAll('#al-feats input:checked').forEach(cb => feats.push(cb.value));
+    const planNames = {light:'ライト',standard:'スタンダード',premium:'プレミアム'};
+    const statusNames = {pending:'審査中',active:'即時掲載中'};
+    const status = document.getElementById('al-status').value;
+    document.getElementById('al-conf-box').innerHTML = `
+      <div class="adm-conf-grid">
+        <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">店舗名</div><div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">${document.getElementById('al-name').value}</div></div>
+        <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">業種</div><div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">${document.getElementById('al-genre').value}</div></div>
+        <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">時給</div><div style="font-size:.85rem;font-weight:700;color:var(--or);">¥${parseInt(document.getElementById('al-min').value).toLocaleString()}〜¥${parseInt(document.getElementById('al-max').value).toLocaleString()}</div></div>
+        <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">プラン</div><div style="font-size:.85rem;font-weight:700;color:var(--or);">${planNames[alPlan]}</div></div>
+        <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">担当者</div><div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">${document.getElementById('al-contact').value}</div></div>
+        <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">ステータス</div><div style="font-size:.85rem;font-weight:700;color:${status==='active'?'#22c55e':'#f59e0b'};">${statusNames[status]}</div></div>
+      </div>
+      ${feats.length ? `<div style="margin-top:10px;font-size:.72rem;color:#555;padding:8px 10px;background:#f9f9f9;border-radius:6px;">特典: ${feats.join(' · ')}</div>` : ''}`;
+  }
+  alStep++;
+  alUpdateProg();
+}
+
+function alBack(step) {
+  alStep = step - 1;
+  alUpdateProg();
+}
+
+async function alSubmit() {
+  const btn = document.getElementById('al-submit-btn');
+  btn.disabled = true; btn.textContent = '登録中...';
+  try {
+    const feats = [];
+    document.querySelectorAll('#al-feats input:checked').forEach(cb => feats.push(cb.value));
+    /* owners テーブルの実列: contact_nameは存在しないため除外 */
+    const prText = document.getElementById('al-pr').value.trim();
+    const payload = {
+      store_name: document.getElementById('al-name').value.trim(),
+      genre: document.getElementById('al-genre').value,
+      station: document.getElementById('al-station').value.trim(),
+      hourly_min: parseInt(document.getElementById('al-min').value),
+      hourly_max: parseInt(document.getElementById('al-max').value),
+      hours: document.getElementById('al-hours').value.trim(),
+      description: prText,
+      features: feats,
+      plan: alPlan,
+      email: document.getElementById('al-email').value.trim(),
+      phone: document.getElementById('al-phone').value.trim(),
+      status: document.getElementById('al-status').value,
+      admin_memo: document.getElementById('al-memo')?.value.trim() || '',
+    };
+    const { data: ownerData, error } = await sbAdmin.from('owners').insert(payload).select().single();
+    if (error) throw new Error(error.message);
+    /* ── stores テーブルにも連動登録（求職者サイトに表示するため） ── */
+    const storesPayload = {
+      owner_id: ownerData.id,
+      name: payload.store_name,
+      genre: payload.genre,
+      address: payload.station || '',
+      hourly_min: payload.hourly_min,
+      hourly_max: payload.hourly_max,
+      hours: payload.hours,
+      station: payload.station || '',
+      features: payload.features,
+      pr_text: prText,
+      status: payload.status,
+      owner_email: payload.email,
+    };
+    const { error: stErr } = await sbAdmin.from('stores').insert(storesPayload);
+    if (stErr) console.error('stores insert error:', stErr.message);
+    const storeName = payload.store_name;
+    const statusLabel = payload.status === 'active' ? '掲載中として公開されました' : '審査中として登録されました';
+    document.getElementById('al-done-title').textContent = `「${storeName}」を登録しました`;
+    document.getElementById('al-done-sub').textContent = `${statusLabel}。\n掲載店舗管理から確認・編集できます。`;
+    [1,2,3].forEach(n => { const el = document.getElementById('al-s'+n); if(el) el.style.display='none'; });
+    document.getElementById('al-done').style.display = 'block';
+    [1,2,3].forEach(n => document.getElementById('alp'+n).style.background = 'var(--or)');
+    admToast('✅', `「${storeName}」を登録しました`);
+    if (typeof loadAdminData === 'function') loadAdminData();
+  } catch(e) {
+    admToast('❌', '登録エラー: ' + e.message);
+    btn.disabled = false; btn.textContent = '✅ 登録する';
+  }
+}
+
+function alReset() {
+  alStep = 1; alPlan = 'standard';
+  // フォームリセット
+  ['al-name','al-station','al-min','al-max','al-hours','al-pr','al-contact','al-email','al-phone','al-memo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = id === 'al-station' ? '錦糸町駅' : ''; }
+  });
+  document.getElementById('al-genre').value = '';
+  document.getElementById('al-status').value = 'pending';
+  document.querySelectorAll('#al-feats input').forEach(cb => cb.checked = false);
+  alSelPlan('standard');
+  alUpdateProg();
+}
 
 /* ══ SAVE STORE SETTINGS ══ */
 function saveStoreSettings() {
@@ -1805,6 +2095,196 @@ function timeAgoAdmin(iso) {
   if (h < 24) return h + '時間前';
   return Math.floor(h / 24) + '日前';
 }
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+
+/* ── DB データ読み込み ── */
+async function loadAdminData() {
+  const now = new Date();
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  // 並列取得
+  const [appsRes, ownersRes] = await Promise.all([
+    sbAdmin.from('applications').select('*').order('created_at', { ascending: false }).limit(100),
+    sbAdmin.from('owners').select('*').order('created_at', { ascending: false })
+  ]);
+
+  const apps   = appsRes.data  || [];
+  const owners = ownersRes.data || [];
+
+  // ── KPI ──
+  const thisMonthApps = apps.filter(a => a.created_at >= thisMonthStart);
+  const pending = owners.filter(o => o.status === 'pending');
+  const active  = owners.filter(o => o.status === 'active');
+
+  document.getElementById('kpiStores').textContent = active.length;
+  document.getElementById('kpiStoresSub').innerHTML = `<span class="up">▲${pending.length}</span>&nbsp;審査待き`;
+  document.getElementById('kpiApps').textContent = thisMonthApps.length;
+  document.getElementById('kpiAppsSub').innerHTML = `今月合計`;
+  document.getElementById('kpiPending').textContent = pending.length;
+
+  // ── ダッシュボード: 最新申込 ──
+  const recent = apps.slice(0, 5);
+  const dashEl = document.getElementById('dashRecentApps');
+  if (!recent.length) {
+    dashEl.innerHTML = '<div style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">申込データがありません</div>';
+  } else {
+    dashEl.innerHTML = recent.map(a => {
+      const ini = (a.applicant_name || '?').charAt(0);
+      const expBadge = a.experience && a.experience !== '未経験'
+        ? `<span class="abadge ab-on" style="margin-left:5px">${a.experience}</span>`
+        : `<span class="abadge ab-new" style="margin-left:5px">未経験</span>`;
+      const status = a.status === 'done'
+        ? `<span class="abadge ab-on">対応済</span>`
+        : a.status === 'cancelled'
+        ? `<span class="abadge ab-off">キャンセル</span>`
+        : `<span class="abadge ab-rev">未対応</span>`;
+      const contact = a.contact || a.phone || a.email || '—';
+      return `<div class="adm-app">
+        <div class="adm-ava">${ini}</div>
+        <div class="adm-app-info">
+          <div class="adm-app-name">${a.applicant_name||'—'}${a.age?'（'+a.age+'歳）':''}${expBadge}</div>
+          <div class="adm-app-store">${a.store_name||'—'}｜${a.preferred_date||''} ${a.preferred_time||''}</div>
+          <div class="adm-app-acts">
+            <button class="adm-aa adm-aa-ok" onclick="markAppDone('${a.id}',this)">対応済</button>
+            <button class="adm-aa adm-aa-ng" onclick="cancelApp('${a.id}',this)">キャンセル</button>
+          </div>
+        </div>
+        <div class="adm-app-time">${relTime(a.created_at)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── 申込一覧テーブル ──
+  const tbody = document.getElementById('appliesTbody');
+  if (!apps.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">申込データがありません</td></tr>';
+  } else {
+    tbody.innerHTML = apps.map(a => {
+      const expBadge = a.experience && a.experience !== '未経験'
+        ? `<span class="abadge ab-on">${a.experience}</span>`
+        : `<span class="abadge ab-new">未経験</span>`;
+      const stBadge = a.status === 'done'
+        ? `<span class="abadge ab-on">対応済</span>`
+        : a.status === 'cancelled'
+        ? `<span class="abadge ab-off">キャンセル</span>`
+        : `<span class="abadge ab-rev">未対応</span>`;
+      const contact = a.contact || a.phone || a.email || '—';
+      const acts = (!a.status || a.status === 'pending')
+        ? `<button class="adm-tact ok" onclick="markAppDone('${a.id}',this)">対応済</button><button class="adm-tact danger" onclick="cancelApp('${a.id}',this)">キャンセル</button>`
+        : `<button class="adm-tact danger" onclick="deleteApp('${a.id}',this)">削除</button>`;
+      return `<tr>
+        <td><div class="td-main">${a.applicant_name||'—'}${a.age?'（'+a.age+'歳）':''}</div></td>
+        <td><div class="td-main">${a.store_name||'—'}</div></td>
+        <td>${a.preferred_date||''} ${a.preferred_time||''}</td>
+        <td>${expBadge}</td>
+        <td style="font-size:.72rem;color:#555;">${contact}</td>
+        <td>${stBadge}</td>
+        <td style="font-size:.72rem;color:#9ca3af;">${relTime(a.created_at)}</td>
+        <td><div class="adm-tacts">${acts}</div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── 店舗一覧テーブル ──
+  const PLAN_TAG = { premium: '<span class="plan-tag pt-pr">Premium</span>', standard: '<span class="plan-tag pt-st">Standard</span>', light: '<span class="plan-tag pt-lt">Light</span>' };
+  const STATUS_BADGE = { active: '<span class="abadge ab-on">掲載中</span>', pending: '<span class="abadge ab-rev">審査中</span>', suspended: '<span class="abadge ab-off">停止中</span>' };
+  const sTbody = document.getElementById('storesTbody');
+  if (!owners.length) {
+    sTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">店舗データがありません</td></tr>';
+  } else {
+    sTbody.innerHTML = owners.map(o => {
+      const pay = o.hourly_min ? `¥${Number(o.hourly_min).toLocaleString()}〜¥${Number(o.hourly_max||o.hourly_min).toLocaleString()}` : '—';
+      const planTag = PLAN_TAG[o.plan] || `<span class="plan-tag pt-lt">${o.plan||'—'}</span>`;
+      const stBadge = STATUS_BADGE[o.status] || `<span class="abadge">${o.status||'—'}</span>`;
+      const acts = o.status === 'active'
+        ? `<button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="suspendOwner('${o.id}',this)">停止</button>`
+        : o.status === 'pending'
+        ? `<button class="adm-tact ok" onclick="approveOwner('${o.id}',this)">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button>`
+        : `<button class="adm-tact ok" onclick="activateOwner('${o.id}',this)">再開</button>`;
+      return `<tr>
+        <td><div class="td-main">${o.store_name||'—'}</div><div class="td-sub">${o.email||''}</div></td>
+        <td>${o.genre||'—'}</td>
+        <td>${planTag}</td>
+        <td>${stBadge}</td>
+        <td style="font-size:.78rem;">${pay}</td>
+        <td style="font-size:.72rem;color:#9ca3af;">${fmtDate(o.created_at)}</td>
+        <td><div class="adm-tacts">${acts}</div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── 審査待ちテーブル ──
+  const pTbody = document.getElementById('pendingTbody');
+  if (!pending.length) {
+    pTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">審査待ちの申請はありません</td></tr>';
+  } else {
+    pTbody.innerHTML = pending.map(o => {
+      const planTag = PLAN_TAG[o.plan] || `<span class="plan-tag pt-lt">${o.plan||'—'}</span>`;
+      return `<tr>
+        <td>${fmtDate(o.created_at)}</td>
+        <td><div class="td-main">${o.store_name||'—'}</div></td>
+        <td>${o.genre||'—'}</td>
+        <td>${planTag}</td>
+        <td style="font-size:.72rem;">${o.email||'—'}</td>
+        <td><div class="adm-tacts">
+          <button class="adm-tact ok" onclick="approveOwner('${o.id}',this)">承認</button>
+          <button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // 審査待ちバッジを更新
+  const pendingBadgeEl = document.querySelector('[data-admpage="pending"] .adm-si-bdg');
+  if (pendingBadgeEl) pendingBadgeEl.textContent = pending.length;
+}
+
+/* ── DB 操作 ── */
+async function markAppDone(id, btn) {
+  await sbAdmin.from('applications').update({ status: 'done' }).eq('id', id);
+  admToast('✅', '対応済みにしました');
+  loadAdminData();
+}
+async function cancelApp(id, btn) {
+  await sbAdmin.from('applications').update({ status: 'cancelled' }).eq('id', id);
+  admToast('🗑', 'キャンセルしました');
+  loadAdminData();
+}
+async function deleteApp(id, btn) {
+  await sbAdmin.from('applications').delete().eq('id', id);
+  admToast('🗑', '削除しました');
+  loadAdminData();
+}
+async function approveOwner(id, btn) {
+  await sbAdmin.from('owners').update({ status: 'active' }).eq('id', id);
+  await sbAdmin.from('stores').update({ status: 'active' }).eq('owner_id', id);
+  admToast('✅', '承認しました');
+  loadAdminData();
+}
+async function suspendOwner(id, btn) {
+  await sbAdmin.from('owners').update({ status: 'suspended' }).eq('id', id);
+  await sbAdmin.from('stores').update({ status: 'inactive' }).eq('owner_id', id);
+  admToast('⏸', '掲載を停止しました');
+  loadAdminData();
+}
+async function activateOwner(id, btn) {
+  await sbAdmin.from('owners').update({ status: 'active' }).eq('id', id);
+  await sbAdmin.from('stores').update({ status: 'active' }).eq('owner_id', id);
+  admToast('▶', '掲載を再開しました');
+  loadAdminData();
+}
+
+/* ── admNav拡張: ページ遷移時にDBリロード ── */
+const _admNavOrig = admNav;
+window.admNav = function(id, btn) {
+  _admNavOrig(id, btn);
+  if (['dashboard','applies','stores','pending'].includes(id)) loadAdminData();
+};
 </script>
 
 </body>

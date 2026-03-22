@@ -179,6 +179,10 @@ select.form-fi{appearance:none;cursor:pointer;}
   .sidebar{position:fixed;top:56px;left:0;bottom:0;z-index:200;transform:translateX(-100%);}
   .sidebar.open{transform:translateX(0);}
   .sb-toggle{display:block;}
+  /* ヘッダーのズレ対策: 狭い画面で不要な要素を非表示 */
+  .hdr-title{display:none;}
+  .hdr-badge{display:none;}
+  #hdrDate{display:none;}
   .kpi-grid{grid-template-columns:1fr 1fr;}
   .content{padding:12px;}
   .row2{grid-template-columns:1fr;}

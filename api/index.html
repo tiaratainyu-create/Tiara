@@ -644,43 +644,39 @@ document.getElementById('applyModal').addEventListener('click',function(e){if(e.
 function upStep(){[1,2,3].forEach(n=>{document.getElementById('sp'+n).classList.toggle('act',n===step);const m=document.getElementById('ms'+n);m.className='ms'+(n===step?' act':n<step?' done':'');});document.getElementById('mpf').style.width={1:'33%',2:'66%',3:'100%'}[step];document.getElementById('mTitle').textContent={1:'プロフィールを入力',2:'体入希望日を選ぶ',3:'内容を確認する'}[step];document.getElementById('btnBack').style.display=step>1?'block':'none';const nb=document.getElementById('btnNext');if(step===3){nb.className='btn-sub';nb.textContent='体入に申し込む →';nb.onclick=submit;}else{nb.className='btn-next';nb.textContent='次へ →';nb.onclick=stepNext;}}
 function stepNext(){if(step===2){document.getElementById('ccStore').textContent=aS+(aT?' — '+aT:'');document.getElementById('ccName').textContent=document.getElementById('fName').value||'（未入力）';document.getElementById('ccAge').textContent=document.getElementById('fAge').value;document.getElementById('ccExp').textContent=document.getElementById('fExp').value;document.getElementById('ccContact').textContent=document.getElementById('fContact').value||'（未入力）';document.getElementById('ccDate').textContent=aD+' '+aTime;document.getElementById('ccPay').textContent=aP||'—';}if(step<3){step++;upStep();}}
 function stepBack(){if(step>1){step--;upStep();}}
-async function submit(){
-  const btn=document.getElementById('btnNext');
-  btn.textContent='送信中...';btn.disabled=true;
-  try{
-    // Supabaseのapplicationsテーブルに直接保存
-    await fetch(`${SUPABASE_URL}/rest/v1/applications`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},
-      body:JSON.stringify({
-        store_name:aS,
-        applicant_name:document.getElementById('fName').value||'（未入力）',
-        age:document.getElementById('fAge').value,
-        experience:document.getElementById('fExp').value,
-        contact:document.getElementById('fContact').value||'（未入力）',
-        preferred_date:aD+' '+aTime,
-        store_id:aStoreId
+async function submit() {
+  _baseSubmit();
+  const store   = document.getElementById('mStore')?.textContent || '';
+  const name    = document.getElementById('fName')?.value || '';
+  const age     = document.getElementById('fAge')?.value || '';
+  const exp     = document.getElementById('fExp')?.value || '';
+  const email   = document.getElementById('fEmail')?.value || '';
+  const phone   = document.getElementById('fPhone')?.value || '';
+  const contact = document.getElementById('fContact')?.value || '';
+  const date    = document.getElementById('ccDate')?.textContent || '';
+  const appData = { store, name, age, email, phone, contact, date, time: aTime, at: new Date().toISOString() };
+  addApp(appData);
+  try {
+    await fetch('/api/applications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        store_name:     store,
+        applicant_name: name,
+        age,
+        experience:     exp,
+        email,
+        phone,
+        contact,
+        preferred_date: date,
+        preferred_time: aTime,
+        user_id:        currentUser ? currentUser.id : null,
+        _email_only:    false,
       })
     });
-    // メール通知はAPIルート経由
-    await fetch('/api/applications',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        store_name:aS,
-        applicant_name:document.getElementById('fName').value||'（未入力）',
-        age:document.getElementById('fAge').value,
-        experience:document.getElementById('fExp').value,
-        contact:document.getElementById('fContact').value||'（未入力）',
-        contact_type:'LINE/電話',
-        preferred_date:aD,
-        preferred_time:aTime,
-        store_id:aStoreId
-      })
-    });
-  }catch(e){console.error(e);}
-  ['mHead','mBody','mFoot'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('msuc').classList.add('show');
+  } catch (e) {
+    console.error('申込API エラー:', e);
+  }
 }
 function pickD(el){document.querySelectorAll('.dopt').forEach(d=>d.classList.remove('pk'));el.classList.add('pk');const m=el.querySelector('.do-m').textContent.replace('月','');const day=el.querySelector('.do-d').textContent;aD=m+'月'+day+'日';}
 function pickT(el){document.querySelectorAll('.topt').forEach(t=>t.classList.remove('pk'));el.classList.add('pk');aTime=el.textContent;}

@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
 body{
   font-family:'Noto Sans JP',sans-serif;
   background:#f4f4f4;color:#222;
@@ -20,7 +20,7 @@ body{
   --red:#e53935;--grn:#2e7d32;--blu:#1565c0;
   --hdr:60px;
 }
-img{display:block;}
+img{display:block;max-width:100%;}
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:#f4f4f4;}
 ::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px;}
@@ -142,8 +142,9 @@ img{display:block;}
   border:1px solid var(--bd);
   margin-top:-18px;position:relative;z-index:10;
   overflow:hidden;
+  width:100%;
 }
-.sb-rows{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);}
+.sb-rows{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);overflow:hidden;}
 .sb-row{
   flex:1;display:flex;align-items:center;
   padding:13px 16px;gap:10px;
@@ -236,7 +237,7 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
 .sidebar-apply:hover{opacity:.88;}
 
 /* ── CONTENT AREA ── */
-.content-area{}
+.content-area{min-width:0;overflow:hidden;}
 .result-bar{
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:16px;flex-wrap:wrap;gap:8px;
@@ -256,8 +257,8 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
 /* ── JOB GRID ── */
 .jgrid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:16px;
+  grid-template-columns:1fr;
+  gap:12px;
 }
 
 /* ── JOB CARD ── */
@@ -268,7 +269,8 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
   box-shadow:0 1px 4px rgba(0,0,0,.06);
   transition:box-shadow .18s,transform .18s;
   animation:cIn .35s ease both;
-  display:flex;flex-direction:column;
+  display:flex;flex-direction:row;
+  min-width:0;
 }
 .jcard:hover{box-shadow:0 6px 24px rgba(0,0,0,.12);transform:translateY(-2px);}
 @keyframes cIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -295,7 +297,8 @@ input[type=range]{width:100%;height:4px;accent-color:var(--or);cursor:pointer;}
 
 /* card image */
 .c-img{
-  height:170px;overflow:hidden;
+  width:220px;min-width:220px;
+  overflow:hidden;
   background:#eee;position:relative;flex-shrink:0;
 }
 .c-img img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease;}
@@ -505,6 +508,123 @@ select.fi{appearance:none;cursor:pointer;}
 .bnav{display:none;}
 
 /* ══════════════════════════════
+   詳細モーダル PRセクション（大手求人サイト風）
+══════════════════════════════ */
+.pr-sec{
+  border-left:3px solid #e0e0e0;
+  margin-bottom:0;
+  background:#fff;
+}
+.pr-sec-head{
+  background:#f5f5f5;padding:8px 16px;
+  font-size:.7rem;font-weight:900;color:#555;letter-spacing:.3px;
+  display:flex;align-items:center;gap:6px;
+  border-bottom:1px solid #ededed;
+}
+.pr-sec-body{
+  padding:12px 16px;font-size:.82rem;color:#333;
+  line-height:2;white-space:pre-wrap;
+  overflow-wrap:break-word;word-break:break-word;
+  border-bottom:1px solid #f5f5f5;
+  background:#fff;
+}
+.pr-sec.pr-salary{border-left-color:#f59e0b;}
+.pr-sec.pr-salary .pr-sec-head{background:#fffbf2;color:#92400e;border-bottom-color:#fde68a;}
+.pr-sec.pr-shift{border-left-color:#38bdf8;}
+.pr-sec.pr-shift .pr-sec-head{background:#f0f9ff;color:#0369a1;border-bottom-color:#bae6fd;}
+.pr-sec.pr-msg{border-left-color:#a78bfa;}
+.pr-sec.pr-msg .pr-sec-head{background:#f5f3ff;color:#6d28d9;border-bottom-color:#ede9fe;}
+.pr-sec.pr-msg .pr-sec-body{
+  background:#fff;color:#374151;
+  font-style:italic;
+  position:relative;padding-left:32px;
+}
+.pr-sec.pr-msg .pr-sec-body::before{
+  content:'"';position:absolute;left:12px;top:4px;
+  font-size:1.8rem;color:#d8b4fe;line-height:1;font-family:Georgia,serif;
+}
+.pr-sec.pr-benefits .pr-sec-body{
+  display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;
+}
+.pr-benefit-tag{
+  font-size:.72rem;font-weight:700;padding:4px 11px;border-radius:20px;
+  background:#f5f5f5;border:1.5px solid #e5e5e5;color:#555;
+}
+.pr-catch-banner{
+  margin:12px 16px 0;padding:11px 14px;
+  background:#fff;
+  border:1.5px solid rgba(255,107,0,.2);
+  border-left:3px solid var(--or);
+  border-radius:0 6px 6px 0;
+  font-size:.88rem;font-weight:700;line-height:1.75;
+  color:#333;letter-spacing:.2px;
+}
+.dtl-header{padding:16px 18px 14px;border-bottom:1px solid #f0f0f0;}
+.dtl-pay-box{
+  background:#fff;border:1.5px solid #e5e5e5;
+  border-left:3px solid var(--or);
+  border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:10px;
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
+}
+.dtl-footer{
+  display:flex;gap:10px;
+  border-top:1px solid #f0f0f0;
+  position:sticky;bottom:0;background:#fff;
+}
+.dtl-info-label{font-size:.63rem;font-weight:900;color:#777;letter-spacing:.5px;margin-bottom:8px;padding:14px 18px 0;}
+
+/* ── 詳細ギャラリー ── */
+.dtl-gallery-wrap{
+  width:100%;height:260px;overflow:hidden;
+  display:flex;gap:3px;background:#eee;flex-shrink:0;
+}
+.gal-main{flex:3;overflow:hidden;min-width:0;}
+.gal-subs{flex:2;display:flex;flex-direction:column;gap:3px;min-width:0;}
+.gal-sub{flex:1;overflow:hidden;position:relative;}
+.gal-more{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.5);color:#fff;
+  font-size:1.1rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  letter-spacing:1px;
+}
+.dtl-gallery-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+@media(max-width:768px){
+  .dtl-gallery-wrap{height:210px;}
+}
+/* ══ 詳細フルページ ══ */
+.detail-page-bg{position:fixed;inset:0;z-index:500;pointer-events:none;}
+.detail-page-bg.open{pointer-events:all;}
+.detail-page{
+  position:absolute;inset:0;background:#fff;
+  overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.detail-page-bg.open .detail-page{transform:translateX(0);}
+.detail-nav{
+  position:sticky;top:0;z-index:10;
+  background:#fff;border-bottom:1px solid #f0f0f0;
+  padding:0 40px;height:52px;
+  display:flex;align-items:center;gap:10px;
+}
+.detail-nav-back{
+  background:none;border:none;
+  font-size:.85rem;font-weight:700;color:var(--or);
+  cursor:pointer;display:flex;align-items:center;gap:5px;
+  font-family:'Noto Sans JP',sans-serif;padding:8px 0;flex:1;
+}
+.detail-inner{width:100%;background:#fff;padding:0 40px;}
+.dtl-footer{padding:12px 40px calc(12px + env(safe-area-inset-bottom));}
+@media(max-width:768px){
+  .detail-nav{padding:0 14px;}
+  .detail-inner{padding:0;overflow:hidden auto;}
+  .dtl-footer{padding:12px 14px calc(12px + env(safe-area-inset-bottom));}
+  #dtlInfoGrid{grid-template-columns:1fr!important;padding:0 14px 16px!important;}
+  .rw2m{grid-template-columns:1fr;}
+}
+
+/* ══════════════════════════════
    MODAL (3-step bottom sheet)
 ══════════════════════════════ */
 .modal-bg{
@@ -591,6 +711,11 @@ select.fi{appearance:none;cursor:pointer;}
 .suc-close{background:var(--or);color:#fff;border:none;padding:12px 32px;border-radius:8px;font-size:.85rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:4px;}
 
 /* ══════════════════════════════
+   SEARCH BOX OUTER WRAPPER
+══════════════════════════════ */
+.sb-outer{max-width:1280px;margin:0 auto;padding:0 20px;}
+
+/* ══════════════════════════════
    RESPONSIVE: TABLET (≤ 1024px)
 ══════════════════════════════ */
 @media(max-width:1024px){
@@ -608,59 +733,58 @@ select.fi{appearance:none;cursor:pointer;}
    RESPONSIVE: MOBILE (≤ 768px)
 ══════════════════════════════ */
 @media(max-width:768px){
-  /* Header */
+  /* ── Header ── */
   .hdr-menu{display:block;}
   .hdr-search,.hnav-tab,.hdr-btns{display:none;}
-  .logo{flex:1;text-align:center;}
+  .hdr-inner{padding:0 14px;}
+  .logo{flex:1;text-align:center;font-size:1.3rem;}
 
-  /* Hero */
-  .hero{padding:22px 14px 20px;}
-  .hero h1{font-size:1.35rem;}
-  .hero-stats .hs{min-width:auto;flex:1;padding:8px 10px;}
+  /* ── Hero ── */
+  .hero{padding:20px 14px 28px;overflow:hidden;}
+  .hero h1{font-size:1.28rem;line-height:1.4;margin-bottom:6px;}
+  .hero-sub{font-size:.74rem;margin-bottom:16px;line-height:1.65;}
+  /* stats: 2×2グリッドで固定（4並びはモバイルで崩れるため） */
+  .hero-stats{gap:8px;flex-wrap:wrap;}
+  .hero-stats .hs{flex:0 0 calc(50% - 4px);min-width:0;padding:9px 10px;box-sizing:border-box;}
+  .hs-n{font-size:1.05rem;}
 
-  /* Search box */
-  .search-box{margin:0 10px;margin-top:-16px;}
+  /* ── Search box ── */
+  .sb-outer{padding:0 10px;}
+  .search-box{margin:0;margin-top:-16px;}
   .sb-rows{flex-direction:column;}
   .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:11px 14px;}
   .sb-row:last-of-type{border-bottom:none;}
 
-  /* Main layout: single column */
+  /* ── Main layout: 1 column ── */
   .main-wrap{
     grid-template-columns:1fr;
     margin:14px auto 80px;
-    padding:0 10px;gap:0;
+    padding:0 10px;
+    gap:0;
   }
 
-  /* Sidebar becomes horizontal filter strip */
-  .sidebar{
-    position:static;
-    flex-direction:column;
-    margin-bottom:14px;
-  }
-  /* Compact mode for mobile sidebar */
+  /* ── Sidebar (hidden by default, toggle shows it) ── */
+  .sidebar{position:static;flex-direction:column;margin-bottom:14px;}
   .sbox{border-radius:8px;}
 
-  /* Cards become 1 column */
-  .jgrid{
-    grid-template-columns:1fr;
-    gap:10px;
-  }
+  /* ── Cards: 1 column, vertical ── */
+  .jgrid{grid-template-columns:1fr;gap:10px;}
+  .jcard{flex-direction:column;}
+  .c-img{width:100%;min-width:unset;height:150px;}
 
-  /* Card image */
-  .c-img{height:150px;}
-
-  /* Owner */
-  .owner-wrap{padding:0 10px;margin-top:16px;margin-bottom:80px;}
-  .owner-hero{padding:24px 18px;border-radius:10px;}
-  .owner-hero h2{font-size:1.3rem;}
+  /* ── Owner page ── */
+  .owner-wrap{padding:0 12px;margin-top:16px;margin-bottom:80px;}
+  .owner-hero{padding:22px 16px;border-radius:10px;}
+  .owner-hero h2{font-size:1.25rem;}
   .o-grid{grid-template-columns:1fr;}
 
-  /* Bottom nav */
+  /* ── Bottom nav ── */
   .bnav{
     display:flex;
     position:fixed;bottom:0;left:0;right:0;
     background:var(--wh);border-top:1px solid var(--bd);
     z-index:300;box-shadow:0 -2px 10px rgba(0,0,0,.08);
+    padding-bottom:env(safe-area-inset-bottom);
   }
   .bnav-item{
     flex:1;display:flex;flex-direction:column;align-items:center;
@@ -672,9 +796,9 @@ select.fi{appearance:none;cursor:pointer;}
   .ni{font-size:1.2rem;color:var(--lt);}
   .nl{font-size:.55rem;color:var(--lt);font-family:'Noto Sans JP',sans-serif;}
 
-  /* Modal: bottom sheet on mobile */
+  /* ── Modal: bottom sheet ── */
   .modal-bg{align-items:flex-end;padding:0;}
-  .modal{border-radius:16px 16px 0 0;max-width:100%;max-height:88vh;}
+  .modal{border-radius:16px 16px 0 0;max-width:100%;max-height:88vh;width:100%;}
   .modal-bg.open .modal{transform:none;}
   .modal-bg:not(.open) .modal{transform:translateY(100%)!important;}
 }
@@ -683,10 +807,73 @@ select.fi{appearance:none;cursor:pointer;}
    RESPONSIVE: SMALL MOBILE (≤ 380px)
 ══════════════════════════════ */
 @media(max-width:380px){
-  .hero h1{font-size:1.15rem;}
-  .hdr-inner{padding:0 12px;}
+  .hero{padding:18px 12px 24px;}
+  .hero h1{font-size:1.1rem;}
+  .hero-sub{font-size:.7rem;}
+  .hdr-inner{padding:0 10px;}
+  .logo{font-size:1.2rem;}
   .main-wrap{padding:0 8px;}
+  .sb-outer{padding:0 8px;}
   .owner-wrap{padding:0 8px;}
+}
+
+/* ══════════════════════════════
+   MOBILE DRAWER（ハンバーガーメニュー）
+══════════════════════════════ */
+.mob-drawer{
+  display:none;
+  background:var(--wh);
+  border-bottom:2px solid var(--bd);
+  padding:14px 16px;
+  flex-direction:column;
+  gap:10px;
+  box-shadow:0 4px 14px rgba(0,0,0,.1);
+  position:relative;z-index:250;
+}
+.mob-drawer.open{display:flex;}
+.mob-drawer-search{
+  display:flex;align-items:center;
+  border:2px solid var(--bd);border-radius:8px;overflow:hidden;
+}
+.mob-drawer-search input{
+  flex:1;padding:10px 14px;border:none;outline:none;
+  font-size:.88rem;font-family:'Noto Sans JP',sans-serif;color:var(--dk);
+  background:transparent;
+}
+.mob-drawer-search input:focus{outline:none;}
+.mob-drawer-search button{
+  padding:10px 14px;background:var(--or);border:none;cursor:pointer;font-size:.9rem;
+}
+.mob-drawer-nav{display:flex;gap:8px;flex-wrap:wrap;}
+.mob-drawer-nav .hnav-tab{display:flex!important;font-size:.82rem;}
+.mob-drawer-auth{display:flex;gap:8px;}
+.mob-drawer-auth .hbtn{flex:1;text-align:center;padding:10px;}
+
+/* ══════════════════════════════
+   MOBILE FILTER TOGGLE
+══════════════════════════════ */
+.mob-filter-toggle{
+  display:none;
+  width:100%;
+  background:var(--wh);
+  border:1.5px solid var(--bd);
+  border-radius:8px;
+  padding:11px 14px;
+  font-size:.83rem;font-weight:700;color:var(--dk);
+  cursor:pointer;font-family:'Noto Sans JP',sans-serif;
+  align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.mob-filter-toggle span{font-size:.75rem;color:var(--md);}
+
+@media(max-width:768px){
+  .mob-filter-toggle{display:flex;}
+  .sidebar{display:none;}
+  .sidebar.mob-open{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:14px;
+  }
 }
 </style>
 </head>
@@ -695,7 +882,7 @@ select.fi{appearance:none;cursor:pointer;}
 <!-- ══ HEADER ══ -->
 <header class="hdr">
   <div class="hdr-inner">
-    <button class="hdr-menu">☰</button>
+    <button class="hdr-menu" onclick="toggleMobDrawer()">☰</button>
     <a class="logo" href="#">Tiara<small>錦糸町 夜のお仕事</small></a>
     <div class="hdr-search">
       <input type="text" placeholder="キーワード、店名、業種で検索...">
@@ -711,6 +898,22 @@ select.fi{appearance:none;cursor:pointer;}
     </div>
   </div>
 </header>
+
+<!-- ══ MOBILE DRAWER ══ -->
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-drawer-search">
+    <input type="text" id="mobKeyword" placeholder="キーワード、店名で検索..." oninput="document.getElementById('hdrKeyword').value=this.value;debounceSearch();">
+    <button onclick="document.getElementById('hdrKeyword').value=document.getElementById('mobKeyword').value;doHeaderSearch();toggleMobDrawer();">🔍</button>
+  </div>
+  <div class="mob-drawer-nav">
+    <button class="hnav-tab on" onclick="showPage('seeker',this);toggleMobDrawer();">求人を探す</button>
+    <button class="hnav-tab" onclick="showPage('favs',this);toggleMobDrawer();">♡ お気に入り</button>
+  </div>
+  <div class="mob-drawer-auth" id="mobDrawerAuth">
+    <button class="hbtn out" onclick="toggleMobDrawer();openAuthModal('register');">会員登録</button>
+    <button class="hbtn fill" onclick="toggleMobDrawer();openAuthModal('login');">ログイン</button>
+  </div>
+</div>
 
 <!-- ══════════════════════════════
      PAGE: SEEKER
@@ -733,7 +936,7 @@ select.fi{appearance:none;cursor:pointer;}
   </div>
 
   <!-- SEARCH BOX -->
-  <div style="max-width:1280px;margin:0 auto;padding:0 20px;">
+  <div class="sb-outer">
     <div class="search-box">
       <div class="sb-rows">
         <div class="sb-row">
@@ -759,7 +962,11 @@ select.fi{appearance:none;cursor:pointer;}
   <div class="main-wrap">
 
     <!-- ── SIDEBAR ── -->
-    <aside class="sidebar">
+    <button class="mob-filter-toggle" id="mobFilterToggle" onclick="toggleMobSidebar()">
+      <span>🔧 絞り込み条件</span>
+      <span id="mobFilterArr">▼ 開く</span>
+    </button>
+    <aside class="sidebar" id="mainSidebar">
 
       <!-- こだわり条件 -->
       <div class="sbox">
@@ -974,55 +1181,54 @@ select.fi{appearance:none;cursor:pointer;}
 </div>
 
 
-<!-- ══ 店舗詳細モーダル ══ -->
-<div class="modal-bg" id="detailModal">
-  <div class="modal" style="max-width:600px;border-radius:14px;overflow:hidden;">
-    <button class="m-close" onclick="closeDetail()" style="position:absolute;top:10px;right:10px;z-index:20;background:rgba(0,0,0,.45);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;">✕</button>
+<!-- ══ 店舗詳細フルページ ══ -->
+<div class="detail-page-bg" id="detailModal">
+  <div class="detail-page">
 
-    <!-- 写真スライダー -->
-    <div id="dtlImgWrap" style="position:relative;background:#1a1a2e;height:220px;overflow:hidden;flex-shrink:0;">
-      <div id="dtlImgTrack" style="display:flex;height:100%;transition:transform .3s ease;"></div>
-      <!-- ナビ -->
-      <button id="dtlImgPrev" onclick="dtlImgNav(-1)" style="display:none;position:absolute;left:8px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.9rem;z-index:5;">‹</button>
-      <button id="dtlImgNext" onclick="dtlImgNav(1)" style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.9rem;z-index:5;">›</button>
-      <!-- ドット -->
-      <div id="dtlImgDots" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;"></div>
-      <!-- バッジ -->
-      <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:10;"></div>
+    <!-- トップナビ -->
+    <div class="detail-nav">
+      <button class="detail-nav-back" onclick="closeDetail()">← 一覧に戻る</button>
+      <button id="dtlNavFavBtn" onclick="dtlToggleFav()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--lt);line-height:1;padding:6px;">♡</button>
     </div>
 
-    <!-- スクロールエリア -->
-    <div style="overflow-y:auto;max-height:calc(88vh - 220px - 68px);">
+    <!-- コンテンツ（max-width中央揃え） -->
+    <div class="detail-inner">
+      <!-- 画像ギャラリーエリア -->
+      <div style="position:relative;width:100%;overflow:hidden;">
+        <div id="dtlGallery" class="dtl-gallery-wrap"></div>
+        <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;max-width:calc(100% - 20px);"></div>
+      </div>
 
       <!-- ヘッダー情報 -->
-      <div style="padding:16px 18px 12px;border-bottom:1px solid var(--bd);">
+      <div class="dtl-header">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;">
-          <div id="dtlName" style="font-size:1.15rem;font-weight:900;color:var(--dk);line-height:1.3;"></div>
-          <div id="dtlGenreTag" style="font-size:.63rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;"></div>
+          <div id="dtlName" style="font-size:1.18rem;font-weight:900;color:var(--dk);line-height:1.35;min-width:0;overflow-wrap:break-word;word-break:break-word;"></div>
+          <div id="dtlGenreTag" style="font-size:.65rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:3px;"></div>
         </div>
-        <!-- 住所（マップリンク） -->
-        <div id="dtlLoc" style="font-size:.74rem;margin-bottom:10px;"></div>
-        <!-- 時給 -->
-        <div id="dtlPay" class="c-pay" style="margin-bottom:10px;"></div>
-        <!-- 特徴チップ -->
-        <div id="dtlChips" class="c-chips" style="flex-wrap:wrap;gap:5px;"></div>
+        <div id="dtlLoc" style="font-size:.72rem;color:var(--md);display:flex;align-items:center;gap:3px;margin-bottom:12px;"></div>
+        <div id="dtlPay" class="dtl-pay-box"></div>
+        <div id="dtlChips" class="c-chips" style="flex-wrap:wrap;gap:5px;margin-bottom:0;"></div>
       </div>
 
-      <!-- 詳細情報グリッド -->
-      <div style="padding:14px 18px;border-bottom:1px solid var(--bd);">
-        <div style="font-size:.7rem;font-weight:900;color:var(--dk);margin-bottom:10px;display:flex;align-items:center;gap:5px;"><span style="width:3px;height:12px;background:var(--or);border-radius:2px;display:inline-block;"></span>基本情報</div>
-        <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+      <!-- キャッチコピー -->
+      <div id="dtlCatchBanner" style="display:none;"></div>
+
+      <!-- PRセクション -->
+      <div id="dtlDesc"></div>
+
+      <!-- 基本情報グリッド -->
+      <div id="dtlInfoWrap" style="display:none;">
+        <div class="dtl-info-label">📋 基本情報</div>
+        <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 18px 16px;"></div>
       </div>
 
-      <!-- PR文（大手求人サイト風セクション） -->
-      <div id="dtlPrSections" style="padding:14px 18px;border-bottom:1px solid var(--bd);"></div>
-
+      <div style="height:80px;"></div>
     </div>
 
-    <!-- フッター（固定） -->
-    <div style="padding:12px 18px;display:flex;gap:10px;border-top:1px solid var(--bd);background:#fff;flex-shrink:0;">
-      <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:12px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
-      <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:12px;border-radius:8px;font-size:.9rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 12px rgba(255,107,0,.3);">体入に応募する →</button>
+    <!-- フッター（sticky） -->
+    <div class="dtl-footer">
+      <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:13px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
+      <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:13px;border-radius:8px;font-size:.92rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 14px rgba(255,107,0,.35);">体入に応募する →</button>
     </div>
   </div>
 </div>
@@ -1126,10 +1332,28 @@ const PER_PAGE = 9;
 async function fetchStores() {
   const grid = document.getElementById('storeGrid');
   try {
-    const res = await fetch('/api/stores');
-    if (!res.ok) throw new Error('API error ' + res.status);
-    const data = await res.json();
-    allStores = Array.isArray(data) ? data : (data.stores || []);
+    let stores = null;
+
+    // まずAPIを試み、失敗したらSupabase直接クエリにフォールバック
+    try {
+      const res = await fetch('/api/stores');
+      if (res.ok) {
+        const data = await res.json();
+        stores = Array.isArray(data) ? data : (data.stores || []);
+      }
+    } catch (_) {}
+
+    if (!stores) {
+      const { data, error } = await sb.from('stores')
+        .select('*')
+        .eq('status', 'active')
+        .order('plan', { ascending: false })
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      stores = data || [];
+    }
+
+    allStores = stores;
 
     // ヒーロー件数更新
     const cnt = allStores.length;
@@ -1281,10 +1505,31 @@ function openDetail(s) {
   const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
   const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
 
-  /* ── 写真スライダー ── */
-  const photos = [];
-  if (s.image_url) photos.push(s.image_url);
-  if (s.image_urls && Array.isArray(s.image_urls)) photos.push(...s.image_urls);
+  // 画像ギャラリー（s.images 配列 or s.image_url にフォールバック）
+  const imgs = Array.isArray(s.images) && s.images.length ? s.images
+    : s.image_url ? [s.image_url] : [];
+  const placeholder = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);">
+    <div style="font-size:2.5rem;">${icon}</div>
+    <div style="font-size:.7rem;color:#aaa;font-weight:700;letter-spacing:1px;">${s.name}</div>
+  </div>`;
+  let galleryHtml = '';
+  if (imgs.length === 0) {
+    galleryHtml = `<div style="flex:1;">${placeholder}</div>`;
+  } else if (imgs.length === 1) {
+    galleryHtml = `<div style="flex:1;overflow:hidden;"><img src="${imgs[0]}" style="width:100%;height:100%;object-fit:cover;display:block;"></div>`;
+  } else {
+    const subs = imgs.slice(1, 3);
+    const extra = imgs.length > 3 ? imgs.length - 3 : 0;
+    const subsHtml = subs.map((url, i) => {
+      const showMore = extra > 0 && i === subs.length - 1;
+      return `<div class="gal-sub">
+        <img src="${url}">
+        ${showMore ? `<div class="gal-more">+${extra}枚</div>` : ''}
+      </div>`;
+    }).join('');
+    galleryHtml = `<div class="gal-main"><img src="${imgs[0]}"></div><div class="gal-subs">${subsHtml}</div>`;
+  }
+  document.getElementById('dtlGallery').innerHTML = galleryHtml;
 
   const track = document.getElementById('dtlImgTrack');
   const dots  = document.getElementById('dtlImgDots');
@@ -1425,6 +1670,8 @@ function openDetail(s) {
   favBtn.textContent = isFav ? '♥ お気に入り済み' : '♡ お気に入り';
   favBtn.style.color       = isFav ? 'var(--red)' : 'var(--md)';
   favBtn.style.borderColor = isFav ? 'var(--red)' : 'var(--bd)';
+  document.getElementById('dtlNavFavBtn').textContent = isFav ? '♥' : '♡';
+  document.getElementById('dtlNavFavBtn').style.color = isFav ? 'var(--red)' : 'var(--lt)';
 
   /* ── 応募ボタン ── */
   document.getElementById('dtlApplyBtn').onclick = () => {
@@ -1432,6 +1679,7 @@ function openDetail(s) {
     openModal(s.name, s.genre || '', payMin + payMax);
   };
 
+  history.pushState({detail:true},'',location.pathname+location.search);
   document.getElementById('detailModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1440,6 +1688,7 @@ function openDetail(s) {
 function closeDetail() {
   document.getElementById('detailModal').classList.remove('open');
   document.body.style.overflow = '';
+  history.replaceState(null,'',location.pathname+location.search);
 }
 
 function dtlToggleFav() {
@@ -1449,12 +1698,14 @@ function dtlToggleFav() {
   const s = currentDetailStore;
   const favs = currentUser ? favsCache : getLocalFavs();
   const existing = favs.find(f => (f.store_name || f.name) === s.name);
+  const navBtn = document.getElementById('dtlNavFavBtn');
   if (existing) {
     removeFavByIdx(favs.indexOf(existing));
     const btn = document.getElementById('dtlFavBtn');
     btn.textContent = '♡ お気に入り';
     btn.style.color = 'var(--md)';
     btn.style.borderColor = 'var(--bd)';
+    navBtn.textContent = '♡'; navBtn.style.color = 'var(--lt)';
   } else {
     const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
     const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
@@ -1474,11 +1725,13 @@ function dtlToggleFav() {
     btn.textContent = '♥ お気に入り済み';
     btn.style.color = 'var(--red)';
     btn.style.borderColor = 'var(--red)';
+    navBtn.textContent = '♥'; navBtn.style.color = 'var(--red)';
   }
 }
 
-document.getElementById('detailModal').addEventListener('click', function(e) {
-  if (e.target === this) closeDetail();
+// ブラウザバックで詳細ページを閉じる
+window.addEventListener('popstate', function() {
+  if (document.getElementById('detailModal').classList.contains('open')) closeDetail();
 });
 
 // ソート変更
@@ -2067,6 +2320,23 @@ function setLoading(btnId, on) {
   btn.disabled = on;
   btn.style.opacity = on ? '.6' : '1';
   btn.textContent = on ? '処理中...' : (btnId.includes('Reg') ? '無料で登録する →' : 'ログイン →');
+}
+
+/* ── モバイルドロワー ── */
+function toggleMobDrawer() {
+  const drawer = document.getElementById('mobDrawer');
+  drawer.classList.toggle('open');
+  // ログイン済みの場合は認証ボタンを非表示
+  const authRow = document.getElementById('mobDrawerAuth');
+  if (authRow && currentUser) authRow.style.display = 'none';
+}
+
+/* ── モバイルサイドバー トグル ── */
+function toggleMobSidebar() {
+  const sb = document.getElementById('mainSidebar');
+  const arr = document.getElementById('mobFilterArr');
+  sb.classList.toggle('mob-open');
+  if (arr) arr.textContent = sb.classList.contains('mob-open') ? '▲ 閉じる' : '▼ 開く';
 }
 </script>
 

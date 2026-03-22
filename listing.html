@@ -31,6 +31,36 @@ img{display:block;}
 .nav-login{border:2px solid var(--or);color:var(--or);padding:8px 16px;border-radius:6px;font-size:.78rem;font-weight:700;text-decoration:none;white-space:nowrap;transition:all .15s;}
 .nav-login:hover{background:var(--or3);}
 @media(max-width:768px){.nav-links{display:none;}}
+/* ══ MOBILE NAV DRAWER ══ */
+.mob-nav-btn{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#555;padding:4px;margin-left:auto;}
+.mob-nav-drawer{
+  display:none;
+  background:#fff;
+  border-bottom:2px solid #e0e0e0;
+  padding:14px 18px;
+  flex-direction:column;
+  gap:6px;
+  box-shadow:0 4px 14px rgba(0,0,0,.1);
+  position:sticky;top:60px;z-index:800;
+}
+.mob-nav-drawer.open{display:flex;}
+.mob-nav-drawer a{
+  display:block;padding:11px 14px;
+  font-size:.88rem;font-weight:700;color:#333;
+  text-decoration:none;border-radius:7px;
+  transition:background .13s;
+}
+.mob-nav-drawer a:hover,.mob-nav-drawer a:active{background:#fff3e8;color:var(--or);}
+.mob-nav-drawer .mob-cta{
+  background:var(--or);color:#fff;
+  padding:12px 14px;border-radius:7px;
+  font-size:.88rem;font-weight:900;
+  text-decoration:none;text-align:center;
+  margin-top:4px;
+}
+@media(max-width:768px){
+  .mob-nav-btn{display:block;}
+}
 
 /* ══ HERO ══ */
 .hero{background:linear-gradient(135deg,#fff8f0 0%,#fff3e8 100%);border-bottom:1px solid var(--bd);}
@@ -300,11 +330,15 @@ textarea.fi{resize:vertical;min-height:72px;}
   
 }
 @media(max-width:768px){
-  .hero{padding-top:80px;}
+  /* stickyナビなのでpadding-top不要 — hero-innerの48pxで十分 */
+  .hero{padding-top:0;}
+  .hero-inner{padding-top:28px;padding-left:10px;padding-right:10px;}
   .hero h1{font-size:2rem;}
   .feat-grid{grid-template-columns:1fr;}
   .flow-grid{grid-template-columns:1fr 1fr;}
-  
+  /* ヒーロー統計: 2×2レイアウト */
+  .hero-stats{flex-wrap:wrap;}
+  .hstat{min-width:calc(50% - 0.5px);}
   .sec-title{font-size:1.7rem;}
   .plans-wrap{gap:12px;}
   .row2{grid-template-columns:1fr;}
@@ -335,8 +369,18 @@ textarea.fi{resize:vertical;min-height:72px;}
       <a href="owner.html" class="nav-login">ログイン</a>
       <a href="#" class="nav-cta" onclick="openModal();return false;">無料で掲載申請</a>
     </div>
+    <button class="mob-nav-btn" onclick="toggleListingNav()" aria-label="メニュー">☰</button>
   </div>
 </nav>
+<div class="mob-nav-drawer" id="listingNavDrawer">
+  <a href="#features" onclick="toggleListingNav()">✦ 特長</a>
+  <a href="#plans" onclick="toggleListingNav()">💰 料金プラン</a>
+  <a href="#guarantee" onclick="toggleListingNav()">🛡 保証制度</a>
+  <a href="#flow" onclick="toggleListingNav()">📋 掲載の流れ</a>
+  <a href="#faq" onclick="toggleListingNav()">❓ よくある質問</a>
+  <a href="owner.html" onclick="toggleListingNav()">🔑 ログイン</a>
+  <a href="#" class="mob-cta" onclick="toggleListingNav();openModal();return false;">無料で掲載申請する →</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -856,6 +900,7 @@ async function doPay() {
 
 function faqToggle(btn) { btn.parentElement.classList.toggle('open'); }
 window.addEventListener('scroll', () => { document.querySelector('.nav').style.boxShadow = window.scrollY > 20 ? '0 4px 16px rgba(0,0,0,.12)' : '0 2px 8px rgba(0,0,0,.08)'; });
+function toggleListingNav() { document.getElementById('listingNavDrawer').classList.toggle('open'); }
 </script>
 </body>
 </html>
