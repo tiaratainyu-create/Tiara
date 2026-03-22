@@ -132,48 +132,70 @@ img{display:block;max-width:100%;}
 .hs-l{font-size:.58rem;color:rgba(255,255,255,.75);margin-top:3px;}
 
 /* ── HERO LAYOUT: 2-column ── */
-.hero{padding:44px 20px 54px;}
+.hero{padding:0 0 40px;overflow:visible;}
 .hero-inner{
-  display:flex;align-items:center;
-  gap:40px;
+  max-width:1280px;margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  min-height:300px;
 }
-.hero-text{flex:1;min-width:0;}
+.hero-text{
+  padding:44px 32px 44px 20px;
+}
 
-/* ── 複数写真ビジュアル ── */
+/* ── 写真エリア：背景に溶け込む ── */
 .hero-visual{
-  flex-shrink:0;
   position:relative;
-  width:360px;height:280px;
+  height:320px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:0;
 }
 .hero-photo{
   position:absolute;
   object-fit:cover;object-position:center top;
-  border-radius:14px;
-  border:3px solid rgba(255,255,255,.9);
-  box-shadow:0 8px 28px rgba(0,0,0,.28);
+  border-radius:0;
   display:block;
+  /* 背景に溶け込むグラデーションマスク */
+  -webkit-mask-image:
+    radial-gradient(ellipse 80% 95% at 50% 20%,
+      rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+  mask-image:
+    radial-gradient(ellipse 80% 95% at 50% 20%,
+      rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
 }
-/* 左の写真 */
+/* 左の写真（少し奥・小さめ） */
 .hero-photo:nth-child(1){
-  width:148px;height:210px;
-  left:0;bottom:0;
-  transform:rotate(-5deg);
+  width:190px;height:290px;
+  left:10px;bottom:0;
   z-index:1;
+  -webkit-mask-image:
+    radial-gradient(ellipse 75% 90% at 55% 15%,
+      rgba(0,0,0,.9) 25%, rgba(0,0,0,0) 100%);
+  mask-image:
+    radial-gradient(ellipse 75% 90% at 55% 15%,
+      rgba(0,0,0,.9) 25%, rgba(0,0,0,0) 100%);
 }
-/* 中央メイン写真（大きめ・前面） */
+/* 中央メイン（最大・前面） */
 .hero-photo:nth-child(2){
-  width:162px;height:240px;
+  width:210px;height:320px;
   left:50%;transform:translateX(-50%);
-  top:0;
+  bottom:0;
   z-index:3;
-  box-shadow:0 12px 36px rgba(0,0,0,.35);
 }
-/* 右の写真 */
+/* 右の写真（少し奥・小さめ） */
 .hero-photo:nth-child(3){
-  width:148px;height:210px;
-  right:0;bottom:0;
-  transform:rotate(5deg);
+  width:190px;height:290px;
+  right:10px;bottom:0;
   z-index:2;
+  -webkit-mask-image:
+    radial-gradient(ellipse 75% 90% at 45% 15%,
+      rgba(0,0,0,.9) 25%, rgba(0,0,0,0) 100%);
+  mask-image:
+    radial-gradient(ellipse 75% 90% at 45% 15%,
+      rgba(0,0,0,.9) 25%, rgba(0,0,0,0) 100%);
 }
 
 /* ══════════════════════════════
@@ -879,11 +901,12 @@ select.fi{appearance:none;cursor:pointer;}
 
   /* ── Hero ── */
   .hero{padding:20px 14px 28px;overflow:hidden;}
-  .hero-inner{flex-direction:column;gap:16px;}
-  .hero-visual{width:300px;height:220px;margin:0 auto;}
-  .hero-photo:nth-child(1){width:118px;height:165px;}
-  .hero-photo:nth-child(2){width:130px;height:188px;}
-  .hero-photo:nth-child(3){width:118px;height:165px;}
+  .hero-inner{grid-template-columns:1fr;min-height:auto;}
+  .hero-text{padding:24px 16px 0;}
+  .hero-visual{height:220px;width:100%;}
+  .hero-photo:nth-child(1){width:140px;height:210px;left:20px;}
+  .hero-photo:nth-child(2){width:155px;height:220px;}
+  .hero-photo:nth-child(3){width:140px;height:210px;right:20px;}
   .hero h1{font-size:1.28rem;line-height:1.4;margin-bottom:6px;}
   .hero-sub{font-size:.74rem;margin-bottom:16px;line-height:1.65;}
   /* stats: 2×2グリッドで固定（4並びはモバイルで崩れるため） */
@@ -1086,17 +1109,17 @@ select.fi{appearance:none;cursor:pointer;}
       </div>
       <!-- 女性イラスト右 -->
       <div class="hero-visual">
-        <!-- 左 -->
+        <!-- 左：スマイリング女性・カクテルドレス (Pexels #15797146) -->
         <img class="hero-photo"
-          src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&h=420&fit=crop&crop=top"
+          src="https://images.pexels.com/photos/15797146/pexels-photo-15797146.jpeg?auto=compress&cs=tinysrgb&w=380&h=580&fit=crop"
           alt="" loading="eager">
-        <!-- 中央メイン -->
+        <!-- 中央メイン：東京・エレガントドレス (Pexels #26998033) -->
         <img class="hero-photo"
-          src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=320&h=480&fit=crop&crop=top"
+          src="https://images.pexels.com/photos/26998033/pexels-photo-26998033.jpeg?auto=compress&cs=tinysrgb&w=420&h=640&fit=crop"
           alt="" loading="eager">
-        <!-- 右 -->
+        <!-- 右：ブルードレス (Pexels #15797150) -->
         <img class="hero-photo"
-          src="https://images.unsplash.com/photo-1524504388940-b1c1722653e8?w=300&h=420&fit=crop&crop=top"
+          src="https://images.pexels.com/photos/15797150/pexels-photo-15797150.jpeg?auto=compress&cs=tinysrgb&w=380&h=580&fit=crop"
           alt="" loading="eager">
       </div>
     </div>
