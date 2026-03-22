@@ -131,6 +131,112 @@ img{display:block;max-width:100%;}
 .hs-n{font-size:1.2rem;font-weight:900;color:var(--wh);line-height:1;}
 .hs-l{font-size:.58rem;color:rgba(255,255,255,.75);margin-top:3px;}
 
+/* ── HERO LAYOUT: 2-column ── */
+.hero-inner{
+  display:flex;align-items:center;
+  gap:24px;
+}
+.hero-text{flex:1;min-width:0;}
+.hero-visual{
+  flex-shrink:0;width:220px;height:220px;
+  position:relative;display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden;
+}
+.hero-visual svg{width:100%;height:100%;}
+
+/* ══════════════════════════════
+   TRUST SECTION
+══════════════════════════════ */
+.trust-section{
+  max-width:1280px;margin:28px auto 0;
+  padding:0 20px;
+}
+.trust-section h2{
+  font-size:.75rem;font-weight:900;color:var(--md);
+  letter-spacing:2px;text-align:center;margin-bottom:16px;
+  text-transform:uppercase;
+}
+.trust-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.trust-card{
+  background:var(--wh);border:1px solid var(--bd);
+  border-radius:12px;padding:20px 14px;
+  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  transition:transform .15s,box-shadow .15s;
+}
+.trust-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.09);}
+.trust-ico{
+  font-size:1.8rem;margin-bottom:10px;line-height:1;
+}
+.trust-title{
+  font-size:.82rem;font-weight:900;color:var(--dk);
+  margin-bottom:5px;
+}
+.trust-desc{
+  font-size:.68rem;color:var(--md);line-height:1.6;
+}
+.trust-badge{
+  display:inline-block;background:var(--or3);color:var(--or);
+  font-size:.6rem;font-weight:700;padding:2px 8px;
+  border-radius:20px;margin-top:6px;
+}
+
+/* ══════════════════════════════
+   VOICE SECTION (先輩の声)
+══════════════════════════════ */
+.voice-section{
+  max-width:1280px;margin:28px auto 0;
+  padding:0 20px;
+}
+.voice-header{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;margin-bottom:18px;
+}
+.voice-header h2{
+  font-size:1.05rem;font-weight:900;color:var(--dk);
+}
+.voice-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.voice-card{
+  background:var(--wh);border:1px solid var(--bd);
+  border-radius:12px;padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  position:relative;
+}
+.voice-card::before{
+  content:'"';position:absolute;top:10px;left:14px;
+  font-size:3rem;color:var(--or);opacity:.15;
+  font-family:serif;line-height:1;
+}
+.voice-avatar{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.voice-avt-img{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,#ffd6e0,#ffb3c6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+  border:2px solid rgba(255,107,0,.15);
+}
+.voice-name{font-size:.82rem;font-weight:900;color:var(--dk);}
+.voice-meta{font-size:.65rem;color:var(--md);margin-top:1px;}
+.voice-stars{color:#f5a623;font-size:.75rem;margin-top:2px;}
+.voice-text{
+  font-size:.76rem;color:#444;line-height:1.75;
+  padding-top:4px;
+}
+.voice-income{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--or3);border-radius:6px;
+  padding:5px 10px;margin-top:10px;
+  font-size:.7rem;font-weight:700;color:var(--or);
+}
+
 /* ══════════════════════════════
    SEARCH BOX (hero bottom)
 ══════════════════════════════ */
@@ -741,12 +847,20 @@ select.fi{appearance:none;cursor:pointer;}
 
   /* ── Hero ── */
   .hero{padding:20px 14px 28px;overflow:hidden;}
+  .hero-inner{flex-direction:column;gap:0;}
+  .hero-visual{width:140px;height:140px;margin:0 auto;}
   .hero h1{font-size:1.28rem;line-height:1.4;margin-bottom:6px;}
   .hero-sub{font-size:.74rem;margin-bottom:16px;line-height:1.65;}
   /* stats: 2×2グリッドで固定（4並びはモバイルで崩れるため） */
   .hero-stats{gap:8px;flex-wrap:wrap;}
   .hero-stats .hs{flex:0 0 calc(50% - 4px);min-width:0;padding:9px 10px;box-sizing:border-box;}
   .hs-n{font-size:1.05rem;}
+  /* trust */
+  .trust-section,.voice-section{padding:0 14px;}
+  .trust-grid{grid-template-columns:repeat(2,1fr);}
+  .trust-card{padding:14px 10px;}
+  /* voice */
+  .voice-grid{grid-template-columns:1fr;}
 
   /* ── Search box ── */
   .sb-outer{padding:0 10px;}
@@ -923,14 +1037,75 @@ select.fi{appearance:none;cursor:pointer;}
   <!-- HERO -->
   <div class="hero">
     <div class="hero-inner">
-      <div class="hero-tag">📍 錦糸町エリア限定 · 全<span id="heroStoreCnt">—</span>店舗掲載中</div>
-      <h1>夜のお仕事探しは、<br><mark>Tiara</mark> で。</h1>
-      <p class="hero-sub">体験入店OK · 日払いOK · 未経験歓迎 · 即日対応</p>
-      <div class="hero-stats">
-        <div class="hs"><div class="hs-n" id="heroStoreCnt2">—</div><div class="hs-l">掲載店舗</div></div>
-        <div class="hs"><div class="hs-n">¥4,500</div><div class="hs-l">平均時給</div></div>
-        <div class="hs"><div class="hs-n">即日</div><div class="hs-l">体入対応</div></div>
-        <div class="hs"><div class="hs-n">24h</div><div class="hs-l">問合わせ</div></div>
+      <!-- テキスト左 -->
+      <div class="hero-text">
+        <div class="hero-tag">📍 錦糸町エリア限定 · 全<span id="heroStoreCnt">—</span>店舗掲載中</div>
+        <h1>夜のお仕事探しは、<br><mark>Tiara</mark> で。</h1>
+        <p class="hero-sub">体験入店OK · 日払いOK · 未経験歓迎 · 即日対応</p>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-n" id="heroStoreCnt2">—</div><div class="hs-l">掲載店舗</div></div>
+          <div class="hs"><div class="hs-n">¥4,500</div><div class="hs-l">平均時給</div></div>
+          <div class="hs"><div class="hs-n">即日</div><div class="hs-l">体入対応</div></div>
+          <div class="hs"><div class="hs-n">24h</div><div class="hs-l">問合わせ</div></div>
+        </div>
+      </div>
+      <!-- 女性イラスト右 -->
+      <div class="hero-visual">
+        <svg viewBox="0 0 220 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- 背景丸 -->
+          <circle cx="110" cy="140" r="105" fill="rgba(255,255,255,0.12)"/>
+          <!-- 光沢ハイライト -->
+          <ellipse cx="80" cy="60" rx="28" ry="18" fill="rgba(255,255,255,0.08)"/>
+          <!-- ドレス -->
+          <path d="M68 155 Q60 200 52 270 L168 270 Q160 200 152 155 Z" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <!-- ウエスト -->
+          <ellipse cx="110" cy="155" rx="42" ry="10" fill="rgba(255,255,255,0.18)"/>
+          <!-- 胴体 -->
+          <rect x="82" y="110" width="56" height="50" rx="14" fill="rgba(255,255,255,0.25)"/>
+          <!-- 首 -->
+          <rect x="101" y="92" width="18" height="22" rx="9" fill="rgba(255,230,210,0.9)"/>
+          <!-- 頭 -->
+          <ellipse cx="110" cy="80" rx="26" ry="28" fill="rgba(255,230,210,0.95)"/>
+          <!-- 髪（上） -->
+          <ellipse cx="110" cy="57" rx="27" ry="16" fill="rgba(60,30,10,0.75)"/>
+          <!-- 髪（サイド左） -->
+          <path d="M84 68 Q74 90 80 115 Q86 100 90 85Z" fill="rgba(60,30,10,0.7)"/>
+          <!-- 髪（サイド右） -->
+          <path d="M136 68 Q146 90 140 115 Q134 100 130 85Z" fill="rgba(60,30,10,0.7)"/>
+          <!-- 目（左） -->
+          <ellipse cx="100" cy="80" rx="5" ry="3.5" fill="rgba(255,255,255,0.9)"/>
+          <ellipse cx="100" cy="80" rx="3" ry="2.5" fill="#4a2800"/>
+          <ellipse cx="99" cy="79" rx="1" ry="1" fill="#fff"/>
+          <!-- 目（右） -->
+          <ellipse cx="120" cy="80" rx="5" ry="3.5" fill="rgba(255,255,255,0.9)"/>
+          <ellipse cx="120" cy="80" rx="3" ry="2.5" fill="#4a2800"/>
+          <ellipse cx="119" cy="79" rx="1" ry="1" fill="#fff"/>
+          <!-- まつ毛 -->
+          <path d="M95 77 Q97 74 100 76" stroke="#2a1000" stroke-width="1" fill="none"/>
+          <path d="M115 77 Q117 74 120 76" stroke="#2a1000" stroke-width="1" fill="none"/>
+          <!-- 鼻 -->
+          <path d="M108 88 Q110 91 112 88" stroke="rgba(180,100,60,0.5)" stroke-width="1" fill="none"/>
+          <!-- 口 -->
+          <path d="M104 95 Q110 100 116 95" stroke="rgba(220,80,80,0.8)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- ほっぺ（左） -->
+          <ellipse cx="93" cy="88" rx="8" ry="5" fill="rgba(255,150,150,0.22)"/>
+          <!-- ほっぺ（右） -->
+          <ellipse cx="127" cy="88" rx="8" ry="5" fill="rgba(255,150,150,0.22)"/>
+          <!-- 腕（左） -->
+          <path d="M82 115 Q65 130 62 155" stroke="rgba(255,220,190,0.85)" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <!-- 腕（右） -->
+          <path d="M138 115 Q155 130 158 155" stroke="rgba(255,220,190,0.85)" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <!-- ティアラ（王冠） -->
+          <path d="M90 57 L95 45 L103 55 L110 38 L117 55 L125 45 L130 57Z" fill="rgba(255,220,80,0.9)" stroke="rgba(255,180,0,0.8)" stroke-width="0.5"/>
+          <circle cx="110" cy="39" r="3" fill="rgba(255,80,120,0.9)"/>
+          <circle cx="95" cy="46" r="2" fill="rgba(255,220,80,1)"/>
+          <circle cx="125" cy="46" r="2" fill="rgba(255,220,80,1)"/>
+          <!-- キラキラ -->
+          <text x="40" y="100" font-size="10" fill="rgba(255,255,255,0.6)">✦</text>
+          <text x="170" y="80" font-size="8" fill="rgba(255,255,255,0.5)">✦</text>
+          <text x="55" y="200" font-size="7" fill="rgba(255,255,255,0.4)">✦</text>
+          <text x="165" y="190" font-size="9" fill="rgba(255,255,255,0.5)">✦</text>
+        </svg>
       </div>
     </div>
   </div>
@@ -955,6 +1130,82 @@ select.fi{appearance:none;cursor:pointer;}
         </div>
       </div>
       <button class="sb-btn">求人を検索する</button>
+    </div>
+  </div>
+
+  <!-- ══ 安心ポイント ══ -->
+  <div class="trust-section">
+    <h2>✦ Tiara が選ばれる理由</h2>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-ico">🙈</div>
+        <div class="trust-title">顔出しなしOK</div>
+        <div class="trust-desc">写真・SNS掲載は<br>すべてご本人の許可制</div>
+        <span class="trust-badge">プライバシー保護</span>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ico">👩‍💼</div>
+        <div class="trust-title">女性スタッフ在籍</div>
+        <div class="trust-desc">女性スタッフが<br>丁寧にサポートします</div>
+        <span class="trust-badge">安心相談</span>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ico">🔒</div>
+        <div class="trust-title">個人情報厳守</div>
+        <div class="trust-desc">登録情報は<br>第三者に一切提供しません</div>
+        <span class="trust-badge">秘密厳守</span>
+      </div>
+      <div class="trust-card">
+        <div class="trust-ico">💬</div>
+        <div class="trust-title">無料LINE相談</div>
+        <div class="trust-desc">24時間いつでも<br>気軽にご相談ください</div>
+        <span class="trust-badge">完全無料</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 先輩の声 ══ -->
+  <div class="voice-section">
+    <div class="voice-header">
+      <h2>👑 働く女性の声</h2>
+    </div>
+    <div class="voice-grid">
+      <div class="voice-card">
+        <div class="voice-avatar">
+          <div class="voice-avt-img">🌸</div>
+          <div>
+            <div class="voice-name">Aさん（22歳）</div>
+            <div class="voice-meta">キャバクラ勤務 · 未経験スタート</div>
+            <div class="voice-stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="voice-text">最初はすごく不安でしたが、女性スタッフさんが親身に相談に乗ってくれて安心できました。体入から1週間でレギュラー入りできました！</p>
+        <div class="voice-income">💰 月収 28万円〜達成</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar">
+          <div class="voice-avt-img">🌷</div>
+          <div>
+            <div class="voice-name">Bさん（25歳）</div>
+            <div class="voice-meta">ラウンジ勤務 · 掛け持ちOK</div>
+            <div class="voice-stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="voice-text">Tiaraで紹介してもらったお店は雰囲気が良くてすぐ馴染めました。日払い対応なので急な出費にも安心です。</p>
+        <div class="voice-income">💰 週3〜で月20万円</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-avatar">
+          <div class="voice-avt-img">🌺</div>
+          <div>
+            <div class="voice-name">Cさん（20歳）</div>
+            <div class="voice-meta">クラブ勤務 · 学生アルバイト</div>
+            <div class="voice-stars">★★★★☆</div>
+          </div>
+        </div>
+        <p class="voice-text">学業と両立できるシフトで働けています。ノルマもなくプレッシャーなし。スタッフの方が優しく、質問も何でも答えてもらえます。</p>
+        <div class="voice-income">💰 週2で月15万円</div>
+      </div>
     </div>
   </div>
 
