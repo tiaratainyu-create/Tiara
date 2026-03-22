@@ -1877,8 +1877,30 @@ async function alSubmit() {
       status: document.getElementById('al-status').value,
       admin_memo: document.getElementById('al-memo').value.trim(),
     };
-    const { error } = await sbAdmin.from('owners').insert(payload);
+    let { data: ownerData, error } = await sbAdmin.from('owners').insert(payload).select().single();
+    if (error && error.message.includes('admin_memo')) {
+      /* admin_memo列が未認識の場合、フォールバックで再試行 */
+      delete payload.admin_memo;
+      ({ data: ownerData, error } = await sbAdmin.from('owners').insert(payload).select().single());
+    }
     if (error) throw new Error(error.message);
+    /* ── stores テーブルにも連動登録（求職者サイトに表示するため） ── */
+    const storesPayload = {
+      owner_id: ownerData.id,
+      name: payload.store_name,
+      genre: payload.genre,
+      address: payload.station || '',
+      hourly_min: payload.hourly_min,
+      hourly_max: payload.hourly_max,
+      hours: payload.hours,
+      station: payload.station || '',
+      features: payload.features,
+      pr_text: payload.pr_text,
+      status: payload.status,
+      owner_email: payload.email,
+    };
+    const { error: stErr } = await sbAdmin.from('stores').insert(storesPayload);
+    if (stErr) console.error('stores insert error:', stErr.message);
     const storeName = payload.store_name;
     const statusLabel = payload.status === 'active' ? '掲載中として公開されました' : '審査中として登録されました';
     document.getElementById('al-done-title').textContent = `「${storeName}」を登録しました`;
@@ -2126,16 +2148,19 @@ async function deleteApp(id, btn) {
 }
 async function approveOwner(id, btn) {
   await sbAdmin.from('owners').update({ status: 'active' }).eq('id', id);
+  await sbAdmin.from('stores').update({ status: 'active' }).eq('owner_id', id);
   admToast('✅', '承認しました');
   loadAdminData();
 }
 async function suspendOwner(id, btn) {
   await sbAdmin.from('owners').update({ status: 'suspended' }).eq('id', id);
+  await sbAdmin.from('stores').update({ status: 'inactive' }).eq('owner_id', id);
   admToast('⏸', '掲載を停止しました');
   loadAdminData();
 }
 async function activateOwner(id, btn) {
   await sbAdmin.from('owners').update({ status: 'active' }).eq('id', id);
+  await sbAdmin.from('stores').update({ status: 'active' }).eq('owner_id', id);
   admToast('▶', '掲載を再開しました');
   loadAdminData();
 }
