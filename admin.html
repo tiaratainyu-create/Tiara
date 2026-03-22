@@ -1881,18 +1881,19 @@ async function alSubmit() {
     if (error) throw new Error(error.message);
     /* ── stores テーブルにも連動登録（求職者サイトに表示するため） ── */
     const storesPayload = {
-      owner_id: ownerData.id,
       name: payload.store_name,
       genre: payload.genre,
       address: payload.station || '',
-      hourly_min: payload.hourly_min,
-      hourly_max: payload.hourly_max,
-      hours: payload.hours,
-      station: payload.station || '',
+      min_wage: payload.hourly_min,
+      max_wage: payload.hourly_max,
+      opening_time: payload.hours,
       features: payload.features,
       pr_text: prText,
+      plan: alPlan,
       status: payload.status,
       owner_email: payload.email,
+      phone: payload.phone,
+      owner_name: payload.store_name,
     };
     const { error: stErr } = await sbAdmin.from('stores').insert(storesPayload);
     if (stErr) console.error('stores insert error:', stErr.message);
