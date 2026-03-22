@@ -1861,9 +1861,8 @@ async function alSubmit() {
   try {
     const feats = [];
     document.querySelectorAll('#al-feats input:checked').forEach(cb => feats.push(cb.value));
-    /* owners テーブルに存在する列のみ */
-    const contactName = document.getElementById('al-contact').value.trim();
-    const adminMemo = document.getElementById('al-memo').value.trim();
+    /* owners テーブルに存在する列のみ（description=PR文, contact_name/admin_memoは非対応列）*/
+    const prText = document.getElementById('al-pr').value.trim();
     const payload = {
       store_name: document.getElementById('al-name').value.trim(),
       genre: document.getElementById('al-genre').value,
@@ -1871,7 +1870,7 @@ async function alSubmit() {
       hourly_min: parseInt(document.getElementById('al-min').value),
       hourly_max: parseInt(document.getElementById('al-max').value),
       hours: document.getElementById('al-hours').value.trim(),
-      pr_text: document.getElementById('al-pr').value.trim(),
+      description: prText,
       features: feats,
       plan: alPlan,
       email: document.getElementById('al-email').value.trim(),
@@ -1891,7 +1890,7 @@ async function alSubmit() {
       hours: payload.hours,
       station: payload.station || '',
       features: payload.features,
-      pr_text: payload.pr_text,
+      pr_text: prText,
       status: payload.status,
       owner_email: payload.email,
     };
