@@ -1875,7 +1875,6 @@ async function alSubmit() {
       email: document.getElementById('al-email').value.trim(),
       phone: document.getElementById('al-phone').value.trim(),
       status: document.getElementById('al-status').value,
-      admin_memo: document.getElementById('al-memo').value.trim(),
     };
     const { error } = await sbAdmin.from('owners').insert(payload);
     if (error) throw new Error(error.message);
