@@ -1422,7 +1422,7 @@ function goPage(p) {
 function getSortedStores() {
   let s = [...allStores];
   if (currentSort === 'pay') {
-    s.sort((a, b) => (b.hourly_max || 0) - (a.hourly_max || 0));
+    s.sort((a, b) => (b.max_wage || 0) - (a.max_wage || 0));
   } else if (currentSort === 'new') {
     s.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
   }
@@ -1431,14 +1431,14 @@ function getSortedStores() {
 
 function buildCard(s, idx) {
   const icon = STORE_ICONS[s.genre] || '🏪';
-  const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
-  const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
-  const payStr = payMin + (payMax ? '〜¥' + Number(s.hourly_max).toLocaleString() : '');
+  const payMin = s.min_wage ? '¥' + Number(s.min_wage).toLocaleString() : '—';
+  const payMax = s.max_wage ? '〜¥' + Number(s.max_wage).toLocaleString() : '';
+  const payStr = payMin + (payMax ? '〜¥' + Number(s.max_wage).toLocaleString() : '');
 
   // バッジ
   let badges = '';
   if (s.plan === 'premium') badges += '<span class="cbdg b-pick">★ PICK UP</span>';
-  if (s.hourly_max >= 10000) badges += '<span class="cbdg b-hi">高時給</span>';
+  if (s.max_wage >= 10000) badges += '<span class="cbdg b-hi">高時給</span>';
   if (s.is_urgent) badges += '<span class="cbdg b-urg">🔥 急募</span>';
   if (s.is_new) badges += '<span class="cbdg b-new">✨ NEW</span>';
 
@@ -1502,8 +1502,8 @@ function openDetail(s) {
   if (typeof s === 'string') { try { s = JSON.parse(s.replace(/&quot;/g,'"')); } catch(e) { return; } }
   currentDetailStore = s;
   const icon = STORE_ICONS[s.genre] || '🏪';
-  const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
-  const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
+  const payMin = s.min_wage ? '¥' + Number(s.min_wage).toLocaleString() : '—';
+  const payMax = s.max_wage ? '〜¥' + Number(s.max_wage).toLocaleString() : '';
 
   // 画像ギャラリー（s.images 配列 or s.image_url にフォールバック）
   const imgs = Array.isArray(s.images) && s.images.length ? s.images
@@ -1531,48 +1531,10 @@ function openDetail(s) {
   }
   document.getElementById('dtlGallery').innerHTML = galleryHtml;
 
-  const track = document.getElementById('dtlImgTrack');
-  const dots  = document.getElementById('dtlImgDots');
-  const prev  = document.getElementById('dtlImgPrev');
-  const next  = document.getElementById('dtlImgNext');
-  let imgIdx  = 0;
-
-  if (photos.length > 0) {
-    track.innerHTML = photos.map(url =>
-      `<div style="min-width:100%;height:220px;flex-shrink:0;overflow:hidden;">
-        <img src="${url}" style="width:100%;height:100%;object-fit:cover;">
-      </div>`
-    ).join('');
-    dots.innerHTML = photos.length > 1 ? photos.map((_, i) =>
-      `<div style="width:${i===0?'18px':'8px'};height:8px;border-radius:4px;background:${i===0?'#fff':'rgba(255,255,255,.4)'};transition:all .3s;cursor:pointer;" onclick="dtlImgGo(${i})"></div>`
-    ).join('') : '';
-    if (photos.length > 1) { prev.style.display='flex'; next.style.display='flex'; }
-    else { prev.style.display='none'; next.style.display='none'; }
-  } else {
-    track.innerHTML = `<div style="min-width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a1a2e,#2d1f3d);">
-      <div style="font-size:3rem;">${icon}</div>
-      <div style="font-size:.72rem;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:1px;">${s.name}</div>
-    </div>`;
-    dots.innerHTML = ''; prev.style.display='none'; next.style.display='none';
-  }
-
-  window.dtlImgGo = function(idx) {
-    imgIdx = idx;
-    track.style.transform = `translateX(-${idx * 100}%)`;
-    dots.querySelectorAll('div').forEach((d, i) => {
-      d.style.width = i === idx ? '18px' : '8px';
-      d.style.background = i === idx ? '#fff' : 'rgba(255,255,255,.4)';
-    });
-  };
-  window.dtlImgNav = function(dir) {
-    const total = photos.length || 1;
-    dtlImgGo((imgIdx + dir + total) % total);
-  };
-
   /* ── バッジ ── */
   let badges = '';
   if (s.plan === 'premium') badges += '<span class="cbdg b-pick">★ PICK UP</span>';
-  if (s.hourly_max >= 10000) badges += '<span class="cbdg b-hi">高時給</span>';
+  if (s.max_wage >= 10000) badges += '<span class="cbdg b-hi">高時給</span>';
   if (s.is_urgent) badges += '<span class="cbdg b-urg">🔥 急募</span>';
   if (s.is_new)    badges += '<span class="cbdg b-new">✨ NEW</span>';
   document.getElementById('dtlBadges').innerHTML = badges;
@@ -1587,7 +1549,7 @@ function openDetail(s) {
   const mapUrl = /iPhone|iPad/.test(ua)
     ? 'maps://maps.apple.com/?q=' + encodeURIComponent(addr)
     : 'https://maps.google.com/?q='  + encodeURIComponent(addr);
-  const station = s.station ? ` · ${s.station}` : '';
+  const station = s.address ? ` · ${s.address}` : '';
   document.getElementById('dtlLoc').innerHTML =
     `<a href="${mapUrl}" target="_blank" style="color:var(--or);text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-size:.74rem;">
       📍 ${addr}${station}
@@ -1608,8 +1570,8 @@ function openDetail(s) {
   /* ── 詳細情報グリッド ── */
   const grid = document.getElementById('dtlInfoGrid');
   const items = [
-    { l: '営業時間', v: s.hours },
-    { l: '最寄り駅', v: s.station },
+    { l: '営業時間', v: s.opening_time },
+    { l: '最寄り駅', v: s.address },
     { l: '体験入店', v: features.includes('体験入店OK') ? '✅ OK' : null },
     { l: '日払い',   v: features.includes('日払いOK')  ? '✅ OK' : null },
     { l: '未経験',   v: features.includes('未経験歓迎') ? '✅ 歓迎' : null },
@@ -1626,7 +1588,7 @@ function openDetail(s) {
 
   /* ── PR文（大手求人サイト風セクション区分け） ── */
   const rawDesc = s.description || '';
-  const prSec = document.getElementById('dtlPrSections');
+  const prSec = document.getElementById('dtlDesc');
   const sectionDefs = [
     { key: '雰囲気',    icon: '🏠', label: 'お店の雰囲気・特徴' },
     { key: '給与',      icon: '💰', label: '給与・待遇' },
@@ -1707,8 +1669,8 @@ function dtlToggleFav() {
     btn.style.borderColor = 'var(--bd)';
     navBtn.textContent = '♡'; navBtn.style.color = 'var(--lt)';
   } else {
-    const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
-    const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
+    const payMin = s.min_wage ? '¥' + Number(s.min_wage).toLocaleString() : '—';
+    const payMax = s.max_wage ? '〜¥' + Number(s.max_wage).toLocaleString() : '';
     if (currentUser) {
       sb.from('favourites').insert({ user_id: currentUser.id, store_name: s.name, genre: s.genre, pay: payMin + payMax, desc: s.description || '' }).select().single().then(({ data }) => {
         if (data) favsCache.unshift(data);

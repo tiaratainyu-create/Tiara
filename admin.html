@@ -1628,7 +1628,7 @@ function openAdminLogin() {
 function tryAdminLogin() {
   const id = document.getElementById('adm-id').value.trim();
   const pw = document.getElementById('adm-pw').value;
-  if (id === 'admin' && pw === 'tiara2025') {
+  if (id === 'admin' && pw === 'toukatutiara') {
     document.getElementById('adminLoginBg').style.display = 'none';
     document.getElementById('adminShell').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1881,18 +1881,19 @@ async function alSubmit() {
     if (error) throw new Error(error.message);
     /* ── stores テーブルにも連動登録（求職者サイトに表示するため） ── */
     const storesPayload = {
-      owner_id: ownerData.id,
       name: payload.store_name,
       genre: payload.genre,
       address: payload.station || '',
-      hourly_min: payload.hourly_min,
-      hourly_max: payload.hourly_max,
-      hours: payload.hours,
-      station: payload.station || '',
+      min_wage: payload.hourly_min,
+      max_wage: payload.hourly_max,
+      opening_time: payload.hours,
       features: payload.features,
       pr_text: prText,
+      plan: alPlan,
       status: payload.status,
       owner_email: payload.email,
+      phone: payload.phone,
+      owner_name: payload.store_name,
     };
     const { error: stErr } = await sbAdmin.from('stores').insert(storesPayload);
     if (stErr) console.error('stores insert error:', stErr.message);
@@ -1962,9 +1963,10 @@ function admToast(icon, msg) {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ══ Supabase リアルデータ連携 ══ */
-const SB_URL  = 'https://ljvovzmjqesspzikglna.supabase.co';
-const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
-const sbAdmin = supabase.createClient(SB_URL, SB_ANON);
+const SB_URL     = 'https://ljvovzmjqesspzikglna.supabase.co';
+const SB_ANON    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNDMzMDksImV4cCI6MjA4ODcxOTMwOX0.gtt6qxMxRX6v9eTG_E8LPI7sOyh5VHp4s2d3joDKPuc';
+const SB_SERVICE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxqdm92em1qcWVzc3B6aWtnbG5hIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzE0MzMwOSwiZXhwIjoyMDg4NzE5MzA5fQ.FgypqNC55qJg587Gji0Grid9Ppbiib_Pp_1KDL32bos';
+const sbAdmin    = supabase.createClient(SB_URL, SB_SERVICE);
 
 // 管理者ログイン後にリアルデータを読み込む
 async function loadRealData() {
