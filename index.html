@@ -578,12 +578,34 @@ select.fi{appearance:none;cursor:pointer;}
   display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;
 }
 .dtl-footer{
-  padding:12px 18px 20px;display:flex;gap:10px;
+  padding:12px 18px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;
   border-top:1px solid #f0f0f0;
   position:sticky;bottom:0;background:#fff;
-  border-radius:0 0 14px 14px;
 }
 .dtl-info-label{font-size:.63rem;font-weight:900;color:#777;letter-spacing:.5px;margin-bottom:8px;padding:14px 18px 0;}
+/* ══ 詳細フルページ ══ */
+.detail-page-bg{position:fixed;inset:0;z-index:500;pointer-events:none;}
+.detail-page-bg.open{pointer-events:all;}
+.detail-page{
+  position:absolute;inset:0;background:#f5f7fa;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.detail-page-bg.open .detail-page{transform:translateX(0);}
+.detail-nav{
+  position:sticky;top:0;z-index:10;
+  background:#fff;border-bottom:1px solid #f0f0f0;
+  padding:0 16px;height:52px;
+  display:flex;align-items:center;gap:10px;
+}
+.detail-nav-back{
+  background:none;border:none;
+  font-size:.85rem;font-weight:700;color:var(--or);
+  cursor:pointer;display:flex;align-items:center;gap:5px;
+  font-family:'Noto Sans JP',sans-serif;padding:8px 0;flex:1;
+}
+.detail-inner{max-width:680px;margin:0 auto;background:#fff;}
 
 /* ══════════════════════════════
    MODAL (3-step bottom sheet)
@@ -1156,42 +1178,52 @@ select.fi{appearance:none;cursor:pointer;}
 </div>
 
 
-<!-- ══ 店舗詳細モーダル ══ -->
-<div class="modal-bg" id="detailModal">
-  <div class="modal" style="max-width:580px;">
-    <button class="m-close" onclick="closeDetail()" style="position:absolute;top:12px;right:12px;z-index:10;">✕</button>
+<!-- ══ 店舗詳細フルページ ══ -->
+<div class="detail-page-bg" id="detailModal">
+  <div class="detail-page">
 
-    <!-- 画像エリア -->
-    <div id="dtlImg" style="height:220px;overflow:hidden;background:#eee;position:relative;flex-shrink:0;border-radius:14px 14px 0 0;"></div>
-    <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;"></div>
-
-    <!-- ヘッダー情報 -->
-    <div class="dtl-header">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;">
-        <div id="dtlName" style="font-size:1.18rem;font-weight:900;color:var(--dk);line-height:1.35;"></div>
-        <div id="dtlGenreTag" style="font-size:.65rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:3px;"></div>
-      </div>
-      <div id="dtlLoc" style="font-size:.72rem;color:var(--md);display:flex;align-items:center;gap:3px;margin-bottom:12px;"></div>
-      <!-- 給与ハイライトボックス -->
-      <div id="dtlPay" class="dtl-pay-box"></div>
-      <!-- 特徴チップ -->
-      <div id="dtlChips" class="c-chips" style="flex-wrap:wrap;gap:5px;margin-bottom:0;"></div>
+    <!-- トップナビ -->
+    <div class="detail-nav">
+      <button class="detail-nav-back" onclick="closeDetail()">← 一覧に戻る</button>
+      <button id="dtlNavFavBtn" onclick="dtlToggleFav()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--lt);line-height:1;padding:6px;">♡</button>
     </div>
 
-    <!-- キャッチコピー -->
-    <div id="dtlCatchBanner" style="display:none;"></div>
+    <!-- コンテンツ（max-width中央揃え） -->
+    <div class="detail-inner">
+      <!-- 画像エリア -->
+      <div style="position:relative;">
+        <div id="dtlImg" style="height:240px;overflow:hidden;background:#eee;"></div>
+        <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;"></div>
+      </div>
 
-    <!-- PRセクション（大手求人サイト風） -->
-    <div id="dtlDesc"></div>
+      <!-- ヘッダー情報 -->
+      <div class="dtl-header">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;">
+          <div id="dtlName" style="font-size:1.18rem;font-weight:900;color:var(--dk);line-height:1.35;"></div>
+          <div id="dtlGenreTag" style="font-size:.65rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:3px;"></div>
+        </div>
+        <div id="dtlLoc" style="font-size:.72rem;color:var(--md);display:flex;align-items:center;gap:3px;margin-bottom:12px;"></div>
+        <div id="dtlPay" class="dtl-pay-box"></div>
+        <div id="dtlChips" class="c-chips" style="flex-wrap:wrap;gap:5px;margin-bottom:0;"></div>
+      </div>
 
-    <!-- 基本情報グリッド -->
-    <div id="dtlInfoWrap" style="display:none;">
-      <div class="dtl-info-label">📋 基本情報</div>
-      <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 18px 16px;"></div>
+      <!-- キャッチコピー -->
+      <div id="dtlCatchBanner" style="display:none;"></div>
+
+      <!-- PRセクション -->
+      <div id="dtlDesc"></div>
+
+      <!-- 基本情報グリッド -->
+      <div id="dtlInfoWrap" style="display:none;">
+        <div class="dtl-info-label">📋 基本情報</div>
+        <div id="dtlInfoGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 18px 16px;"></div>
+      </div>
+
+      <div style="height:80px;"></div>
     </div>
 
     <!-- フッター（sticky） -->
-    <div class="dtl-footer">
+    <div class="dtl-footer" style="max-width:680px;margin:0 auto;">
       <button id="dtlFavBtn" onclick="dtlToggleFav()" style="flex:1;background:#fff;border:2px solid var(--bd);color:var(--md);padding:13px;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .13s;">♡ お気に入り</button>
       <button id="dtlApplyBtn" style="flex:2;background:var(--or);color:#fff;border:none;padding:13px;border-radius:8px;font-size:.92rem;font-weight:900;cursor:pointer;font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 14px rgba(255,107,0,.35);">体入に応募する →</button>
     </div>
@@ -1630,6 +1662,8 @@ function openDetail(s) {
   favBtn.textContent = isFav ? '♥ お気に入り済み' : '♡ お気に入り';
   favBtn.style.color = isFav ? 'var(--red)' : 'var(--md)';
   favBtn.style.borderColor = isFav ? 'var(--red)' : 'var(--bd)';
+  document.getElementById('dtlNavFavBtn').textContent = isFav ? '♥' : '♡';
+  document.getElementById('dtlNavFavBtn').style.color = isFav ? 'var(--red)' : 'var(--lt)';
 
   // 応募ボタン
   document.getElementById('dtlApplyBtn').onclick = () => {
@@ -1637,6 +1671,7 @@ function openDetail(s) {
     openModal(s.name, s.genre || '', payMin + payMax);
   };
 
+  history.pushState({detail:true},'',location.pathname+location.search);
   document.getElementById('detailModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1644,6 +1679,7 @@ function openDetail(s) {
 function closeDetail() {
   document.getElementById('detailModal').classList.remove('open');
   document.body.style.overflow = '';
+  history.replaceState(null,'',location.pathname+location.search);
 }
 
 function dtlToggleFav() {
@@ -1653,12 +1689,14 @@ function dtlToggleFav() {
   const s = currentDetailStore;
   const favs = currentUser ? favsCache : getLocalFavs();
   const existing = favs.find(f => (f.store_name || f.name) === s.name);
+  const navBtn = document.getElementById('dtlNavFavBtn');
   if (existing) {
     removeFavByIdx(favs.indexOf(existing));
     const btn = document.getElementById('dtlFavBtn');
     btn.textContent = '♡ お気に入り';
     btn.style.color = 'var(--md)';
     btn.style.borderColor = 'var(--bd)';
+    navBtn.textContent = '♡'; navBtn.style.color = 'var(--lt)';
   } else {
     const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
     const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
@@ -1678,11 +1716,13 @@ function dtlToggleFav() {
     btn.textContent = '♥ お気に入り済み';
     btn.style.color = 'var(--red)';
     btn.style.borderColor = 'var(--red)';
+    navBtn.textContent = '♥'; navBtn.style.color = 'var(--red)';
   }
 }
 
-document.getElementById('detailModal').addEventListener('click', function(e) {
-  if (e.target === this) closeDetail();
+// ブラウザバックで詳細ページを閉じる
+window.addEventListener('popstate', function() {
+  if (document.getElementById('detailModal').classList.contains('open')) closeDetail();
 });
 
 // ソート変更
