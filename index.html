@@ -614,7 +614,7 @@ select.fi{appearance:none;cursor:pointer;}
 .dtl-footer{padding:12px 40px calc(12px + env(safe-area-inset-bottom));}
 @media(max-width:768px){
   .detail-nav{padding:0 14px;}
-  .detail-inner{padding:0;overflow-x:hidden;}
+  .detail-inner{padding:0;overflow:hidden auto;}
   .dtl-footer{padding:12px 14px calc(12px + env(safe-area-inset-bottom));}
   #dtlInfoGrid{grid-template-columns:1fr!important;padding:0 14px 16px!important;}
   .rw2m{grid-template-columns:1fr;}
@@ -1203,15 +1203,15 @@ select.fi{appearance:none;cursor:pointer;}
     <!-- コンテンツ（max-width中央揃え） -->
     <div class="detail-inner">
       <!-- 画像エリア -->
-      <div style="position:relative;">
-        <div id="dtlImg" style="height:240px;overflow:hidden;background:#eee;"></div>
-        <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;"></div>
+      <div style="position:relative;width:100%;overflow:hidden;">
+        <div id="dtlImg" style="width:100%;height:240px;overflow:hidden;background:#eee;"></div>
+        <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;max-width:calc(100% - 20px);"></div>
       </div>
 
       <!-- ヘッダー情報 -->
       <div class="dtl-header">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;">
-          <div id="dtlName" style="font-size:1.18rem;font-weight:900;color:var(--dk);line-height:1.35;"></div>
+          <div id="dtlName" style="font-size:1.18rem;font-weight:900;color:var(--dk);line-height:1.35;min-width:0;overflow-wrap:break-word;word-break:break-word;"></div>
           <div id="dtlGenreTag" style="font-size:.65rem;font-weight:700;padding:4px 10px;background:var(--or3);color:var(--or);border-radius:4px;white-space:nowrap;flex-shrink:0;margin-top:3px;"></div>
         </div>
         <div id="dtlLoc" style="font-size:.72rem;color:var(--md);display:flex;align-items:center;gap:3px;margin-bottom:12px;"></div>
