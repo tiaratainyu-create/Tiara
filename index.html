@@ -131,6 +131,109 @@ img{display:block;max-width:100%;}
 .hs-n{font-size:1.2rem;font-weight:900;color:var(--wh);line-height:1;}
 .hs-l{font-size:.58rem;color:rgba(255,255,255,.75);margin-top:3px;}
 
+/* ── HERO LAYOUT: 2-column ── */
+.hero{padding:36px 20px 30px;}
+.hero-inner{
+  max-width:1280px;margin:0 auto;
+  display:flex;align-items:center;
+  gap:32px;position:relative;z-index:1;
+}
+.hero-text{flex:1;min-width:0;}
+
+
+/* ══════════════════════════════
+   TRUST SECTION
+══════════════════════════════ */
+.trust-section{
+  max-width:1280px;margin:28px auto 0;
+  padding:0 20px;
+}
+.trust-section h2{
+  font-size:.75rem;font-weight:900;color:var(--md);
+  letter-spacing:2px;text-align:center;margin-bottom:16px;
+  text-transform:uppercase;
+}
+.trust-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.trust-card{
+  background:var(--wh);border:1px solid var(--bd);
+  border-radius:12px;padding:20px 14px;
+  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  transition:transform .15s,box-shadow .15s;
+}
+.trust-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.09);}
+.trust-ico{
+  font-size:1.8rem;margin-bottom:10px;line-height:1;
+}
+.trust-title{
+  font-size:.82rem;font-weight:900;color:var(--dk);
+  margin-bottom:5px;
+}
+.trust-desc{
+  font-size:.68rem;color:var(--md);line-height:1.6;
+}
+.trust-badge{
+  display:inline-block;background:var(--or3);color:var(--or);
+  font-size:.6rem;font-weight:700;padding:2px 8px;
+  border-radius:20px;margin-top:6px;
+}
+
+/* ══════════════════════════════
+   VOICE SECTION (先輩の声)
+══════════════════════════════ */
+.voice-section{
+  max-width:1280px;margin:28px auto 0;
+  padding:0 20px;
+}
+.voice-header{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;margin-bottom:18px;
+}
+.voice-header h2{
+  font-size:1.05rem;font-weight:900;color:var(--dk);
+}
+.voice-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.voice-card{
+  background:var(--wh);border:1px solid var(--bd);
+  border-radius:12px;padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  position:relative;
+}
+.voice-card::before{
+  content:'"';position:absolute;top:10px;left:14px;
+  font-size:3rem;color:var(--or);opacity:.15;
+  font-family:serif;line-height:1;
+}
+.voice-avatar{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.voice-avt-img{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,#ffd6e0,#ffb3c6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+  border:2px solid rgba(255,107,0,.15);
+}
+.voice-name{font-size:.82rem;font-weight:900;color:var(--dk);}
+.voice-meta{font-size:.65rem;color:var(--md);margin-top:1px;}
+.voice-stars{color:#f5a623;font-size:.75rem;margin-top:2px;}
+.voice-text{
+  font-size:.76rem;color:#444;line-height:1.75;
+  padding-top:4px;
+}
+.voice-income{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--or3);border-radius:6px;
+  padding:5px 10px;margin-top:10px;
+  font-size:.7rem;font-weight:700;color:var(--or);
+}
+
 /* ══════════════════════════════
    SEARCH BOX (hero bottom)
 ══════════════════════════════ */
@@ -740,20 +843,30 @@ select.fi{appearance:none;cursor:pointer;}
   .logo{flex:1;text-align:center;font-size:1.3rem;}
 
   /* ── Hero ── */
-  .hero{padding:20px 14px 28px;overflow:hidden;}
-  .hero h1{font-size:1.28rem;line-height:1.4;margin-bottom:6px;}
-  .hero-sub{font-size:.74rem;margin-bottom:16px;line-height:1.65;}
+  .hero{padding:14px 14px 20px;overflow:hidden;}
+  .hero-inner{flex-direction:column;gap:0;}
+  .hero-tag{font-size:.68rem;padding:3px 10px;margin-bottom:8px;}
+  .hero h1{font-size:1.15rem;line-height:1.4;margin-bottom:5px;}
+  .hero-sub{font-size:.72rem;margin-bottom:12px;line-height:1.6;}
   /* stats: 2×2グリッドで固定（4並びはモバイルで崩れるため） */
-  .hero-stats{gap:8px;flex-wrap:wrap;}
-  .hero-stats .hs{flex:0 0 calc(50% - 4px);min-width:0;padding:9px 10px;box-sizing:border-box;}
-  .hs-n{font-size:1.05rem;}
+  .hero-stats{gap:7px;flex-wrap:wrap;}
+  .hero-stats .hs{flex:0 0 calc(50% - 4px);min-width:0;padding:7px 10px;box-sizing:border-box;}
+  .hs-n{font-size:.95rem;}
+  .hs-l{font-size:.55rem;}
+  /* trust */
+  .trust-section,.voice-section{padding:0 14px;}
+  .trust-grid{grid-template-columns:repeat(2,1fr);}
+  .trust-card{padding:14px 10px;}
+  /* voice */
+  .voice-grid{grid-template-columns:1fr;}
 
   /* ── Search box ── */
   .sb-outer{padding:0 10px;}
-  .search-box{margin:0;margin-top:-16px;}
+  .search-box{margin:0;margin-top:-14px;}
   .sb-rows{flex-direction:column;}
-  .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:11px 14px;}
+  .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:11px 16px 11px 14px;}
   .sb-row:last-of-type{border-bottom:none;}
+  .sb-badge{margin-right:2px;}
 
   /* ── Main layout: 1 column ── */
   .main-wrap{
@@ -807,8 +920,8 @@ select.fi{appearance:none;cursor:pointer;}
    RESPONSIVE: SMALL MOBILE (≤ 380px)
 ══════════════════════════════ */
 @media(max-width:380px){
-  .hero{padding:18px 12px 24px;}
-  .hero h1{font-size:1.1rem;}
+  .hero{padding:12px 12px 18px;}
+  .hero h1{font-size:1.05rem;}
   .hero-sub{font-size:.7rem;}
   .hdr-inner{padding:0 10px;}
   .logo{font-size:1.2rem;}
@@ -923,15 +1036,21 @@ select.fi{appearance:none;cursor:pointer;}
   <!-- HERO -->
   <div class="hero">
     <div class="hero-inner">
-      <div class="hero-tag">📍 錦糸町エリア限定 · 全<span id="heroStoreCnt">—</span>店舗掲載中</div>
-      <h1>夜のお仕事探しは、<br><mark>Tiara</mark> で。</h1>
-      <p class="hero-sub">体験入店OK · 日払いOK · 未経験歓迎 · 即日対応</p>
-      <div class="hero-stats">
-        <div class="hs"><div class="hs-n" id="heroStoreCnt2">—</div><div class="hs-l">掲載店舗</div></div>
-        <div class="hs"><div class="hs-n">¥4,500</div><div class="hs-l">平均時給</div></div>
-        <div class="hs"><div class="hs-n">即日</div><div class="hs-l">体入対応</div></div>
-        <div class="hs"><div class="hs-n">24h</div><div class="hs-l">問合わせ</div></div>
+      <!-- テキスト左 -->
+      <div class="hero-text">
+        <div class="hero-tag">📍 錦糸町エリア限定 · 全<span id="heroStoreCnt">—</span>店舗掲載中</div>
+        <h1>夜のお仕事探しは、<br><mark>Tiara</mark> で。</h1>
+        <p class="hero-sub">体験入店OK · 日払いOK · 未経験歓迎 · 即日対応</p>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-n" id="heroStoreCnt2">—</div><div class="hs-l">掲載店舗</div></div>
+          <div class="hs"><div class="hs-n">¥4,500</div><div class="hs-l">平均時給</div></div>
+          <div class="hs"><div class="hs-n">即日</div><div class="hs-l">体入対応</div></div>
+          <div class="hs"><div class="hs-n">24h</div><div class="hs-l">問合わせ</div></div>
+        </div>
       </div>
+      <!-- hero-visual removed -->
+
+
     </div>
   </div>
 
