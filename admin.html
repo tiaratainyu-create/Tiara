@@ -1861,6 +1861,9 @@ async function alSubmit() {
   try {
     const feats = [];
     document.querySelectorAll('#al-feats input:checked').forEach(cb => feats.push(cb.value));
+    /* owners テーブルに存在する列のみ */
+    const contactName = document.getElementById('al-contact').value.trim();
+    const adminMemo = document.getElementById('al-memo').value.trim();
     const payload = {
       store_name: document.getElementById('al-name').value.trim(),
       genre: document.getElementById('al-genre').value,
@@ -1871,18 +1874,11 @@ async function alSubmit() {
       pr_text: document.getElementById('al-pr').value.trim(),
       features: feats,
       plan: alPlan,
-      contact_name: document.getElementById('al-contact').value.trim(),
       email: document.getElementById('al-email').value.trim(),
       phone: document.getElementById('al-phone').value.trim(),
       status: document.getElementById('al-status').value,
-      admin_memo: document.getElementById('al-memo').value.trim(),
     };
-    let { data: ownerData, error } = await sbAdmin.from('owners').insert(payload).select().single();
-    if (error && error.message.includes('admin_memo')) {
-      /* admin_memo列が未認識の場合、フォールバックで再試行 */
-      delete payload.admin_memo;
-      ({ data: ownerData, error } = await sbAdmin.from('owners').insert(payload).select().single());
-    }
+    const { data: ownerData, error } = await sbAdmin.from('owners').insert(payload).select().single();
     if (error) throw new Error(error.message);
     /* ── stores テーブルにも連動登録（求職者サイトに表示するため） ── */
     const storesPayload = {
