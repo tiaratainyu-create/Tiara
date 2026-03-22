@@ -587,6 +587,26 @@ select.fi{appearance:none;cursor:pointer;}
   position:sticky;bottom:0;background:#fff;
 }
 .dtl-info-label{font-size:.63rem;font-weight:900;color:#777;letter-spacing:.5px;margin-bottom:8px;padding:14px 18px 0;}
+
+/* ── 詳細ギャラリー ── */
+.dtl-gallery-wrap{
+  width:100%;height:260px;overflow:hidden;
+  display:flex;gap:3px;background:#eee;flex-shrink:0;
+}
+.gal-main{flex:3;overflow:hidden;min-width:0;}
+.gal-subs{flex:2;display:flex;flex-direction:column;gap:3px;min-width:0;}
+.gal-sub{flex:1;overflow:hidden;position:relative;}
+.gal-more{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.5);color:#fff;
+  font-size:1.1rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  letter-spacing:1px;
+}
+.dtl-gallery-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+@media(max-width:768px){
+  .dtl-gallery-wrap{height:210px;}
+}
 /* ══ 詳細フルページ ══ */
 .detail-page-bg{position:fixed;inset:0;z-index:500;pointer-events:none;}
 .detail-page-bg.open{pointer-events:all;}
@@ -1200,9 +1220,9 @@ select.fi{appearance:none;cursor:pointer;}
 
     <!-- コンテンツ（max-width中央揃え） -->
     <div class="detail-inner">
-      <!-- 画像エリア -->
+      <!-- 画像ギャラリーエリア -->
       <div style="position:relative;width:100%;overflow:hidden;">
-        <div id="dtlImg" style="width:100%;height:240px;overflow:hidden;background:#eee;"></div>
+        <div id="dtlGallery" class="dtl-gallery-wrap"></div>
         <div id="dtlBadges" class="cbadges" style="position:absolute;top:10px;left:10px;z-index:2;max-width:calc(100% - 20px);"></div>
       </div>
 
@@ -1560,14 +1580,31 @@ function openDetail(s) {
   const payMin = s.hourly_min ? '¥' + Number(s.hourly_min).toLocaleString() : '—';
   const payMax = s.hourly_max ? '〜¥' + Number(s.hourly_max).toLocaleString() : '';
 
-  // 画像
-  const imgEl = document.getElementById('dtlImg');
-  imgEl.innerHTML = s.image_url
-    ? `<img src="${s.image_url}" style="width:100%;height:100%;object-fit:cover;">`
-    : `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);">
-        <div style="font-size:2.5rem;">${icon}</div>
-        <div style="font-size:.7rem;color:#aaa;font-weight:700;letter-spacing:1px;">${s.name}</div>
+  // 画像ギャラリー（s.images 配列 or s.image_url にフォールバック）
+  const imgs = Array.isArray(s.images) && s.images.length ? s.images
+    : s.image_url ? [s.image_url] : [];
+  const placeholder = `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);">
+    <div style="font-size:2.5rem;">${icon}</div>
+    <div style="font-size:.7rem;color:#aaa;font-weight:700;letter-spacing:1px;">${s.name}</div>
+  </div>`;
+  let galleryHtml = '';
+  if (imgs.length === 0) {
+    galleryHtml = `<div style="flex:1;">${placeholder}</div>`;
+  } else if (imgs.length === 1) {
+    galleryHtml = `<div style="flex:1;overflow:hidden;"><img src="${imgs[0]}" style="width:100%;height:100%;object-fit:cover;display:block;"></div>`;
+  } else {
+    const subs = imgs.slice(1, 3);
+    const extra = imgs.length > 3 ? imgs.length - 3 : 0;
+    const subsHtml = subs.map((url, i) => {
+      const showMore = extra > 0 && i === subs.length - 1;
+      return `<div class="gal-sub">
+        <img src="${url}">
+        ${showMore ? `<div class="gal-more">+${extra}枚</div>` : ''}
       </div>`;
+    }).join('');
+    galleryHtml = `<div class="gal-main"><img src="${imgs[0]}"></div><div class="gal-subs">${subsHtml}</div>`;
+  }
+  document.getElementById('dtlGallery').innerHTML = galleryHtml;
 
   // バッジ
   let badges = '';
