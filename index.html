@@ -1531,44 +1531,6 @@ function openDetail(s) {
   }
   document.getElementById('dtlGallery').innerHTML = galleryHtml;
 
-  const track = document.getElementById('dtlImgTrack');
-  const dots  = document.getElementById('dtlImgDots');
-  const prev  = document.getElementById('dtlImgPrev');
-  const next  = document.getElementById('dtlImgNext');
-  let imgIdx  = 0;
-
-  if (imgs.length > 0) {
-    track.innerHTML = imgs.map(url =>
-      `<div style="min-width:100%;height:220px;flex-shrink:0;overflow:hidden;">
-        <img src="${url}" style="width:100%;height:100%;object-fit:cover;">
-      </div>`
-    ).join('');
-    dots.innerHTML = imgs.length > 1 ? imgs.map((_, i) =>
-      `<div style="width:${i===0?'18px':'8px'};height:8px;border-radius:4px;background:${i===0?'#fff':'rgba(255,255,255,.4)'};transition:all .3s;cursor:pointer;" onclick="dtlImgGo(${i})"></div>`
-    ).join('') : '';
-    if (imgs.length > 1) { prev.style.display='flex'; next.style.display='flex'; }
-    else { prev.style.display='none'; next.style.display='none'; }
-  } else {
-    track.innerHTML = `<div style="min-width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a1a2e,#2d1f3d);">
-      <div style="font-size:3rem;">${icon}</div>
-      <div style="font-size:.72rem;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:1px;">${s.name}</div>
-    </div>`;
-    dots.innerHTML = ''; prev.style.display='none'; next.style.display='none';
-  }
-
-  window.dtlImgGo = function(idx) {
-    imgIdx = idx;
-    track.style.transform = `translateX(-${idx * 100}%)`;
-    dots.querySelectorAll('div').forEach((d, i) => {
-      d.style.width = i === idx ? '18px' : '8px';
-      d.style.background = i === idx ? '#fff' : 'rgba(255,255,255,.4)';
-    });
-  };
-  window.dtlImgNav = function(dir) {
-    const total = imgs.length || 1;
-    dtlImgGo((imgIdx + dir + total) % total);
-  };
-
   /* ── バッジ ── */
   let badges = '';
   if (s.plan === 'premium') badges += '<span class="cbdg b-pick">★ PICK UP</span>';
