@@ -1091,7 +1091,10 @@ select.adm-sfi{appearance:none;cursor:pointer;}
 .dow-label:hover{border-color:var(--or)!important;}
 .adm-feat-cb:has(input:checked){border-color:var(--or)!important;background:#fff3e8;color:var(--or);font-weight:700;}
 .adm-feat-cb:hover{border-color:var(--or)!important;}
-.adm-al-plan.on{border-color:var(--or)!important;background:#fff3e8;}
+.adm-al-plan{border:1.5px solid #e5e8ef;background:#fff;}
+.adm-al-plan.on{border:2px solid var(--or)!important;background:#fff3e8;}
+.adm-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.adm-conf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .adm-modal-body{padding:18px;}
 .adm-modal-fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
 .adm-modal-fg:last-child{margin-bottom:0;}
@@ -1161,6 +1164,10 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
   .adm-logo-badge{display:none;}
   .adm-kpi-grid{grid-template-columns:1fr 1fr;}
   .adm-content{padding:12px;}
+  .adm-row2{grid-template-columns:1fr;}
+  .adm-conf-grid{grid-template-columns:1fr;}
+  .adm-modal-bg{padding:0;align-items:flex-end;}
+  .adm-modal{border-radius:16px 16px 0 0;max-height:92vh;}
 }
 @media(max-width:420px){
   .adm-kpi-grid{grid-template-columns:1fr 1fr;gap:8px;}
@@ -1355,7 +1362,7 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
                 <label class="adm-modal-lbl" style="font-size:.72rem;font-weight:700;">店舗名 <span style="color:var(--red)">*</span></label>
                 <input class="adm-modal-inp" id="al-name" type="text" placeholder="例：Club Magnolia">
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="adm-row2">
                 <div class="adm-modal-fg">
                   <label class="adm-modal-lbl">業種 <span style="color:var(--red)">*</span></label>
                   <select class="adm-modal-inp" id="al-genre">
@@ -1369,7 +1376,7 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
                   <input class="adm-modal-inp" id="al-station" type="text" value="錦糸町駅">
                 </div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="adm-row2">
                 <div class="adm-modal-fg">
                   <label class="adm-modal-lbl">最低時給（円） <span style="color:var(--red)">*</span></label>
                   <input class="adm-modal-inp" id="al-min" type="number" placeholder="4000" min="1000">
@@ -1412,18 +1419,18 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
               <div class="adm-modal-fg">
                 <label class="adm-modal-lbl" style="display:block;margin-bottom:8px;">プラン <span style="color:var(--red)">*</span></label>
                 <div style="display:flex;flex-direction:column;gap:8px;" id="al-plan-list">
-                  <div class="adm-al-plan" id="alp-light" onclick="alSelPlan('light')" style="border:1.5px solid #e5e8ef;border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;">
+                  <div class="adm-al-plan" id="alp-light" onclick="alSelPlan('light')" style="border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;">
                     <span style="font-size:1.2rem;">🌱</span>
                     <div style="flex:1;"><div style="font-size:.85rem;font-weight:900;color:#1a1a2e;">ライト</div><div style="font-size:.62rem;color:#9ca3af;margin-top:1px;">求人1件 · 写真3枚 · 体入管理</div></div>
                     <div style="text-align:right;"><div style="font-size:1.1rem;font-weight:900;color:var(--or);">¥24,000</div><div style="font-size:.58rem;color:#aaa;">/月</div></div>
                   </div>
-                  <div class="adm-al-plan on" id="alp-standard" onclick="alSelPlan('standard')" style="border:2px solid var(--or);background:#fff3e8;border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;position:relative;">
+                  <div class="adm-al-plan on" id="alp-standard" onclick="alSelPlan('standard')" style="border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;position:relative;">
                     <span style="position:absolute;top:-9px;right:12px;background:var(--or);color:#fff;font-size:.58rem;font-weight:900;padding:2px 10px;border-radius:3px;">⭐ おすすめ</span>
                     <span style="font-size:1.2rem;">⭐</span>
                     <div style="flex:1;"><div style="font-size:.85rem;font-weight:900;color:#1a1a2e;">スタンダード</div><div style="font-size:.62rem;color:#9ca3af;margin-top:1px;">求人1件 · 検索上位 · PICKUPバッジ · 保証つき</div></div>
                     <div style="text-align:right;"><div style="font-size:1.1rem;font-weight:900;color:var(--or);">¥30,000</div><div style="font-size:.58rem;color:#aaa;">/月</div></div>
                   </div>
-                  <div class="adm-al-plan" id="alp-premium" onclick="alSelPlan('premium')" style="border:1.5px solid #e5e8ef;border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;">
+                  <div class="adm-al-plan" id="alp-premium" onclick="alSelPlan('premium')" style="border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;">
                     <span style="font-size:1.2rem;">👑</span>
                     <div style="flex:1;"><div style="font-size:.85rem;font-weight:900;color:#1a1a2e;">プレミアム</div><div style="font-size:.62rem;color:#9ca3af;margin-top:1px;">掲載無制限 · トップ · SNS · 特集記事</div></div>
                     <div style="text-align:right;"><div style="font-size:.85rem;font-weight:900;color:#8b5cf6;">¥50,000</div><div style="font-size:.58rem;color:#aaa;">/月</div></div>
@@ -1434,7 +1441,7 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
                 <label class="adm-modal-lbl">担当者名 <span style="color:var(--red)">*</span></label>
                 <input class="adm-modal-inp" id="al-contact" type="text" placeholder="田中 花子">
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="adm-row2">
                 <div class="adm-modal-fg">
                   <label class="adm-modal-lbl">メールアドレス <span style="color:var(--red)">*</span></label>
                   <input class="adm-modal-inp" id="al-email" type="email" placeholder="owner@example.com">
@@ -1799,27 +1806,17 @@ let alPlan = 'standard', alStep = 1;
 
 function alUpdateProg() {
   [1,2,3].forEach(n => {
-    const el = document.getElementById('alp'+n);
-    el.style.background = n <= alStep ? 'var(--or)' : '#e5e8ef';
-  });
-  [1,2,3].forEach(n => {
-    const el = document.getElementById('al-s'+n);
-    if (el) el.style.display = n === alStep ? 'block' : 'none';
+    document.getElementById('alp'+n).style.background = n <= alStep ? 'var(--or)' : '#e5e8ef';
+    const s = document.getElementById('al-s'+n);
+    if (s) s.style.display = n === alStep ? 'block' : 'none';
   });
   document.getElementById('al-done').style.display = 'none';
 }
 
 function alSelPlan(p) {
   alPlan = p;
-  document.querySelectorAll('.adm-al-plan').forEach(el => {
-    el.classList.remove('on');
-    el.style.border = '1.5px solid #e5e8ef';
-    el.style.background = '#fff';
-  });
-  const sel = document.getElementById('alp-'+p);
-  sel.classList.add('on');
-  sel.style.border = '2px solid var(--or)';
-  sel.style.background = '#fff3e8';
+  document.querySelectorAll('.adm-al-plan').forEach(el => el.classList.remove('on'));
+  document.getElementById('alp-'+p).classList.add('on');
 }
 
 function alNext(step) {
@@ -1839,7 +1836,7 @@ function alNext(step) {
     const statusNames = {pending:'審査中',active:'即時掲載中'};
     const status = document.getElementById('al-status').value;
     document.getElementById('al-conf-box').innerHTML = `
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="adm-conf-grid">
         <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">店舗名</div><div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">${document.getElementById('al-name').value}</div></div>
         <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">業種</div><div style="font-size:.85rem;font-weight:700;color:#1a1a2e;">${document.getElementById('al-genre').value}</div></div>
         <div style="background:#fff;border-radius:6px;padding:10px 12px;border:1px solid #e5e8ef;"><div style="font-size:.62rem;color:#9ca3af;margin-bottom:3px;">時給</div><div style="font-size:.85rem;font-weight:700;color:var(--or);">¥${parseInt(document.getElementById('al-min').value).toLocaleString()}〜¥${parseInt(document.getElementById('al-max').value).toLocaleString()}</div></div>
