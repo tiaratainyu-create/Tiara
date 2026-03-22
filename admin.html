@@ -1262,20 +1262,17 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
       <!-- ═ DASHBOARD ═ -->
       <div class="adm-page on" id="adm-dashboard">
         <div class="adm-kpi-grid">
-          <div class="adm-kpi kc-or"><div class="adm-kpi-lbl">掲載店舗数</div><div class="adm-kpi-num">47</div><div class="adm-kpi-sub"><span class="up">▲3</span>&nbsp;今月新規</div><div class="adm-kpi-ico">🏪</div></div>
-          <div class="adm-kpi kc-gr"><div class="adm-kpi-lbl">体入申込（今月）</div><div class="adm-kpi-num">284</div><div class="adm-kpi-sub"><span class="up">▲18%</span>&nbsp;先月比</div><div class="adm-kpi-ico">📝</div></div>
-          <div class="adm-kpi kc-bl"><div class="adm-kpi-lbl">月間売上</div><div class="adm-kpi-num">¥1.84M</div><div class="adm-kpi-sub"><span class="up">▲12%</span>&nbsp;先月比</div><div class="adm-kpi-ico">💴</div></div>
-          <div class="adm-kpi kc-pu"><div class="adm-kpi-lbl">審査待ち</div><div class="adm-kpi-num" style="color:#f59e0b">5</div><div class="adm-kpi-sub" style="color:#9ca3af">要対応あり</div><div class="adm-kpi-ico">⏳</div></div>
+          <div class="adm-kpi kc-or"><div class="adm-kpi-lbl">掲載店舗数</div><div class="adm-kpi-num" id="kpiStores">—</div><div class="adm-kpi-sub" id="kpiStoresSub">読み込み中</div><div class="adm-kpi-ico">🏪</div></div>
+          <div class="adm-kpi kc-gr"><div class="adm-kpi-lbl">体入申込（今月）</div><div class="adm-kpi-num" id="kpiApps">—</div><div class="adm-kpi-sub" id="kpiAppsSub">今月合計</div><div class="adm-kpi-ico">📝</div></div>
+          <div class="adm-kpi kc-bl"><div class="adm-kpi-lbl">月間売上</div><div class="adm-kpi-num">¥—</div><div class="adm-kpi-sub">Stripe連携</div><div class="adm-kpi-ico">💴</div></div>
+          <div class="adm-kpi kc-pu"><div class="adm-kpi-lbl">審査待ち</div><div class="adm-kpi-num" id="kpiPending" style="color:#f59e0b">—</div><div class="adm-kpi-sub" style="color:#9ca3af">要対応あり</div><div class="adm-kpi-ico">⏳</div></div>
         </div>
         <div class="adm-dash-grid">
           <div>
             <div class="adm-sbox">
               <div class="adm-shead"><div class="adm-stitle">最新 体入申込</div><button class="adm-saction" onclick="admNav('applies',document.querySelectorAll('.adm-sb-item')[1])">すべて見る →</button></div>
-              <div class="adm-apps">
-                <div class="adm-app"><div class="adm-ava">さ</div><div class="adm-app-info"><div class="adm-app-name">さくら（21歳）<span class="abadge ab-new" style="margin-left:5px">未経験</span></div><div class="adm-app-store">Club Magnolia — キャバクラ｜3月12日 19:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">10分前</div></div>
-                <div class="adm-app"><div class="adm-ava">れ</div><div class="adm-app-info"><div class="adm-app-name">れいな（24歳）<span class="abadge ab-on" style="margin-left:5px">経験あり</span></div><div class="adm-app-store">Lounge ESTRELLA — ラウンジ｜3月13日 20:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">42分前</div></div>
-                <div class="adm-app"><div class="adm-ava">み</div><div class="adm-app-info"><div class="adm-app-name">みな（19歳）<span class="abadge ab-new" style="margin-left:5px">未経験</span></div><div class="adm-app-store">NIGHT VENUS — クラブ｜3月14日 21:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">1時間前</div></div>
-                <div class="adm-app"><div class="adm-ava">ゆ</div><div class="adm-app-info"><div class="adm-app-name">ゆか（26歳）<span class="abadge ab-on" style="margin-left:5px">経験あり</span></div><div class="adm-app-store">スナック 桜並木｜3月15日 20:00〜</div><div class="adm-app-acts"><button class="adm-aa adm-aa-ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-aa adm-aa-ng">キャンセル</button></div></div><div class="adm-app-time">3時間前</div></div>
+              <div class="adm-apps" id="dashRecentApps">
+                <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</div>
               </div>
             </div>
             <div class="adm-sbox" style="margin-top:18px">
@@ -1323,12 +1320,8 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
             <select class="adm-fsel"><option>すべての期間</option><option>今日</option><option>今週</option><option>今月</option></select>
             <button class="adm-fbtn">絞り込む</button>
           </div>
-          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申込者</th><th>店舗</th><th>希望日時</th><th>経験</th><th>連絡先</th><th>状態</th><th>申込日</th><th>操作</th></tr></thead><tbody>
-            <tr><td><div class="td-main">さくら（21歳）</div></td><td><div class="td-main">Club Magnolia</div><div class="td-sub">キャバクラ</div></td><td>3月12日（水）19:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @sakura123</td><td><span class="abadge ab-rev">未対応</span></td><td>10分前</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-tact danger" onclick="admToast('🗑','キャンセルしました')">キャンセル</button></div></td></tr>
-            <tr><td><div class="td-main">れいな（24歳）</div></td><td><div class="td-main">Lounge ESTRELLA</div><div class="td-sub">ラウンジ</div></td><td>3月13日（木）20:00〜</td><td><span class="abadge ab-on">経験あり</span></td><td>090-XXXX-1234</td><td><span class="abadge ab-rev">未対応</span></td><td>42分前</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','対応済みにしました')">対応済</button><button class="adm-tact danger" onclick="admToast('🗑','キャンセルしました')">キャンセル</button></div></td></tr>
-            <tr><td><div class="td-main">みな（19歳）</div></td><td><div class="td-main">NIGHT VENUS</div><div class="td-sub">クラブ</div></td><td>3月14日（金）21:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @mina_night</td><td><span class="abadge ab-on">対応済</span></td><td>1時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
-            <tr><td><div class="td-main">ゆか（26歳）</div></td><td><div class="td-main">スナック 桜並木</div><div class="td-sub">スナック</div></td><td>3月15日（土）20:00〜</td><td><span class="abadge ab-on">3年以上</span></td><td>090-XXXX-5678</td><td><span class="abadge ab-on">対応済</span></td><td>3時間前</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
-            <tr><td><div class="td-main">あい（22歳）</div></td><td><div class="td-main">Girls Bar SAKURA</div><div class="td-sub">ガールズバー</div></td><td>3月16日（日）18:00〜</td><td><span class="abadge ab-new">未経験</span></td><td>LINE: @ai_bar</td><td><span class="abadge ab-off">キャンセル</span></td><td>昨日</td><td><div class="adm-tacts"><button class="adm-tact">詳細</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申込者</th><th>店舗</th><th>希望日時</th><th>経験</th><th>連絡先</th><th>状態</th><th>申込日</th><th>操作</th></tr></thead><tbody id="appliesTbody">
+            <tr><td colspan="8" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</td></tr>
           </tbody></table></div>
         </div>
       </div>
@@ -1342,12 +1335,8 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
             <select class="adm-fsel"><option>すべてのプラン</option><option>プレミアム</option><option>スタンダード</option><option>ライト</option></select>
             <select class="adm-fsel"><option>すべての業種</option><option>キャバクラ</option><option>ラウンジ</option><option>クラブ</option></select>
           </div>
-          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>店舗名</th><th>業種</th><th>プラン</th><th>状態</th><th>体入件数</th><th>掲載開始</th><th>次回更新</th><th>操作</th></tr></thead><tbody>
-            <tr><td><div class="td-main">Club Magnolia</div><div class="td-sub">田中 花子 · 03-0000-0001</div></td><td>キャバクラ</td><td><span class="plan-tag pt-pr">Premium</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>32件</strong></td><td>2025/01/01</td><td>2025/04/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
-            <tr><td><div class="td-main">Lounge ESTRELLA</div><div class="td-sub">鈴木 一郎 · 03-0000-0002</div></td><td>ラウンジ</td><td><span class="plan-tag pt-st">Standard</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>18件</strong></td><td>2025/02/01</td><td>2025/04/01</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
-            <tr><td><div class="td-main">スナック 桜並木</div><div class="td-sub">山田 花子 · 03-0000-0003</div></td><td>スナック</td><td><span class="plan-tag pt-lt">Light</span></td><td><span class="abadge ab-on">掲載中</span></td><td><strong>7件</strong></td><td>2025/01/15</td><td>2025/04/15</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="admToast('⏸','掲載を停止しました')">停止</button></div></td></tr>
-            <tr><td><div class="td-main">NIGHT VENUS</div><div class="td-sub">佐藤 太郎 · 03-0000-0004</div></td><td>クラブ</td><td><span class="plan-tag pt-st">Standard</span></td><td><span class="abadge ab-rev">審査中</span></td><td>—</td><td>—</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
-            <tr><td><div class="td-main">Girls Bar SAKURA</div><div class="td-sub">伊藤 美咲 · 03-0000-0005</div></td><td>Gバー</td><td><span class="plan-tag pt-lt">Light</span></td><td><span class="abadge ab-off">停止中</span></td><td><strong>0件</strong></td><td>2025/02/01</td><td>—</td><td><div class="adm-tacts"><button class="adm-tact ok" onclick="admToast('▶','掲載を再開しました')">再開</button><button class="adm-tact danger" onclick="admToast('🗑','削除しました')">削除</button></div></td></tr>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>店舗名</th><th>業種</th><th>プラン</th><th>状態</th><th>掲載開始</th><th>操作</th></tr></thead><tbody id="storesTbody">
+            <tr><td colspan="6" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</td></tr>
           </tbody></table></div>
         </div>
       </div>
@@ -1507,11 +1496,8 @@ textarea.adm-modal-inp{resize:vertical;min-height:80px;}
       <div class="adm-page" id="adm-pending">
         <div class="adm-sbox">
           <div class="adm-shead"><div class="adm-stitle">掲載申請 審査一覧</div><span style="font-size:.73rem;color:#854d0e;font-weight:700;background:#fef9c3;padding:4px 10px;border-radius:5px;">5件 審査待ち</span></div>
-          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申請日</th><th>店舗名</th><th>業種</th><th>プラン</th><th>担当者</th><th>連絡先</th><th>操作</th></tr></thead><tbody>
-            <tr><td>3月7日 22:10</td><td><div class="td-main">NIGHT VENUS</div></td><td>クラブ</td><td><span class="plan-tag pt-st">Standard</span></td><td>佐藤 太郎</td><td>03-0000-0004</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
-            <tr><td>3月7日 18:44</td><td><div class="td-main">Lounge Bijou</div></td><td>ラウンジ</td><td><span class="plan-tag pt-pr">Premium</span></td><td>中村 里奈</td><td>03-0000-0006</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
-            <tr><td>3月6日 14:30</td><td><div class="td-main">Club Fleur</div></td><td>キャバクラ</td><td><span class="plan-tag pt-st">Standard</span></td><td>小林 健一</td><td>03-0000-0007</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
-            <tr><td>3月5日 21:00</td><td><div class="td-main">スナック 月見</div></td><td>スナック</td><td><span class="plan-tag pt-lt">Light</span></td><td>田中 優子</td><td>03-0000-0009</td><td><div class="adm-tacts"><button class="adm-tact" onclick="openAdmModal('review')">内容確認</button><button class="adm-tact ok" onclick="admToast('✅','承認しました')">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button></div></td></tr>
+          <div class="adm-tbl-wrap"><table class="adm-tbl"><thead><tr><th>申請日</th><th>店舗名</th><th>業種</th><th>プラン</th><th>担当者</th><th>連絡先</th><th>操作</th></tr></thead><tbody id="pendingTbody">
+            <tr><td colspan="7" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">読み込み中...</td></tr>
           </tbody></table></div>
         </div>
       </div>
@@ -2195,23 +2181,21 @@ async function loadAdminData() {
   const STATUS_BADGE = { active: '<span class="abadge ab-on">掲載中</span>', pending: '<span class="abadge ab-rev">審査中</span>', suspended: '<span class="abadge ab-off">停止中</span>' };
   const sTbody = document.getElementById('storesTbody');
   if (!owners.length) {
-    sTbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">店舗データがありません</td></tr>';
+    sTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#9ca3af;font-size:.78rem;">店舗データがありません</td></tr>';
   } else {
     sTbody.innerHTML = owners.map(o => {
-      const pay = o.hourly_min ? `¥${Number(o.hourly_min).toLocaleString()}〜¥${Number(o.hourly_max||o.hourly_min).toLocaleString()}` : '—';
       const planTag = PLAN_TAG[o.plan] || `<span class="plan-tag pt-lt">${o.plan||'—'}</span>`;
       const stBadge = STATUS_BADGE[o.status] || `<span class="abadge">${o.status||'—'}</span>`;
       const acts = o.status === 'active'
-        ? `<button class="adm-tact" onclick="openAdmModal('edit')">編集</button><button class="adm-tact danger" onclick="suspendOwner('${o.id}',this)">停止</button>`
+        ? `<button class="adm-tact danger" onclick="suspendOwner('${o.id}',this)">停止</button>`
         : o.status === 'pending'
-        ? `<button class="adm-tact ok" onclick="approveOwner('${o.id}',this)">承認</button><button class="adm-tact danger" onclick="admToast('❌','却下しました')">却下</button>`
+        ? `<button class="adm-tact ok" onclick="approveOwner('${o.id}',this)">承認</button><button class="adm-tact danger" onclick="rejectOwner('${o.id}',this)">却下</button>`
         : `<button class="adm-tact ok" onclick="activateOwner('${o.id}',this)">再開</button>`;
       return `<tr>
         <td><div class="td-main">${o.store_name||'—'}</div><div class="td-sub">${o.email||''}</div></td>
         <td>${o.genre||'—'}</td>
         <td>${planTag}</td>
         <td>${stBadge}</td>
-        <td style="font-size:.78rem;">${pay}</td>
         <td style="font-size:.72rem;color:#9ca3af;">${fmtDate(o.created_at)}</td>
         <td><div class="adm-tacts">${acts}</div></td>
       </tr>`;
@@ -2239,9 +2223,19 @@ async function loadAdminData() {
     }).join('');
   }
 
-  // 審査待ちバッジを更新
-  const pendingBadgeEl = document.querySelector('[data-admpage="pending"] .adm-si-bdg');
-  if (pendingBadgeEl) pendingBadgeEl.textContent = pending.length;
+  // サイドバーのバッジを更新
+  const allBtns = document.querySelectorAll('.adm-sb-item');
+  allBtns.forEach(btn => {
+    if (btn.textContent.includes('掲載審査')) {
+      const bdg = btn.querySelector('.adm-si-bdg');
+      if (bdg) bdg.textContent = pending.length;
+    }
+    if (btn.textContent.includes('体入申込管理')) {
+      const bdg = btn.querySelector('.adm-si-bdg');
+      const unhandled = apps.filter(a => !a.status || a.status === 'pending').length;
+      if (bdg) bdg.textContent = unhandled;
+    }
+  });
 }
 
 /* ── DB 操作 ── */
