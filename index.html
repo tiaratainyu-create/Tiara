@@ -138,11 +138,15 @@ img{display:block;max-width:100%;}
 }
 .hero-text{flex:1;min-width:0;}
 .hero-visual{
-  flex-shrink:0;width:220px;height:220px;
-  position:relative;display:flex;align-items:flex-end;justify-content:center;
+  flex-shrink:0;width:200px;height:260px;
+  position:relative;border-radius:50% 50% 46% 46% / 40% 40% 60% 60%;
   overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.25),0 0 0 4px rgba(255,255,255,.3);
 }
-.hero-visual svg{width:100%;height:100%;}
+.hero-visual img{
+  width:100%;height:100%;object-fit:cover;object-position:center top;
+  display:block;
+}
 
 /* ══════════════════════════════
    TRUST SECTION
@@ -1051,61 +1055,11 @@ select.fi{appearance:none;cursor:pointer;}
       </div>
       <!-- 女性イラスト右 -->
       <div class="hero-visual">
-        <svg viewBox="0 0 220 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <!-- 背景丸 -->
-          <circle cx="110" cy="140" r="105" fill="rgba(255,255,255,0.12)"/>
-          <!-- 光沢ハイライト -->
-          <ellipse cx="80" cy="60" rx="28" ry="18" fill="rgba(255,255,255,0.08)"/>
-          <!-- ドレス -->
-          <path d="M68 155 Q60 200 52 270 L168 270 Q160 200 152 155 Z" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-          <!-- ウエスト -->
-          <ellipse cx="110" cy="155" rx="42" ry="10" fill="rgba(255,255,255,0.18)"/>
-          <!-- 胴体 -->
-          <rect x="82" y="110" width="56" height="50" rx="14" fill="rgba(255,255,255,0.25)"/>
-          <!-- 首 -->
-          <rect x="101" y="92" width="18" height="22" rx="9" fill="rgba(255,230,210,0.9)"/>
-          <!-- 頭 -->
-          <ellipse cx="110" cy="80" rx="26" ry="28" fill="rgba(255,230,210,0.95)"/>
-          <!-- 髪（上） -->
-          <ellipse cx="110" cy="57" rx="27" ry="16" fill="rgba(60,30,10,0.75)"/>
-          <!-- 髪（サイド左） -->
-          <path d="M84 68 Q74 90 80 115 Q86 100 90 85Z" fill="rgba(60,30,10,0.7)"/>
-          <!-- 髪（サイド右） -->
-          <path d="M136 68 Q146 90 140 115 Q134 100 130 85Z" fill="rgba(60,30,10,0.7)"/>
-          <!-- 目（左） -->
-          <ellipse cx="100" cy="80" rx="5" ry="3.5" fill="rgba(255,255,255,0.9)"/>
-          <ellipse cx="100" cy="80" rx="3" ry="2.5" fill="#4a2800"/>
-          <ellipse cx="99" cy="79" rx="1" ry="1" fill="#fff"/>
-          <!-- 目（右） -->
-          <ellipse cx="120" cy="80" rx="5" ry="3.5" fill="rgba(255,255,255,0.9)"/>
-          <ellipse cx="120" cy="80" rx="3" ry="2.5" fill="#4a2800"/>
-          <ellipse cx="119" cy="79" rx="1" ry="1" fill="#fff"/>
-          <!-- まつ毛 -->
-          <path d="M95 77 Q97 74 100 76" stroke="#2a1000" stroke-width="1" fill="none"/>
-          <path d="M115 77 Q117 74 120 76" stroke="#2a1000" stroke-width="1" fill="none"/>
-          <!-- 鼻 -->
-          <path d="M108 88 Q110 91 112 88" stroke="rgba(180,100,60,0.5)" stroke-width="1" fill="none"/>
-          <!-- 口 -->
-          <path d="M104 95 Q110 100 116 95" stroke="rgba(220,80,80,0.8)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <!-- ほっぺ（左） -->
-          <ellipse cx="93" cy="88" rx="8" ry="5" fill="rgba(255,150,150,0.22)"/>
-          <!-- ほっぺ（右） -->
-          <ellipse cx="127" cy="88" rx="8" ry="5" fill="rgba(255,150,150,0.22)"/>
-          <!-- 腕（左） -->
-          <path d="M82 115 Q65 130 62 155" stroke="rgba(255,220,190,0.85)" stroke-width="12" fill="none" stroke-linecap="round"/>
-          <!-- 腕（右） -->
-          <path d="M138 115 Q155 130 158 155" stroke="rgba(255,220,190,0.85)" stroke-width="12" fill="none" stroke-linecap="round"/>
-          <!-- ティアラ（王冠） -->
-          <path d="M90 57 L95 45 L103 55 L110 38 L117 55 L125 45 L130 57Z" fill="rgba(255,220,80,0.9)" stroke="rgba(255,180,0,0.8)" stroke-width="0.5"/>
-          <circle cx="110" cy="39" r="3" fill="rgba(255,80,120,0.9)"/>
-          <circle cx="95" cy="46" r="2" fill="rgba(255,220,80,1)"/>
-          <circle cx="125" cy="46" r="2" fill="rgba(255,220,80,1)"/>
-          <!-- キラキラ -->
-          <text x="40" y="100" font-size="10" fill="rgba(255,255,255,0.6)">✦</text>
-          <text x="170" y="80" font-size="8" fill="rgba(255,255,255,0.5)">✦</text>
-          <text x="55" y="200" font-size="7" fill="rgba(255,255,255,0.4)">✦</text>
-          <text x="165" y="190" font-size="9" fill="rgba(255,255,255,0.5)">✦</text>
-        </svg>
+        <img
+          src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=520&fit=crop&crop=face,top"
+          alt="スタッフ"
+          loading="eager"
+        >
       </div>
     </div>
   </div>
