@@ -863,12 +863,16 @@ select.fi{appearance:none;cursor:pointer;}
   .voice-grid{grid-template-columns:1fr;}
 
   /* ── Search box ── */
-  .sb-outer{padding:0 10px;}
-  .search-box{margin:0;margin-top:-14px;}
-  .sb-rows{flex-direction:column;}
-  .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:8px 20px 8px 14px;}
-  .sb-row:last-of-type{border-bottom:none;}
-  .sb-badge{flex-shrink:0;}
+  .sb-outer{padding:0 16px;}
+  .search-box{margin:0;margin-top:-16px;}
+  /* sb-row2: 勤務地|働き方 横並びそのまま(50:50) */
+  .sb-row2 .sb-row{padding:10px 10px 10px 12px;}
+  .sb-badge{flex-shrink:0;padding:4px 8px;font-size:.62rem;}
+  /* sb-row3: キーワード+検索ボタン */
+  .sb-row3 .sb-in-wrap{padding:10px 12px;}
+  .sb-row3 .sb-btn-inline{padding:0 18px;font-size:.9rem;}
+
+  /* ── Main layout: 1 column ── */
 
   /* ── Main layout: 1 column ── */
   .main-wrap{
@@ -936,20 +940,44 @@ select.fi{appearance:none;cursor:pointer;}
 /* ══════════════════════════════
    MOBILE DRAWER（ハンバーガーメニュー）
 ══════════════════════════════ */
+/* ── Mobile header login button ── */
+.hdr-login-mob{
+  display:none;
+  background:none;border:1.5px solid var(--bd);border-radius:8px;
+  padding:6px 14px;font-size:.8rem;font-weight:700;color:var(--dk);
+  cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap;
+}
+@media(max-width:768px){.hdr-login-mob{display:block;}}
+
 .mob-drawer{
   display:none;
   background:var(--wh);
-  border-bottom:2px solid var(--bd);
-  padding:14px 16px;
+  border-bottom:1px solid var(--bd);
   flex-direction:column;
-  gap:10px;
-  box-shadow:0 4px 14px rgba(0,0,0,.1);
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
   position:relative;z-index:250;
 }
 .mob-drawer.open{display:flex;}
+/* ドロワー: 認証ボタン */
+.mob-drawer-auth{
+  display:flex;gap:10px;padding:16px 16px 12px;
+  border-bottom:1px solid var(--bd);
+}
+.mob-drawer-auth .hbtn{flex:1;text-align:center;padding:11px;border-radius:10px;}
+/* ドロワー: メニューリスト */
+.mob-drawer-menu{display:flex;flex-direction:column;}
+.mob-drawer-menu a{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px;font-size:.9rem;color:var(--dk);
+  text-decoration:none;border-bottom:1px solid var(--bd);
+  font-family:'Noto Sans JP',sans-serif;
+}
+.mob-drawer-menu a:last-child{border-bottom:none;}
+.mob-drawer-menu a .dm-ico{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0;}
+.mob-drawer-menu a .dm-arr{margin-left:auto;color:var(--lt);font-size:.8rem;}
 .mob-drawer-search{
-  display:flex;align-items:center;
-  border:2px solid var(--bd);border-radius:8px;overflow:hidden;
+  display:flex;align-items:center;margin:12px 16px;
+  border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;
 }
 .mob-drawer-search input{
   flex:1;padding:10px 14px;border:none;outline:none;
@@ -960,10 +988,45 @@ select.fi{appearance:none;cursor:pointer;}
 .mob-drawer-search button{
   padding:10px 14px;background:var(--or);border:none;cursor:pointer;font-size:.9rem;
 }
-.mob-drawer-nav{display:flex;gap:8px;flex-wrap:wrap;}
-.mob-drawer-nav .hnav-tab{display:flex!important;font-size:.82rem;}
-.mob-drawer-auth{display:flex;gap:8px;}
-.mob-drawer-auth .hbtn{flex:1;text-align:center;padding:10px;}
+.mob-drawer-nav{display:none;}
+
+/* ── Quick search tags ── */
+.quick-tags{
+  padding:12px 0 4px;overflow-x:auto;white-space:nowrap;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.quick-tags::-webkit-scrollbar{display:none;}
+.quick-tags-inner{display:inline-flex;gap:8px;padding:0 16px;}
+.qtag{
+  display:inline-block;background:var(--wh);
+  border:1.5px solid var(--bd);border-radius:20px;
+  padding:6px 14px;font-size:.78rem;font-weight:700;color:var(--dk);
+  cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;
+  transition:all .13s;flex-shrink:0;
+}
+.qtag:hover,.qtag.on{background:var(--or3);border-color:rgba(255,107,0,.4);color:var(--or);}
+
+/* ── Search form 2-row layout ── */
+.sb-row2{
+  display:flex;align-items:stretch;
+  border-bottom:1px solid var(--bd);
+}
+.sb-row2 .sb-row{flex:1;border-right:1px solid var(--bd);}
+.sb-row2 .sb-row:last-child{border-right:none;}
+.sb-row3{
+  display:flex;align-items:stretch;
+}
+.sb-row3 .sb-in-wrap{
+  flex:1;display:flex;align-items:center;
+  padding:12px 16px;gap:10px;border-right:1px solid var(--bd);
+}
+.sb-row3 .sb-btn-inline{
+  background:var(--or);color:var(--wh);border:none;
+  padding:0 24px;font-size:.95rem;font-weight:900;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:1px;
+  transition:opacity .13s;white-space:nowrap;
+}
+.sb-row3 .sb-btn-inline:hover{opacity:.9;}
 
 /* ══════════════════════════════
    MOBILE FILTER TOGGLE
@@ -1000,6 +1063,7 @@ select.fi{appearance:none;cursor:pointer;}
   <div class="hdr-inner">
     <button class="hdr-menu" onclick="toggleMobDrawer()">☰</button>
     <a class="logo" href="#">Tiara<small>錦糸町 夜のお仕事</small></a>
+    <button class="hdr-login-mob" onclick="openAuthModal('login')">ログイン</button>
     <div class="hdr-search">
       <input type="text" placeholder="キーワード、店名、業種で検索...">
       <button>🔍</button>
@@ -1017,18 +1081,20 @@ select.fi{appearance:none;cursor:pointer;}
 
 <!-- ══ MOBILE DRAWER ══ -->
 <div class="mob-drawer" id="mobDrawer">
+  <div class="mob-drawer-auth" id="mobDrawerAuth">
+    <button class="hbtn fill" onclick="toggleMobDrawer();openAuthModal('register');">会員登録</button>
+    <button class="hbtn out" onclick="toggleMobDrawer();openAuthModal('login');">ログイン</button>
+  </div>
   <div class="mob-drawer-search">
     <input type="text" id="mobKeyword" placeholder="キーワード、店名で検索..." oninput="document.getElementById('hdrKeyword').value=this.value;debounceSearch();">
     <button onclick="document.getElementById('hdrKeyword').value=document.getElementById('mobKeyword').value;doHeaderSearch();toggleMobDrawer();">🔍</button>
   </div>
-  <div class="mob-drawer-nav">
-    <button class="hnav-tab on" onclick="showPage('seeker',this);toggleMobDrawer();">求人を探す</button>
-    <button class="hnav-tab" onclick="showPage('favs',this);toggleMobDrawer();">♡ お気に入り</button>
-  </div>
-  <div class="mob-drawer-auth" id="mobDrawerAuth">
-    <button class="hbtn out" onclick="toggleMobDrawer();openAuthModal('register');">会員登録</button>
-    <button class="hbtn fill" onclick="toggleMobDrawer();openAuthModal('login');">ログイン</button>
-  </div>
+  <nav class="mob-drawer-menu">
+    <a href="#" onclick="showPage('seeker',null);toggleMobDrawer();return false;"><span class="dm-ico">🔍</span>求人を探す<span class="dm-arr">›</span></a>
+    <a href="#" onclick="showPage('favs',null);toggleMobDrawer();return false;"><span class="dm-ico">♡</span>お気に入り<span class="dm-arr">›</span></a>
+    <a href="#" onclick="toggleMobDrawer();return false;"><span class="dm-ico">🕐</span>最近見た求人<span class="dm-arr">›</span></a>
+    <a href="#" onclick="toggleMobSidebar();toggleMobDrawer();return false;"><span class="dm-ico">🔧</span>条件から探す<span class="dm-arr">›</span></a>
+  </nav>
 </div>
 
 <!-- ══════════════════════════════
@@ -1039,44 +1105,53 @@ select.fi{appearance:none;cursor:pointer;}
   <!-- HERO -->
   <div class="hero">
     <div class="hero-inner">
-      <!-- テキスト左 -->
       <div class="hero-text">
         <div class="hero-tag">📍 錦糸町エリア限定 · 全<span id="heroStoreCnt">—</span>店舗掲載中</div>
         <h1>夜のお仕事探しは、<br><mark>Tiara</mark> で。</h1>
         <p class="hero-sub">体験入店OK · 日払いOK · 未経験歓迎 · 即日対応</p>
-        <div class="hero-stats">
-          <div class="hs"><div class="hs-n" id="heroStoreCnt2">—</div><div class="hs-l">掲載店舗</div></div>
-          <div class="hs"><div class="hs-n">¥4,500</div><div class="hs-l">平均時給</div></div>
-          <div class="hs"><div class="hs-n">即日</div><div class="hs-l">体入対応</div></div>
-          <div class="hs"><div class="hs-n">24h</div><div class="hs-l">問合わせ</div></div>
-        </div>
       </div>
-      <!-- hero-visual removed -->
-
-
     </div>
   </div>
 
   <!-- SEARCH BOX -->
   <div class="sb-outer">
     <div class="search-box">
-      <div class="sb-rows">
+      <!-- 1行目: 勤務地 | 働き方 -->
+      <div class="sb-row2">
         <div class="sb-row">
           <span class="sb-ico">📍</span>
           <input class="sb-in" type="text" placeholder="勤務地" value="錦糸町" readonly>
-          <span class="sb-badge">変更</span>
+          <span class="sb-badge" style="margin-right:4px;">変更</span>
         </div>
         <div class="sb-row">
           <span class="sb-ico">💼</span>
-          <input class="sb-in" type="text" placeholder="業種・働き方">
-          <span class="sb-badge">選択</span>
-        </div>
-        <div class="sb-row">
-          <span class="sb-ico">🔍</span>
-          <input class="sb-in" type="text" placeholder="キーワード（例：未経験、高時給、日払い）">
+          <input class="sb-in" type="text" placeholder="働き方">
+          <span class="sb-badge" style="margin-right:4px;">選択</span>
         </div>
       </div>
-      <button class="sb-btn">求人を検索する</button>
+      <!-- 2行目: キーワード + 検索ボタン -->
+      <div class="sb-row3">
+        <div class="sb-in-wrap">
+          <span class="sb-ico">🔍</span>
+          <input class="sb-in" type="text" placeholder="職種、キーワードなど（例：未経験、日払い）">
+        </div>
+        <button class="sb-btn-inline" onclick="document.querySelector('.sb-btn')&&document.querySelector('.sb-btn').click()">検索</button>
+      </div>
+      <!-- hidden submit trigger -->
+      <button class="sb-btn" id="sbBtnHidden" style="display:none;">求人を検索する</button>
+    </div>
+  </div>
+
+  <!-- QUICK TAGS -->
+  <div class="quick-tags">
+    <div class="quick-tags-inner">
+      <button class="qtag" onclick="this.classList.toggle('on')">未経験OK</button>
+      <button class="qtag" onclick="this.classList.toggle('on')">日払いOK</button>
+      <button class="qtag" onclick="this.classList.toggle('on')">体験入店OK</button>
+      <button class="qtag" onclick="this.classList.toggle('on')">週1〜OK</button>
+      <button class="qtag" onclick="this.classList.toggle('on')">駅チカ</button>
+      <button class="qtag" onclick="this.classList.toggle('on')">送迎あり</button>
+      <button class="qtag" onclick="this.classList.toggle('on')">高時給</button>
     </div>
   </div>
 
@@ -1833,11 +1908,10 @@ function setSrt(b) {
 // 検索ボタン
 document.addEventListener('DOMContentLoaded', function() {
   fetchStores();
-  // 検索ボタン
-  const sbBtn = document.querySelector('.sb-btn');
-  if (sbBtn) sbBtn.addEventListener('click', function() {
-    currentPage = 1;
-    renderStores();
+  // 検索ボタン（インライン検索ボタン + hidden button 両方対応）
+  function doSearch(){currentPage=1;renderStores();}
+  document.querySelectorAll('.sb-btn,.sb-btn-inline').forEach(btn=>{
+    btn.addEventListener('click',doSearch);
   });
   const sidebarBtn = document.querySelector('.sidebar-apply');
   if (sidebarBtn) sidebarBtn.addEventListener('click', function() {
