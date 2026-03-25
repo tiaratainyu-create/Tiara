@@ -862,23 +862,29 @@ select.fi{appearance:none;cursor:pointer;}
   /* voice */
   .voice-grid{grid-template-columns:1fr;}
 
-  /* ── Search box ── */
+  /* ── Search box (mobile: 全行を縦積み) ── */
   .sb-outer{padding:0 16px;}
   .search-box{margin:0;margin-top:-16px;}
-  /* sb-row2: 勤務地|働き方 横並びそのまま(50:50) */
-  .sb-row2 .sb-row{padding:10px 10px 10px 12px;}
-  .sb-badge{flex-shrink:0;padding:4px 8px;font-size:.62rem;}
-  /* sb-row3: キーワード+検索ボタン */
-  .sb-row3 .sb-in-wrap{padding:10px 12px;}
-  .sb-row3 .sb-btn-inline{padding:0 18px;font-size:.9rem;}
-
-  /* ── Main layout: 1 column ── */
+  /* sb-row2: モバイルは縦積みに変更 */
+  .sb-row2{flex-direction:column;}
+  .sb-row2 .sb-row{border-right:none;border-bottom:1px solid var(--bd);padding:11px 16px;}
+  .sb-row2 .sb-row:last-child{border-bottom:1px solid var(--bd);}
+  .sb-badge{flex-shrink:0;padding:4px 10px;font-size:.7rem;border-radius:6px;}
+  /* sb-row3: キーワードも縦積み→ボタン全幅 */
+  .sb-row3{flex-direction:column;}
+  .sb-row3 .sb-in-wrap{border-right:none;border-bottom:none;padding:11px 16px;}
+  .sb-row3 .sb-btn-inline{
+    height:52px;font-size:1rem;letter-spacing:2px;
+    background:linear-gradient(180deg,#ff8533 0%,#ff6b00 100%);
+    box-shadow:0 4px 14px rgba(255,107,0,.35);
+    padding:0;
+  }
 
   /* ── Main layout: 1 column ── */
   .main-wrap{
     grid-template-columns:1fr;
-    margin:14px auto 80px;
-    padding:0 10px;
+    margin:16px auto 90px;
+    padding:0 16px;
     gap:0;
   }
 
@@ -949,45 +955,26 @@ select.fi{appearance:none;cursor:pointer;}
 }
 @media(max-width:768px){.hdr-login-mob{display:block;}}
 
+/* ドロワー: 履歴・お気に入りのみ */
 .mob-drawer{
   display:none;
   background:var(--wh);
   border-bottom:1px solid var(--bd);
   flex-direction:column;
-  box-shadow:0 4px 20px rgba(0,0,0,.1);
+  box-shadow:0 4px 20px rgba(0,0,0,.08);
   position:relative;z-index:250;
 }
 .mob-drawer.open{display:flex;}
-/* ドロワー: 認証ボタン */
-.mob-drawer-auth{
-  display:flex;gap:10px;padding:16px 16px 12px;
-  border-bottom:1px solid var(--bd);
-}
-.mob-drawer-auth .hbtn{flex:1;text-align:center;padding:11px;border-radius:10px;}
-/* ドロワー: メニューリスト */
 .mob-drawer-menu{display:flex;flex-direction:column;}
 .mob-drawer-menu a{
-  display:flex;align-items:center;gap:10px;
-  padding:14px 16px;font-size:.9rem;color:var(--dk);
-  text-decoration:none;border-bottom:1px solid var(--bd);
-  font-family:'Noto Sans JP',sans-serif;
+  display:flex;align-items:center;gap:14px;
+  padding:20px 20px;font-size:.95rem;color:var(--dk);
+  text-decoration:none;border-bottom:1px solid #f0f0f0;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:.3px;
 }
 .mob-drawer-menu a:last-child{border-bottom:none;}
-.mob-drawer-menu a .dm-ico{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0;}
-.mob-drawer-menu a .dm-arr{margin-left:auto;color:var(--lt);font-size:.8rem;}
-.mob-drawer-search{
-  display:flex;align-items:center;margin:12px 16px;
-  border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;
-}
-.mob-drawer-search input{
-  flex:1;padding:10px 14px;border:none;outline:none;
-  font-size:.88rem;font-family:'Noto Sans JP',sans-serif;color:var(--dk);
-  background:transparent;
-}
-.mob-drawer-search input:focus{outline:none;}
-.mob-drawer-search button{
-  padding:10px 14px;background:var(--or);border:none;cursor:pointer;font-size:.9rem;
-}
+.mob-drawer-menu a .dm-ico{font-size:1.2rem;width:26px;text-align:center;flex-shrink:0;color:var(--md);}
+.mob-drawer-menu a .dm-arr{margin-left:auto;color:#ccc;font-size:.9rem;}
 .mob-drawer-nav{display:none;}
 
 /* ── Quick search tags ── */
@@ -999,12 +986,12 @@ select.fi{appearance:none;cursor:pointer;}
 .quick-tags-inner{display:inline-flex;gap:8px;padding:0 16px;}
 .qtag{
   display:inline-block;background:var(--wh);
-  border:1.5px solid var(--bd);border-radius:20px;
-  padding:6px 14px;font-size:.78rem;font-weight:700;color:var(--dk);
+  border:1.5px solid #ddd;border-radius:9999px;
+  padding:6px 16px;font-size:.75rem;font-weight:700;color:#444;
   cursor:pointer;white-space:nowrap;font-family:'Noto Sans JP',sans-serif;
-  transition:all .13s;flex-shrink:0;
+  transition:all .13s;flex-shrink:0;letter-spacing:.2px;
 }
-.qtag:hover,.qtag.on{background:var(--or3);border-color:rgba(255,107,0,.4);color:var(--or);}
+.qtag:hover,.qtag.on{background:var(--or3);border-color:rgba(255,107,0,.35);color:var(--or);}
 
 /* ── Search form 2-row layout ── */
 .sb-row2{
@@ -1081,19 +1068,13 @@ select.fi{appearance:none;cursor:pointer;}
 
 <!-- ══ MOBILE DRAWER ══ -->
 <div class="mob-drawer" id="mobDrawer">
-  <div class="mob-drawer-auth" id="mobDrawerAuth">
-    <button class="hbtn fill" onclick="toggleMobDrawer();openAuthModal('register');">会員登録</button>
-    <button class="hbtn out" onclick="toggleMobDrawer();openAuthModal('login');">ログイン</button>
-  </div>
-  <div class="mob-drawer-search">
-    <input type="text" id="mobKeyword" placeholder="キーワード、店名で検索..." oninput="document.getElementById('hdrKeyword').value=this.value;debounceSearch();">
-    <button onclick="document.getElementById('hdrKeyword').value=document.getElementById('mobKeyword').value;doHeaderSearch();toggleMobDrawer();">🔍</button>
-  </div>
   <nav class="mob-drawer-menu">
-    <a href="#" onclick="showPage('seeker',null);toggleMobDrawer();return false;"><span class="dm-ico">🔍</span>求人を探す<span class="dm-arr">›</span></a>
-    <a href="#" onclick="showPage('favs',null);toggleMobDrawer();return false;"><span class="dm-ico">♡</span>お気に入り<span class="dm-arr">›</span></a>
-    <a href="#" onclick="toggleMobDrawer();return false;"><span class="dm-ico">🕐</span>最近見た求人<span class="dm-arr">›</span></a>
-    <a href="#" onclick="toggleMobSidebar();toggleMobDrawer();return false;"><span class="dm-ico">🔧</span>条件から探す<span class="dm-arr">›</span></a>
+    <a href="#" onclick="showPage('favs',null);toggleMobDrawer();return false;">
+      <span class="dm-ico">♡</span>お気に入り<span class="dm-arr">›</span>
+    </a>
+    <a href="#" onclick="toggleMobDrawer();return false;">
+      <span class="dm-ico">🕐</span>履歴<span class="dm-arr">›</span>
+    </a>
   </nav>
 </div>
 
