@@ -864,18 +864,19 @@ select.fi{appearance:none;cursor:pointer;}
 
   /* ── Search box (mobile: 全行を縦積み) ── */
   .sb-outer{padding:0 16px;}
-  .search-box{margin:0;margin-top:-16px;}
-  /* モバイル: 全行縦積み */
+  .search-box{margin:0;margin-top:-16px;border-radius:12px;}
+  /* モバイル: 全行縦積み + overflow制御 */
   .sb-row2{flex-direction:column;}
   .sb-row2 .sb-row{
     border-right:none;border-bottom:1px solid var(--bd);
-    padding:11px 12px 11px 14px;
+    padding:11px 14px 11px 14px;
+    overflow:hidden;
   }
   .sb-row2 .sb-row:last-child{border-bottom:1px solid var(--bd);}
-  /* バッジ: 縮小・右端に12px余白 */
+  /* バッジ: 右端に確実に収める */
   .sb-badge{
     flex-shrink:0;padding:4px 10px;font-size:.68rem;
-    border-radius:6px;margin-right:2px;
+    border-radius:6px;margin-right:0;min-width:0;
   }
   /* sb-row3: キーワード + 全幅ボタン（縦積み） */
   .sb-row3{flex-direction:column;}
