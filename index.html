@@ -269,7 +269,7 @@ img{display:block;max-width:100%;}
   white-space:nowrap;
 }
 .sb-btn{
-  display:block;width:100%;
+  display:none;width:100%;
   background:linear-gradient(180deg,var(--or2) 0%,var(--or) 100%);
   color:var(--wh);
   border:none;padding:15px;
@@ -850,11 +850,11 @@ select.fi{appearance:none;cursor:pointer;}
   .hero-tag{font-size:.65rem;padding:3px 9px;margin-bottom:7px;}
   .hero h1{font-size:1.1rem;line-height:1.35;margin-bottom:4px;}
   .hero-sub{font-size:.7rem;margin-bottom:10px;line-height:1.5;}
-  /* stats: 横1行に並べてコンパクトに */
-  .hero-stats{gap:5px;flex-wrap:nowrap;}
-  .hero-stats .hs{flex:1;min-width:0;padding:5px 4px;box-sizing:border-box;}
-  .hs-n{font-size:.88rem;}
-  .hs-l{font-size:.5rem;margin-top:2px;}
+  /* stats: 2×2グリッド */
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .hero-stats .hs{padding:14px 10px;}
+  .hs-n{font-size:1.5rem;}
+  .hs-l{font-size:.72rem;margin-top:6px;}
   /* trust */
   .trust-section,.voice-section{padding:0 14px;}
   .trust-grid{grid-template-columns:repeat(2,1fr);}
@@ -881,11 +881,11 @@ select.fi{appearance:none;cursor:pointer;}
   /* sb-row3: キーワード + 全幅ボタン（縦積み） */
   .sb-row3{flex-direction:column;}
   .sb-row3 .sb-in-wrap{border-right:none;border-bottom:none;padding:11px 14px;}
-  .sb-row3 .sb-btn-inline{
-    width:100%;height:52px;font-size:1rem;letter-spacing:2px;padding:0;
-    background:linear-gradient(180deg,#ff8533 0%,#ff6b00 100%);
-    box-shadow:0 4px 14px rgba(255,107,0,.35);
-    border-radius:0;
+  .sb-row3 .sb-btn-inline{display:none;}
+  .sb-btn{
+    display:block;height:56px;padding:0;
+    background:#F97316;font-size:16px;font-weight:700;
+    letter-spacing:1px;
   }
 
   /* ── Main layout: 1 column ── */
@@ -962,7 +962,7 @@ select.fi{appearance:none;cursor:pointer;}
   padding:6px 14px;font-size:.8rem;font-weight:700;color:var(--dk);
   cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap;
 }
-@media(max-width:768px){.hdr-login-mob{display:block;}}
+@media(max-width:768px){.hdr-login-mob{display:none;}}
 
 /* オーバーレイ */
 .drawer-overlay{
@@ -1152,6 +1152,12 @@ select.fi{appearance:none;cursor:pointer;}
         <div class="hero-tag">📍 錦糸町エリア限定 · 全<span id="heroStoreCnt">—</span>店舗掲載中</div>
         <h1>夜のお仕事探しは、<br><mark>Tiara</mark> で。</h1>
         <p class="hero-sub">体験入店OK · 日払いOK · 未経験歓迎 · 即日対応</p>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-n">8</div><div class="hs-l">掲載店舗</div></div>
+          <div class="hs"><div class="hs-n">¥4,500</div><div class="hs-l">平均時給</div></div>
+          <div class="hs"><div class="hs-n">即日</div><div class="hs-l">体入対応</div></div>
+          <div class="hs"><div class="hs-n">24h</div><div class="hs-l">問い合わせ</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1181,7 +1187,7 @@ select.fi{appearance:none;cursor:pointer;}
         <button class="sb-btn-inline" onclick="document.querySelector('.sb-btn')&&document.querySelector('.sb-btn').click()">検索</button>
       </div>
       <!-- hidden submit trigger -->
-      <button class="sb-btn" id="sbBtnHidden" style="display:none;">求人を検索する</button>
+      <button class="sb-btn" id="sbBtnHidden">求人を検索する</button>
     </div>
   </div>
 
