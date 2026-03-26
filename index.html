@@ -841,8 +841,8 @@ select.fi{appearance:none;cursor:pointer;}
   /* ── Header ── */
   .hdr-menu{display:block;}
   .hdr-search,.hnav-tab,.hdr-btns{display:none;}
-  .hdr-inner{padding:0 14px;}
-  .logo{flex:1;text-align:center;font-size:1.3rem;}
+  .hdr-inner{padding:0 14px;position:relative;}
+  .logo{position:absolute;left:50%;transform:translateX(-50%);font-size:1.3rem;}
 
   /* ── Hero ── */
   .hero{padding:12px 14px 16px;overflow:hidden;}
@@ -882,7 +882,7 @@ select.fi{appearance:none;cursor:pointer;}
   .sb-row3{flex-direction:column;}
   .sb-row3 .sb-in-wrap{border-right:none;border-bottom:none;padding:11px 14px;}
   .sb-row3 .sb-btn-inline{
-    height:52px;font-size:1rem;letter-spacing:2px;padding:0;
+    width:100%;height:52px;font-size:1rem;letter-spacing:2px;padding:0;
     background:linear-gradient(180deg,#ff8533 0%,#ff6b00 100%);
     box-shadow:0 4px 14px rgba(255,107,0,.35);
     border-radius:0;
@@ -903,7 +903,8 @@ select.fi{appearance:none;cursor:pointer;}
   /* ── Cards: 1 column, vertical ── */
   .jgrid{grid-template-columns:1fr;gap:10px;}
   .jcard{flex-direction:column;}
-  .c-img{width:100%;min-width:unset;height:150px;}
+  .c-img{width:100%;min-width:unset;height:160px;}
+  .c-body{flex:1 1 auto;}
 
   /* ── Owner page ── */
   .owner-wrap{padding:0 12px;margin-top:16px;margin-bottom:80px;}
