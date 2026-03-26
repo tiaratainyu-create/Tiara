@@ -841,7 +841,7 @@ select.fi{appearance:none;cursor:pointer;}
   /* ── Header ── */
   .hdr-menu{display:block;}
   .hdr-search,.hnav-tab,.hdr-btns{display:none;}
-  .hdr-inner{padding:0 14px;position:relative;}
+  .hdr-inner{padding:0 14px;position:relative;justify-content:space-between;}
   .logo{position:absolute;left:50%;transform:translateX(-50%);font-size:1.3rem;}
 
   /* ── Hero ── */
@@ -1047,15 +1047,21 @@ select.fi{appearance:none;cursor:pointer;}
 }
 .sb-row3 .sb-in-wrap{
   flex:1;display:flex;align-items:center;
-  padding:12px 16px;gap:10px;border-right:1px solid var(--bd);
+  gap:10px;
 }
-.sb-row3 .sb-btn-inline{
-  background:var(--or);color:var(--wh);border:none;
-  padding:0 24px;font-size:.95rem;font-weight:900;cursor:pointer;
-  font-family:'Noto Sans JP',sans-serif;letter-spacing:1px;
-  transition:opacity .13s;white-space:nowrap;
+/* PC only: sb-row3 button and in-wrap layout */
+@media(min-width:769px){
+  .sb-row3 .sb-in-wrap{
+    padding:12px 16px;border-right:1px solid var(--bd);
+  }
+  .sb-row3 .sb-btn-inline{
+    background:var(--or);color:var(--wh);border:none;
+    padding:0 24px;font-size:.95rem;font-weight:900;cursor:pointer;
+    font-family:'Noto Sans JP',sans-serif;letter-spacing:1px;
+    transition:opacity .13s;white-space:nowrap;
+  }
+  .sb-row3 .sb-btn-inline:hover{opacity:.9;}
 }
-.sb-row3 .sb-btn-inline:hover{opacity:.9;}
 
 /* ══════════════════════════════
    MOBILE FILTER TOGGLE
