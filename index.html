@@ -39,6 +39,7 @@ img{display:block;max-width:100%;}
   max-width:1280px;margin:0 auto;
   display:flex;align-items:center;
   padding:0 20px;height:100%;gap:16px;
+  position:relative; /* enables absolute logo centering on mobile */
 }
 .hdr-menu{
   display:none;background:none;border:none;
@@ -237,36 +238,49 @@ img{display:block;max-width:100%;}
 /* ══════════════════════════════
    SEARCH BOX (hero bottom)
 ══════════════════════════════ */
+/* ── Search box shell ── */
 .search-box{
   background:var(--wh);
-  max-width:1280px;margin:0 auto;
-  border-radius:10px;
+  border-radius:12px;
   box-shadow:0 4px 20px rgba(0,0,0,.12);
   border:1px solid var(--bd);
-  margin-top:-18px;position:relative;z-index:10;
-  overflow:hidden;
-  width:100%;
+  position:relative;z-index:10;
+  overflow:hidden;   /* clips children to rounded corners */
 }
-.sb-rows{display:flex;align-items:stretch;border-bottom:1px solid var(--bd);overflow:hidden;}
+/* ── Row base: 8px grid, height-based centering ── */
 .sb-row{
-  flex:1;display:flex;align-items:center;
-  padding:10px 16px;gap:10px;
+  display:flex;align-items:center;
+  height:56px;        /* 7×8px = fixed row height */
+  padding:0 16px;     /* 2×8px each side — same L/R balance */
+  gap:8px;            /* 1×8px gap between all children */
   border-right:1px solid var(--bd);
 }
 .sb-row:last-of-type{border-right:none;}
-.sb-ico{font-size:1rem;color:var(--or);flex-shrink:0;}
+/* ── Icon: fixed 24px width, optically centered ── */
+.sb-ico{
+  width:24px;text-align:center;
+  font-size:1.05rem;color:var(--or);flex-shrink:0;
+}
+/* ── Input: fills remaining space ── */
 .sb-in{
-  flex:1;border:none;outline:none;
+  flex:1;min-width:0;
+  border:none;outline:none;
   font-size:.88rem;color:var(--dk);
   font-family:'Noto Sans JP',sans-serif;background:transparent;
 }
 .sb-in::placeholder{color:var(--lt);}
+/* ── Badge: 32px tall (fixed), pill shape, never shrinks ── */
 .sb-badge{
+  flex-shrink:0;
+  display:inline-flex;align-items:center;
+  height:32px;         /* (56px row - 2×12px inset) */
+  padding:0 12px;
   background:var(--or3);color:var(--or);
-  font-size:.68rem;font-weight:700;
-  padding:4px 10px;border-radius:4px;
-  cursor:pointer;border:1px solid rgba(255,107,0,.2);
-  white-space:nowrap;
+  font-size:.7rem;font-weight:700;
+  border-radius:6px;
+  border:1px solid rgba(255,107,0,.2);
+  cursor:pointer;white-space:nowrap;
+  letter-spacing:.3px;
 }
 .sb-btn{
   display:block;width:100%;
@@ -818,7 +832,12 @@ select.fi{appearance:none;cursor:pointer;}
 /* ══════════════════════════════
    SEARCH BOX OUTER WRAPPER
 ══════════════════════════════ */
-.sb-outer{max-width:1280px;margin:0 auto;padding:0 20px;}
+.sb-outer{
+  max-width:1280px;margin:0 auto;
+  padding:0 20px;
+  margin-top:-20px;    /* overlaps hero bottom by 20px */
+  position:relative;z-index:10;
+}
 
 /* ══════════════════════════════
    RESPONSIVE: TABLET (≤ 1024px)
@@ -842,7 +861,13 @@ select.fi{appearance:none;cursor:pointer;}
   .hdr-menu{display:block;}
   .hdr-search,.hnav-tab,.hdr-btns{display:none;}
   .hdr-inner{padding:0 14px;}
-  .logo{flex:1;text-align:center;font-size:1.3rem;}
+  /* Logo: mathematically centered regardless of button widths */
+  .logo{
+    position:absolute;left:50%;transform:translateX(-50%);
+    font-size:1.3rem;
+    /* prevent overlap with buttons at extremes */
+    max-width:calc(100% - 140px);text-align:center;
+  }
 
   /* ── Hero ── */
   .hero{padding:12px 14px 16px;overflow:hidden;}
@@ -862,30 +887,28 @@ select.fi{appearance:none;cursor:pointer;}
   /* voice */
   .voice-grid{grid-template-columns:1fr;}
 
-  /* ── Search box (mobile: 全行を縦積み) ── */
-  .sb-outer{padding:0 16px;}
-  .search-box{margin:0;margin-top:-16px;border-radius:12px;}
-  /* モバイル: 全行縦積み + overflow制御 */
+  /* ── Search box (mobile: 縦積み) ── */
+  .sb-outer{padding:0 16px;margin-top:-16px;}
+  /* モバイル: 全行を縦積み */
   .sb-row2{flex-direction:column;}
   .sb-row2 .sb-row{
-    border-right:none;border-bottom:1px solid var(--bd);
-    padding:11px 14px 11px 14px;
-    overflow:hidden;
+    /* Reuse base height:56px, padding:0 16px from desktop */
+    border-right:none;
+    border-bottom:1px solid var(--bd);
+    /* No overflow:hidden — search-box handles corner clipping */
   }
   .sb-row2 .sb-row:last-child{border-bottom:1px solid var(--bd);}
-  /* バッジ: 右端に確実に収める */
-  .sb-badge{
-    flex-shrink:0;padding:4px 10px;font-size:.68rem;
-    border-radius:6px;margin-right:0;min-width:0;
-  }
-  /* sb-row3: キーワード + 全幅ボタン（縦積み） */
+  /* sb-row3: キーワード + 全幅検索ボタン（縦積み） */
   .sb-row3{flex-direction:column;}
-  .sb-row3 .sb-in-wrap{border-right:none;border-bottom:none;padding:11px 14px;}
+  .sb-row3 .sb-in-wrap{
+    border-right:none;border-bottom:none;
+    height:56px;
+  }
   .sb-row3 .sb-btn-inline{
-    height:52px;font-size:1rem;letter-spacing:2px;padding:0;
+    width:100%;height:52px;   /* full-width, slightly taller CTA */
+    font-size:1rem;letter-spacing:2px;
     background:linear-gradient(180deg,#ff8533 0%,#ff6b00 100%);
     box-shadow:0 4px 14px rgba(255,107,0,.35);
-    border-radius:0;
   }
 
   /* ── Main layout: 1 column ── */
@@ -1034,23 +1057,28 @@ select.fi{appearance:none;cursor:pointer;}
 }
 .qtag:hover,.qtag.on{background:var(--or3);border-color:rgba(255,107,0,.35);color:var(--or);}
 
-/* ── Search form 2-row layout ── */
+/* ── Search form: 2-row horizontal layout (PC default) ── */
 .sb-row2{
   display:flex;align-items:stretch;
   border-bottom:1px solid var(--bd);
 }
-.sb-row2 .sb-row{flex:1;border-right:1px solid var(--bd);}
+/* PC: two equal columns side-by-side */
+.sb-row2 .sb-row{flex:1;}
 .sb-row2 .sb-row:last-child{border-right:none;}
-.sb-row3{
-  display:flex;align-items:stretch;
-}
+
+/* Row 3: keyword input + search button */
+.sb-row3{display:flex;align-items:stretch;}
 .sb-row3 .sb-in-wrap{
   flex:1;display:flex;align-items:center;
-  padding:12px 16px;gap:10px;border-right:1px solid var(--bd);
+  height:56px;padding:0 16px;gap:8px;
+  border-right:1px solid var(--bd);
 }
 .sb-row3 .sb-btn-inline{
+  /* PC: fixed width, vertically filled */
+  width:128px;        /* 16×8px */
+  height:56px;        /* matches row height */
   background:var(--or);color:var(--wh);border:none;
-  padding:0 24px;font-size:.95rem;font-weight:900;cursor:pointer;
+  font-size:.95rem;font-weight:900;cursor:pointer;
   font-family:'Noto Sans JP',sans-serif;letter-spacing:1px;
   transition:opacity .13s;white-space:nowrap;
 }
