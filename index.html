@@ -861,9 +861,13 @@ select.fi{appearance:none;cursor:pointer;}
   /* voice */
   .voice-grid{grid-template-columns:1fr;}
 
-  /* ── Search box (mobile: 全行を縦積み) ── */
-  .sb-outer{padding:0 16px;}
-  .search-box{margin:0;margin-top:-16px;border-radius:12px;}
+  /* ── Search box (mobile) ── */
+  .sb-outer{padding:0;}
+  .search-box{
+    margin:0;border-radius:0;
+    box-shadow:none;border-left:none;border-right:none;
+    width:100%;
+  }
   /* モバイル: 全行縦積み + overflow制御 */
   .sb-row2{flex-direction:column;}
   .sb-row2 .sb-row{
