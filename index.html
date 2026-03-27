@@ -261,6 +261,9 @@ img{display:block;max-width:100%;}
   font-family:'Noto Sans JP',sans-serif;background:transparent;
 }
 .sb-in::placeholder{color:var(--lt);}
+.sb-select{appearance:none;-webkit-appearance:none;cursor:pointer;color:var(--lt);}
+.sb-select:valid{color:var(--dk);}
+.sb-select option{color:var(--dk);}
 .sb-badge{
   background:var(--or3);color:var(--or);
   font-size:.68rem;font-weight:700;
@@ -1171,7 +1174,12 @@ select.fi{appearance:none;cursor:pointer;}
         </div>
         <div class="sb-row">
           <span class="sb-ico">💼</span>
-          <input class="sb-in" type="text" placeholder="業種">
+          <select class="sb-in sb-select">
+            <option value="" disabled selected>業種</option>
+            <option value="キャバクラ">キャバクラ</option>
+            <option value="ガールズバー">ガールズバー</option>
+            <option value="コンカフェ">コンカフェ</option>
+          </select>
         </div>
       </div>
       <!-- 検索ボタン -->
