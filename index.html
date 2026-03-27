@@ -852,7 +852,9 @@ select.fi{appearance:none;cursor:pointer;}
     background:#f4f4f4;
     box-shadow:none;
     height:calc(var(--hdr) + env(safe-area-inset-top, 0px));
-    padding-top:env(safe-area-inset-top, 0px);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
   }
   .hdr-inner{
     background:#fff;
