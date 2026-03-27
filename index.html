@@ -1953,6 +1953,15 @@ function setSrt(b) {
   renderStores();
 }
 
+// theme-color: スクロール時に白→グレー切り替え
+(function(){
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if(!meta) return;
+  window.addEventListener('scroll', function(){
+    meta.content = window.scrollY > 0 ? '#ffffff' : '#f4f4f4';
+  }, {passive:true});
+})();
+
 // 検索ボタン
 document.addEventListener('DOMContentLoaded', function() {
   fetchStores();
