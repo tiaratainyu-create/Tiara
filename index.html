@@ -848,7 +848,17 @@ select.fi{appearance:none;cursor:pointer;}
   .hdr-search,.hnav-tab,.hdr-btns,.hdr-nav{display:none;}
   .hdr-inner{padding:0 14px;position:relative;justify-content:space-between;}
   .logo{position:absolute;left:50%;transform:translateX(-50%);font-size:1.3rem;}
-  .hdr{background:#fff;box-shadow:none;border-bottom:1px solid var(--bd);}
+  .hdr{
+    background:#f4f4f4;
+    box-shadow:none;
+    height:calc(var(--hdr) + env(safe-area-inset-top, 0px));
+    padding-top:env(safe-area-inset-top, 0px);
+  }
+  .hdr-inner{
+    background:#fff;
+    border-bottom:1px solid var(--bd);
+    height:var(--hdr);
+  }
   /* ── Hero ── */
   .hero{padding:0 14px 28px;overflow:hidden;}
   .hero-inner{flex-direction:column;gap:0;}
