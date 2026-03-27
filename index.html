@@ -868,16 +868,18 @@ select.fi{appearance:none;cursor:pointer;}
   .sb-row2{flex-direction:column;}
   .sb-row2 .sb-row{
     border-right:none;border-bottom:1px solid var(--bd);
-    padding:11px 14px 11px 14px;
-    overflow:hidden;box-sizing:border-box;width:100%;
+    padding:11px 14px;
+    box-sizing:border-box;width:100%;
+    position:relative;
   }
-  .sb-row2 .sb-row:nth-child(2){padding-right:2cm;}
   .sb-row2 .sb-row:last-child{border-bottom:1px solid var(--bd);}
-  /* バッジ */
+  /* バッジ: absolute配置で右端から16px内側 */
   .sb-badge{
-    flex-shrink:0;padding:4px 10px;font-size:.68rem;
-    border-radius:6px;min-width:0;
+    position:absolute;right:16px;top:50%;transform:translateY(-50%);
+    padding:4px 10px;font-size:.68rem;border-radius:6px;
   }
+  /* inputがバッジと重ならないように右余白を確保 */
+  .sb-row2 .sb-row .sb-in{padding-right:60px;}
   /* sb-row3: キーワード + 全幅ボタン（縦積み） */
   .sb-row3{flex-direction:column;}
   .sb-row3 .sb-in-wrap{border-right:none;border-bottom:none;padding:11px 14px;}
