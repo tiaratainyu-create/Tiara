@@ -1169,14 +1169,9 @@ select.fi{appearance:none;cursor:pointer;}
           <span class="sb-ico">📍</span>
           <input class="sb-in" type="text" placeholder="勤務地" value="錦糸町" readonly>
         </div>
-        <div class="sb-row" style="position:relative;">
+        <div class="sb-row">
           <span class="sb-ico">💼</span>
-          <input class="sb-in" id="gyoshuInput" type="text" placeholder="業種" readonly onclick="toggleGyoshuDropdown(event)">
-          <div id="gyoshuDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e5e5e5;border-top:none;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.1);">
-            <div onclick="selectGyoshu('キャバクラ')" style="padding:13px 16px;font-size:.9rem;cursor:pointer;border-bottom:1px solid #f0f0f0;">キャバクラ</div>
-            <div onclick="selectGyoshu('ガールズバー')" style="padding:13px 16px;font-size:.9rem;cursor:pointer;border-bottom:1px solid #f0f0f0;">ガールズバー</div>
-            <div onclick="selectGyoshu('コンカフェ')" style="padding:13px 16px;font-size:.9rem;cursor:pointer;">コンカフェ</div>
-          </div>
+          <input class="sb-in" type="text" placeholder="業種">
         </div>
       </div>
       <!-- 検索ボタン -->
@@ -2521,21 +2516,6 @@ function setLoading(btnId, on) {
   btn.style.opacity = on ? '.6' : '1';
   btn.textContent = on ? '処理中...' : (btnId.includes('Reg') ? '無料で登録する →' : 'ログイン →');
 }
-
-/* ── 業種ドロップダウン ── */
-function toggleGyoshuDropdown(e) {
-  e.stopPropagation();
-  const dd = document.getElementById('gyoshuDropdown');
-  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
-}
-function selectGyoshu(val) {
-  document.getElementById('gyoshuInput').value = val;
-  document.getElementById('gyoshuDropdown').style.display = 'none';
-}
-document.addEventListener('click', function() {
-  const dd = document.getElementById('gyoshuDropdown');
-  if(dd) dd.style.display = 'none';
-});
 
 /* ── モバイルドロワー（左スライドイン） ── */
 function toggleMobDrawer() {
