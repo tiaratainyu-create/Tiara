@@ -1038,24 +1038,15 @@ select.fi{appearance:none;cursor:pointer;}
 .qtag:hover,.qtag.on{background:var(--or3);border-color:rgba(255,107,0,.35);color:var(--or);}
 
 /* ── Search form 2-row layout ── */
-.sb-row2{
-  display:flex;align-items:stretch;
-  border-bottom:1px solid var(--bd);
-}
-.sb-row2 .sb-row{flex:1;border-right:1px solid var(--bd);}
-.sb-row2 .sb-row:last-child{border-right:none;}
-.sb-row3{
-  display:flex;align-items:stretch;
-}
-.sb-row3 .sb-in-wrap{
-  flex:1;display:flex;align-items:center;
-  gap:10px;
-}
-/* PC only: sb-row3 button and in-wrap layout */
+.sb-row2{display:flex;align-items:stretch;}
+.sb-row3{display:flex;align-items:stretch;}
+.sb-row3 .sb-in-wrap{flex:1;display:flex;align-items:center;gap:10px;}
+/* PC only */
 @media(min-width:769px){
-  .sb-row3 .sb-in-wrap{
-    padding:12px 16px;border-right:1px solid var(--bd);
-  }
+  .sb-row2{border-bottom:1px solid var(--bd);}
+  .sb-row2 .sb-row{flex:1;border-right:1px solid var(--bd);}
+  .sb-row2 .sb-row:last-child{border-right:none;}
+  .sb-row3 .sb-in-wrap{padding:12px 16px;border-right:1px solid var(--bd);}
   .sb-row3 .sb-btn-inline{
     background:var(--or);color:var(--wh);border:none;
     padding:0 24px;font-size:.95rem;font-weight:900;cursor:pointer;
